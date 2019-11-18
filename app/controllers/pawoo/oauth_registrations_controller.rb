@@ -51,4 +51,14 @@ class Pawoo::OauthRegistrationsController < DeviseController
       :email, :username, :display_name, :note
     ).merge(locale: I18n.locale)
   end
+
+  def after_sign_in_path_for(_resource)
+    last_url = stored_location_for(:user)
+
+    if last_url == about_path
+      root_path
+    else
+      last_url || root_path
+    end
+  end
 end

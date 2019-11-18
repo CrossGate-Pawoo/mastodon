@@ -83,4 +83,14 @@ class Pawoo::Auth::OmniauthCallbacksController < Devise::OmniauthCallbacksContro
       redis.setex('auth', 15.minutes, request.env['omniauth.auth'].to_json)
     end
   end
+
+  def after_sign_in_path_for(_resource)
+    last_url = stored_location_for(:user)
+
+    if last_url == about_path
+      root_path
+    else
+      last_url || root_path
+    end
+  end
 end

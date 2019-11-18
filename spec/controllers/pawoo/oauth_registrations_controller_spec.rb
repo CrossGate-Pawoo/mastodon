@@ -129,7 +129,20 @@ RSpec.describe Pawoo::OauthRegistrationsController, type: :controller do
           subject
           expect(Account.joins(:user).where(attributes)).to exist
         end
+      end
 
+      context 'when before path is about_path' do
+        it 'redirects to root_path' do
+          controller.store_location_for(:user, about_path)
+          is_expected.to redirect_to root_path
+        end
+      end
+
+      context 'when before path is not about_path' do
+        it 'redirects to the path for the user after signing in' do
+          controller.store_location_for(:user, '/path/after/sign/in')
+          is_expected.to redirect_to '/path/after/sign/in'
+        end
       end
     end
 
