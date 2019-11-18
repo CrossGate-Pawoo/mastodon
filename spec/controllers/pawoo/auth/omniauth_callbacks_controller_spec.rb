@@ -126,14 +126,23 @@ RSpec.describe Pawoo::Auth::OmniauthCallbacksController, type: :controller do
         }.from(0).to(1)
       end
 
-      it 'redirects to the path for the user after signing in' do
-        controller.store_location_for(:user, '/path/after/sign/in')
-        is_expected.to redirect_to '/path/after/sign/in'
-      end
-
       it 'flashes an notice' do
         subject
         expect(flash[:notice]).to be_present
+      end
+
+      context 'when before path is about_path' do
+        it 'redirects to root_path' do
+          controller.store_location_for(:user, about_path)
+          is_expected.to redirect_to root_path
+        end
+      end
+
+      context 'when before path is not about_path' do
+        it 'redirects to the path for the user after signing in' do
+          controller.store_location_for(:user, '/path/after/sign/in')
+          is_expected.to redirect_to '/path/after/sign/in'
+        end
       end
     end
 
@@ -160,9 +169,18 @@ RSpec.describe Pawoo::Auth::OmniauthCallbacksController, type: :controller do
           expect(oauth_authentication.user.reload.remember_created_at).to be_present
         end
 
-        it 'redirects to the path for the user after signing in' do
-          controller.store_location_for(:user, '/path/after/sign/in')
-          is_expected.to redirect_to '/path/after/sign/in'
+        context 'when before path is about_path' do
+          it 'redirects to root_path' do
+            controller.store_location_for(:user, about_path)
+            is_expected.to redirect_to root_path
+          end
+        end
+
+        context 'when before path is not about_path' do
+          it 'redirects to the path for the user after signing in' do
+            controller.store_location_for(:user, '/path/after/sign/in')
+            is_expected.to redirect_to '/path/after/sign/in'
+          end
         end
 
         context 'when user has not confirmed' do
