@@ -4,7 +4,7 @@ class Pawoo::Form::OauthRegistration
   include ActiveModel::Model
   include TypeAttributes
 
-  PRIVATE_USER_NAME = /\Auser_/
+  PRIVATE_USER_NAME_PREFIX = 'user_'
 
   attr_accessor :user, :oauth_authentication, :avatar, :email_confirmed, :locale
   attr_accessor :provider, :uid
@@ -19,11 +19,13 @@ class Pawoo::Form::OauthRegistration
     def from_omniauth_auth(omniauth_auth)
       case omniauth_auth['provider']
       when 'pixiv'
+        email = omniauth_auth['info']['email']
+        email = nil unless Pawoo::OauthEmailAddressChecker.can_copy?(email)
         new(
           provider: 'pixiv',
           uid: omniauth_auth['uid'],
           email_confirmed: omniauth_auth['extra']['raw_info']['is_mail_authorized'],
-          email: omniauth_auth['info']['email'],
+          email: email,
           username: normalize_username(omniauth_auth['info']['account']),
           display_name: omniauth_auth['info']['nickname'],
           note: omniauth_auth['extra']['raw_info']['profile']['introduction'],
@@ -39,7 +41,7 @@ class Pawoo::Form::OauthRegistration
     # Normalize username for format validator of Account#username
     def normalize_username(string)
       username = string.to_s.tr('-', '_').remove(/[^a-z0-9_]/i, '')
-      username unless username.match?(PRIVATE_USER_NAME)
+      username unless username.start_with?(PRIVATE_USER_NAME_PREFIX)
     end
   end
 

@@ -608,6 +608,7 @@ en:
   oauth_authentications:
     confirm: Are you sure?
     failed_linking: Failed linking
+    failed_synchronization: Sync failed because email address is not authenticated or does not support
     initial_password_usage_note_html: To change pixiv login, please %{link} at the first.
     link: Link
     successfully_linked: Successfully linked
