@@ -5,7 +5,7 @@ OmniAuth.config.mock_auth[:pixiv] = OmniAuth::AuthHash.new(
   uid: '1',
   info: {
     email: 'test@pawoo.dev',
-    name: 'testuser_name',
+    account: 'testuser_name',
     nickname: 'testuser_account',
     id: 1,
     avatar: 'http://localhost/test.jpg'

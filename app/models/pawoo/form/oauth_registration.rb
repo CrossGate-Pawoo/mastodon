@@ -19,12 +19,11 @@ class Pawoo::Form::OauthRegistration
     def from_omniauth_auth(omniauth_auth)
       case omniauth_auth['provider']
       when 'pixiv'
-        email = omniauth_auth['info']['email']
-        email = nil unless Pawoo::OauthEmailAddressChecker.can_copy?(email)
+        email = normalize_email(omniauth_auth['info']['email'])
         new(
           provider: 'pixiv',
           uid: omniauth_auth['uid'],
-          email_confirmed: omniauth_auth['extra']['raw_info']['is_mail_authorized'],
+          email_confirmed: email.present? && omniauth_auth['extra']['raw_info']['is_mail_authorized'],
           email: email,
           username: normalize_username(omniauth_auth['info']['account']),
           display_name: omniauth_auth['info']['nickname'],
@@ -38,10 +37,18 @@ class Pawoo::Form::OauthRegistration
 
     private
 
+    def normalize_email(email)
+      return nil unless Pawoo::OauthEmailAddressChecker.can_copy?(email)
+
+      email
+    end
+
     # Normalize username for format validator of Account#username
     def normalize_username(string)
       username = string.to_s.tr('-', '_').remove(/[^a-z0-9_]/i, '')
-      username unless username.start_with?(PRIVATE_USER_NAME_PREFIX)
+      return nil if username.start_with?(PRIVATE_USER_NAME_PREFIX)
+
+      username
     end
   end
 
