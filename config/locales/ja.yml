@@ -620,6 +620,7 @@ ja:
   oauth_authentications:
     confirm: 本当によろしいですか？
     failed_linking: 連携できませんでした
+    failed_synchronization: メールアドレスが認証されていないかサポートしていないため同期に失敗しました
     initial_password_usage_note_html: pixivアカウント連携を変更する場合は、先に%{link}する必要があります。
     link: 連携する
     successfully_linked: 連携しました

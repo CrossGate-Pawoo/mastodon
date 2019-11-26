@@ -92,6 +92,11 @@ RSpec.describe Pawoo::OauthRegistrationsController, type: :controller do
           end
         end
 
+        it 'creates user' do
+          subject
+          expect(Account.joins(:user).where(attributes)).to exist
+        end
+
         it "doesn't log the user in" do
           subject
           expect(controller.current_user).to be_nil
@@ -101,6 +106,26 @@ RSpec.describe Pawoo::OauthRegistrationsController, type: :controller do
           let!(:unlinked_user) { Fabricate(:user, email: auth.info.email) }
 
           it { is_expected.not_to redirect_to new_user_session_path }
+        end
+      end
+
+      context 'when email is for Sign In with Apple' do
+        let(:attributes) { { email: 'email@example.com', username: 'username', display_name: 'testuser_account', note: 'introduction' } }
+
+        let(:auth) do
+          Marshal.load(Marshal.dump(OmniAuth.config.mock_auth[:pixiv])).tap do |mock_auth|
+            mock_auth['info']['email'] = SecureRandom.hex + '@privaterelay.appleid.com'
+          end
+        end
+
+        it 'creates user' do
+          subject
+          expect(Account.joins(:user).where(users: { email: 'email@example.com'})).to exist
+        end
+
+        it "doesn't log the user in" do
+          subject
+          expect(controller.current_user).to be_nil
         end
       end
 

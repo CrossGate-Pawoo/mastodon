@@ -8,7 +8,7 @@ RSpec.describe Pawoo::Auth::OmniauthCallbacksController, type: :controller do
     @request.env['omniauth.auth'] = auth
   end
 
-  let(:auth) { OmniAuth.config.mock_auth[provider] }
+  let(:auth) { Marshal.load(Marshal.dump(OmniAuth.config.mock_auth[provider])) }
 
   describe 'GET #pixiv' do
     subject { get :pixiv }
@@ -65,20 +65,56 @@ RSpec.describe Pawoo::Auth::OmniauthCallbacksController, type: :controller do
           let(:user) { Fabricate(:user, initial_password_usage: Fabricate(:initial_password_usage)) }
 
           context 'with a permitted email address' do
-            it 'skips reconfirmation' do
-              subject
-              expect(user.reload).to be_confirmed
+            context 'when email is not confirmed' do
+              before do
+                auth['extra']['raw_info']['is_mail_authorized'] = false
+              end
+
+              it 'does not synchronize email address' do
+                expect{ subject }.not_to change {
+                  user.reload.email
+                }.from(user.email)
+              end
+
+              it 'flashes a alert' do
+                subject
+                expect(flash[:alert]).to be_present
+              end
             end
 
-            it 'synchronize email address' do
-              expect{ subject }.to change {
-                user.reload.email
-              }.from(user.email).to(auth['info']['email'])
+            context 'when email is for Sign In with Apple' do
+              before do
+                auth['info']['email'] = SecureRandom.hex + '@privaterelay.appleid.com'
+              end
+
+              it 'does not synchronize email address' do
+                expect{ subject }.not_to change {
+                  user.reload.email
+                }.from(user.email)
+              end
+
+              it 'flashes a alert' do
+                subject
+                expect(flash[:alert]).to be_present
+              end
             end
 
-            it 'flashes a notice' do
-              subject
-              expect(flash[:notice]).to be_present
+            context 'when valid case' do
+              it 'skips reconfirmation' do
+                subject
+                expect(user.reload).to be_confirmed
+              end
+
+              it 'synchronize email address' do
+                expect{ subject }.to change {
+                  user.reload.email
+                }.from(user.email).to(auth['info']['email'])
+              end
+
+              it 'flashes a notice' do
+                subject
+                expect(flash[:notice]).to be_present
+              end
             end
           end
 

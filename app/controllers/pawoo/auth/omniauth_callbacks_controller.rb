@@ -18,11 +18,15 @@ class Pawoo::Auth::OmniauthCallbacksController < Devise::OmniauthCallbacksContro
 
       if oauth_authentication.persisted?
         if current_user.initial_password_usage
-          current_user.skip_reconfirmation!
-          if current_user.update(email: data['info']['email'])
-            flash[:notice] = t('oauth_authentications.successfully_synchronization')
+          if can_update_email?(data)
+            current_user.skip_reconfirmation!
+            if current_user.update(email: data['info']['email'])
+              flash[:notice] = t('oauth_authentications.successfully_synchronization')
+            else
+              flash[:alert] = current_user.errors.full_messages.first
+            end
           else
-            flash[:alert] = current_user.errors.full_messages.first
+            flash[:alert] = t('oauth_authentications.failed_synchronization')
           end
         end
       elsif oauth_authentication.save
@@ -76,6 +80,12 @@ class Pawoo::Auth::OmniauthCallbacksController < Devise::OmniauthCallbacksContro
       oauth_authentication.id,
       *data['credentials'].values_at('token', 'refresh_token', 'expires_at')
     )
+  end
+
+  def can_update_email?(omniauth_auth)
+    return false unless omniauth_auth['extra']['raw_info']['is_mail_authorized']
+
+    Pawoo::OauthEmailAddressChecker.can_copy?(omniauth_auth['info']['email'])
   end
 
   def store_omniauth_auth
