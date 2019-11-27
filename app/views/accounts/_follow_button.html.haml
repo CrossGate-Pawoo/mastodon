@@ -17,7 +17,8 @@
           = fa_icon 'user-plus'
           = t('accounts.follow')
   - elsif !user_signed_in?
-    = render 'pawoo/extensions/accounts/follow', id: pawoo_id, account: account, classes: '' do
-      %button.button.omniauth-pixiv.pawoo-follow__button__link{ data: { follow: account.acct } }
-        = fa_icon 'user-plus'
-        = t('accounts.follow')
+    .controls
+      .remote-follow
+        = link_to (account.local? ? account_remote_follow_path(account) : "web+mastodon://follow?uri=#{account.uri}"), class: 'icon-button' do
+          = fa_icon 'user-plus'
+          = t('accounts.remote_follow')

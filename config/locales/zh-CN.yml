@@ -621,11 +621,8 @@ zh-CN:
       statuses:
         pin_errors:
           time_limit: 无法置顶带自毁设定的嘟文
-    login_email: 使用电子邮件地址登录
     oauth_registrations:
       already_registered: 此电子邮件地址已经被注册。请使用你的电子邮件地址和密码登录，然后前往设置页面绑定 pixiv 帐户。
-    signup_email: 使用电子邮件地址注册
-    start: 开始使用 Pawoo
     validations:
       crashed_unicode: 含有无效字符
   preferences:

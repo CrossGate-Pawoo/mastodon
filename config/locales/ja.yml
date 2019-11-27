@@ -664,11 +664,8 @@ ja:
     gallery:
       index: ギャラリー一覧
       show: "%{name} - ギャラリー"
-    login_email: メールアドレスでログイン
     oauth_registrations:
       already_registered: すでに登録されています。メールアドレスとパスワードでログイン後、設定ページよりpixivアカウント連携してください。
-    signup_email: メールアドレスで登録
-    start: Pawooをはじめる
     validations:
       crashed_unicode: に無効な文字が含まれています
   preferences:

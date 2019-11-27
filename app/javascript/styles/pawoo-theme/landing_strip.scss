@@ -15,9 +15,9 @@
   }
 
   > a {
-    color: $classic-primary-color;
-    margin: 4px 2px 0;
-    display: inline-block;
+    color: $white;
+    margin: 10px 2px 0;
+    text-decoration: none;
 
     @each $lang in $cjk-langs {
       &:lang(#{$lang}) {

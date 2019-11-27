@@ -14,14 +14,9 @@
 
     .about-col-body
       .about-col-body-spacer.top
-      %div
-        .simple_form
-          %button.omniauth-pixiv= t('pawoo.start')
-
-        .form-footer
-          %ul.no-list
-            %li= link_to t('pawoo.login_email'), new_user_session_path
-            %li= link_to t('pawoo.signup_email'), new_user_registration_path
+      .start-pawoo
+        = link_to t('auth.login'), new_user_session_path, class: 'button button-primary'
+        = link_to t('auth.register'), new_user_registration_path, class: 'button button-primary'
 
       .about-col-body-spacer
 
