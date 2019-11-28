@@ -77,7 +77,7 @@ module ApplicationHelper
   private
 
   def pawoo_is_staging?
-    Rails.env.production? && Socket.gethostname == 'ap-staging02'
+    Rails.env.production? && Socket.gethostname == 'ap-staging002'
   rescue
     # FIXME: Socket.gethostname あんまり使わないから。。rescueいらないと思うねんけどね。
     false
