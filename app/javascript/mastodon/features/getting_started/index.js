@@ -157,7 +157,7 @@ export default class GettingStarted extends ImmutablePureComponent {
           <ColumnLink icon='ban' text={intl.formatMessage(messages.blocks)} to='/blocks' />
           <ColumnLink icon='minus-circle' text={intl.formatMessage(messages.domain_blocks)} to='/domain_blocks' />
           <ColumnLink icon='cog' text={intl.formatMessage(messages.preferences)} href='/settings/preferences' />
-          <ColumnLink icon='question-circle' text={intl.formatMessage(messages.help)} href='https://pawoo.pixiv.help/hc/ja' rel='noopener' target='_blank' />
+          <ColumnLink icon='question-circle' text={intl.formatMessage(messages.help)} href='https://russelhelp.zendesk.com' rel='noopener' target='_blank' />
           <ColumnLink icon='sign-out' text={intl.formatMessage(messages.sign_out)} href='/auth/sign_out' method='delete' />
         </div>
 
