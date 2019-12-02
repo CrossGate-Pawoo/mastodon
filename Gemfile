@@ -103,6 +103,8 @@ gem 'sentry-raven'
 gem 'type_attributes'
 gem 'activerecord-import'
 gem 'recaptcha'
+gem 'puma_worker_killer'
+gem 'sidekiq-worker-killer'
 
 group :development, :test do
   gem 'spring'

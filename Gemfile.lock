@@ -465,6 +465,9 @@ GEM
       pry (>= 0.10.4)
     public_suffix (3.0.2)
     puma (3.11.4)
+    puma_worker_killer (0.1.1)
+      get_process_mem (~> 0.2)
+      puma (>= 2.7, < 5)
     pundit (1.1.0)
       activesupport (>= 3.0.0)
     rack (2.0.7)
@@ -621,6 +624,9 @@ GEM
     sidekiq-unique-jobs (5.0.10)
       sidekiq (>= 4.0, <= 6.0)
       thor (~> 0)
+    sidekiq-worker-killer (0.5.0)
+      get_process_mem (~> 0.2.1)
+      sidekiq (>= 3)
     simple-navigation (4.0.5)
       activesupport (>= 2.3.2)
     simple_form (4.0.0)
@@ -800,6 +806,7 @@ DEPENDENCIES
   pry-doc
   pry-rails (~> 0.3)
   puma (~> 3.11)
+  puma_worker_killer
   pundit (~> 1.1)
   rack-attack (~> 5.2)
   rack-cors (~> 1.0)
@@ -825,6 +832,7 @@ DEPENDENCIES
   sidekiq-bulk (~> 0.1.1)
   sidekiq-scheduler (~> 2.2)
   sidekiq-unique-jobs (~> 5.0)
+  sidekiq-worker-killer
   simple-navigation (~> 4.0)
   simple_form (~> 4.0)
   simplecov (~> 0.16)

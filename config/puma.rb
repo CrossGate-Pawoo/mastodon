@@ -19,4 +19,14 @@ on_worker_boot do
   ActiveRecord::Base.establish_connection if defined?(ActiveRecord)
 end
 
+before_fork do
+  require 'puma_worker_killer'
+
+  PumaWorkerKiller.config do |config|
+    config.ram = workers * 512 # mb
+  end
+
+  PumaWorkerKiller.start
+end
+
 plugin :tmp_restart
