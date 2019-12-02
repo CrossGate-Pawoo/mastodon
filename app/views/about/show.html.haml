@@ -1,5 +1,5 @@
 - content_for :page_title do
-  Mastodon (マストドン) hosted by pixiv
+  Mastodon (マストドン) hosted by Russell
 
 - content_for :header_tags do
   %link{ rel: 'canonical', href: about_url }/
@@ -26,7 +26,7 @@
       .about-col-body-spacer
 
       %p.hide_on_short_display
-        ピクシブが運営するマストドンインスタンス「Pawoo」は、文章や画像を投稿して楽しむSNSです。
+        ラッセルが運営するマストドンインスタンス「Pawoo」は、文章や画像を投稿して楽しむSNSです。
         「創作活動や自由なコミュニケーションを楽しめる場」として、どなたにも幅広く使っていただけます。
 
       .about-col-body-spacer.bottom
@@ -37,8 +37,8 @@
 .info
   %ul.no-list
     %li
-      = link_to 'https://www.pixiv.net/' do
-        = image_tag asset_pack_path('pawoo/logo_pixiv.png'), alt: 'pixiv', height: '20'
+      = link_to 'http://www.russel.co.jp/' do
+        = image_tag asset_pack_path('pawoo/logo_russell.png'), alt: 'Russell', height: '27'
     %li
       = link_to 'https://joinmastodon.org/' do
         = image_tag asset_pack_path('logo_full.svg'), alt: 'Mastodon', class: 'mastodon', height: '24'

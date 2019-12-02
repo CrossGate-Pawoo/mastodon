@@ -119,7 +119,7 @@ export default class Compose extends React.PureComponent {
             <Link to='/timelines/public/media' className='drawer__tab' onClick={this.pawooHandleClick} title={intl.formatMessage(messages.media)} aria-label={intl.formatMessage(messages.media)}><i role='img' className='fa fa-fw fa-image' /></Link>
           )}
           <Link to='/suggested_accounts' className='drawer__tab' onClick={this.pawooHandleClick} title={intl.formatMessage(messages.suggested_accounts)} aria-label={intl.formatMessage(messages.suggested_accounts)}><i role='img' className='fa fa-fw fa-user-plus' /></Link>
-          <a href='https://pawoo.pixiv.help' target='_blank' rel='noopener' className='drawer__tab' title={intl.formatMessage(messages.help)} aria-label={intl.formatMessage(messages.help)}><i role='img' className='fa fa-fw fa-question-circle' /></a>
+          <a href='https://russelhelp.zendesk.com' target='_blank' rel='noopener' className='drawer__tab' title={intl.formatMessage(messages.help)} aria-label={intl.formatMessage(messages.help)}><i role='img' className='fa fa-fw fa-question-circle' /></a>
         </nav>
       );
     }
