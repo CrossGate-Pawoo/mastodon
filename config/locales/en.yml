@@ -629,14 +629,11 @@ en:
     gallery:
       index: Galleries
       show: "%{name} - Gallery"
-    login_email: Log in with email address
     oauth_registrations:
       already_registered: It has already been registered. After logging in with your e-mail address and password, please link with pixiv account from setting page.
     report_summations:
       nav_title: Count of reports by day
       title: Count of reports in %{month} %{year}
-    signup_email: Sign up with email address
-    start: Start now!
     validations:
       crashed_unicode: includes invalid characters
   preferences:

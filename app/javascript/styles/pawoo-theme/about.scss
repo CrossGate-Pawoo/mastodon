@@ -4,7 +4,7 @@
   flex-direction: column;
   min-height: 100vh;
 
-  @media screen and (max-height: 700px) {
+  @media screen and (max-height: 600px) {
     .hide_on_short_display {
       display: none;
     }
@@ -112,6 +112,7 @@
       flex: 1;
       margin: auto;
       max-width: 700px;
+      width: 100%;
 
       .about-col-body-spacer {
         flex: 1;
@@ -127,15 +128,25 @@
         color: $primary-text-color;
       }
 
-      .omniauth-pixiv {
-        margin: 20px auto 0;
-        width: 250px;
-        height: 60px;
-        font-size: 18px;
-      }
+      .start-pawoo {
+        display: flex;
+        justify-content: space-around;
+        padding: 0 60px;
+        width: 100%;
+        box-sizing: border-box;
 
-      .form-footer {
-        margin-top: 10px;
+        @media screen and (max-width: 650px) {
+          flex-direction: column;
+
+          a.button {
+            margin-bottom: 20px;
+          }
+        }
+
+        a.button {
+          min-width: 200px;
+          box-sizing: border-box;
+        }
       }
 
       @media screen and (min-width: 650px) {

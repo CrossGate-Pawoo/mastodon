@@ -6,6 +6,5 @@
       = t('landing_strip_html', name: content_tag(:span, display_name(account, custom_emojify: true), class: :emojify), link_to_root_path: link_to(content_tag(:strong, site_hostname), root_path))
 
   .landing-form
-    %button.button.omniauth-pixiv Pawooをはじめる
-    = link_to 'メールアドレスで登録', new_user_registration_path
-    = link_to 'メールアドレスでログイン', new_user_session_path
+    = link_to t('auth.login'), new_user_session_path, class: 'button button-primary'
+    = link_to t('auth.register'), new_user_registration_path, class: 'button button-primary'
