@@ -23,7 +23,7 @@ before_fork do
   require 'puma_worker_killer'
 
   PumaWorkerKiller.config do |config|
-    config.ram = workers * ENV.fetch('PAWOO_PUMA_MAX_RAM_PER_WORKER') { 512 } # mb
+    config.ram = workers.to_i * (ENV['PAWOO_PUMA_MAX_RAM_PER_WORKER'] || 512).to_i # mb
     config.rolling_restart_frequency = false
   end
 
