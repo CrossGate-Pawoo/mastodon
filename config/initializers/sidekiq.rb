@@ -17,7 +17,7 @@ Sidekiq.configure_server do |config|
   end
 
   config.server_middleware do |chain|
-    chain.add Sidekiq::WorkerKiller, max_rss: 750, grace_time: 60
+    chain.add Sidekiq::WorkerKiller, max_rss: ENV.fetch('PAWOO_SIDEKIQ_MAX_RSS') { 750 }, grace_time: 60
   end
 end
 
