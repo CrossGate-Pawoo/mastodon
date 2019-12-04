@@ -36,7 +36,6 @@ module.exports = {
   env: {
     CDN_HOST: env.CDN_HOST,
     NODE_ENV: env.NODE_ENV,
-    PAWOO_SENTRY: env.PAWOO_SENTRY,
   },
   loadersDir,
   output,
