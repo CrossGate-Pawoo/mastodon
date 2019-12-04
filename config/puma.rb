@@ -25,6 +25,7 @@ before_fork do
   PumaWorkerKiller.config do |config|
     config.ram = ENV.fetch('WEB_CONCURRENCY') { 2 }.to_i * (ENV['PAWOO_PUMA_MAX_RAM_PER_WORKER'] || 512).to_i # mb
     config.rolling_restart_frequency = false
+    config.reaper_status_logs = false
   end
 
   PumaWorkerKiller.start
