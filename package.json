@@ -20,7 +20,6 @@
   },
   "private": true,
   "dependencies": {
-    "@sentry/browser": "^4.6.3",
     "array-includes": "^3.0.3",
     "autoprefixer": "^7.1.6",
     "axios": "~0.16.2",
