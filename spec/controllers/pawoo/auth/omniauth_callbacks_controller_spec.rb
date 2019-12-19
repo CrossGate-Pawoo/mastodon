@@ -6,7 +6,9 @@ RSpec.describe Pawoo::Auth::OmniauthCallbacksController, type: :controller do
   before do
     request.env['devise.mapping'] = Devise.mappings[:user]
     @request.env['omniauth.auth'] = auth
-  end
+    raise 'do not need patch' unless session.id.is_a? String
+    session.id = Rack::Session::SessionId.new(session.id)
+end
 
   let(:auth) { Marshal.load(Marshal.dump(OmniAuth.config.mock_auth[provider])) }
 
@@ -247,8 +249,6 @@ RSpec.describe Pawoo::Auth::OmniauthCallbacksController, type: :controller do
 
     context 'user is not signed in and oauth is not linked with user' do
       it 'stores auth' do
-        raise 'do not need patch' unless session.id.is_a? String
-        session.id = Rack::Session::SessionId.new(session.id)
         subject
         cache_key = "redis_session_store:#{session.id.public_id}:devise.omniauth:auth"
         expect(Redis.current.exists(cache_key)).to be true
