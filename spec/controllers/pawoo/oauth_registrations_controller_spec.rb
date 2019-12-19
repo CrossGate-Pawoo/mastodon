@@ -5,7 +5,7 @@ RSpec.describe Pawoo::OauthRegistrationsController, type: :controller do
   before { request.env['devise.mapping'] = Devise.mappings[:user] }
 
   def cache
-    cache_key = "redis_session_store:#{session.id.public_id}:devise.omniauth:auth"
+    cache_key = "redis_session_store:#{session.id.private_id}:devise.omniauth:auth"
     Redis.current.set(cache_key, auth.to_json)
 
     stub_request(:get, auth['info']['avatar'])

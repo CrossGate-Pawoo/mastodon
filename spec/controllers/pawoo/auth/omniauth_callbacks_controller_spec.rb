@@ -250,7 +250,7 @@ end
     context 'user is not signed in and oauth is not linked with user' do
       it 'stores auth' do
         subject
-        cache_key = "redis_session_store:#{session.id.public_id}:devise.omniauth:auth"
+        cache_key = "redis_session_store:#{session.id.private_id}:devise.omniauth:auth"
         expect(Redis.current.exists(cache_key)).to be true
       end
 
