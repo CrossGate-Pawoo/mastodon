@@ -5,7 +5,7 @@ RSpec.describe Pawoo::OauthRegistrationsController, type: :controller do
   before { request.env['devise.mapping'] = Devise.mappings[:user] }
 
   def cache
-    cache_key = "redis_session_store:#{session.id}:devise.omniauth:auth"
+    cache_key = "redis_session_store:#{session.id.public_id}:devise.omniauth:auth"
     Redis.current.set(cache_key, auth.to_json)
 
     stub_request(:get, auth['info']['avatar'])
@@ -17,6 +17,11 @@ RSpec.describe Pawoo::OauthRegistrationsController, type: :controller do
     Sidekiq::Testing.fake! do
       example.run
     end
+  end
+
+  before do
+    raise 'do not need patch' unless session.id.is_a? String
+    session.id = Rack::Session::SessionId.new(session.id)
   end
 
   shared_examples 'cache miss' do

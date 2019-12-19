@@ -11,6 +11,6 @@ module Pawoo::WithRedisSessionStore
 
   def pawoo_current_session_id
     session.send(:load_for_write!) unless session.id
-    session.id
+    session.id.public_id
   end
 end
