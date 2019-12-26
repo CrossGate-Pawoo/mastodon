@@ -33,7 +33,7 @@ module Mastodon
     end
 
     def source_base_url
-      'https://github.com/pixiv/mastodon'
+      'https://github.com/CrossGate-Pawoo/mastodon'
     end
 
     # specify git tag or commit hash here
