@@ -27,11 +27,13 @@ jobs:
         image: redis:3.2.4
         ports:
           - 6379:6379
+        options: --health-cmd "redis-cli -h localhost ping" --health-interval 10s --health-timeout 5s --health-retries 15
     container:
       image: ruby:2.5.7-stretch
       env:
-        DB_HOST: 127.0.0.1
+        DB_HOST: postgres
         DB_USER: root
+        REDIS_HOST: redis
         LOCAL_HTTPS: true
         RAILS_ENV: test
         PARALLEL_TEST_PROCESSORS: 4
