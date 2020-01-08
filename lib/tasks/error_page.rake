@@ -11,7 +11,7 @@ namespace :error_page do
   end
 
   Rake::Task['assets:precompile'].enhance do
-    Rake::Task['error_page:generate'].invoke if ENV['CIRCLECI'] != 'true' # temporary workaround for avoiding https://circleci.com/gh/pixiv/pawoo/2267 error
+    Rake::Task['error_page:generate'].invoke if ENV['CI'] != 'true' # temporary workaround for avoiding https://circleci.com/gh/pixiv/pawoo/2267 error
   end
 
   class ErrorPageGenerator

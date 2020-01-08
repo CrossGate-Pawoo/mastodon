@@ -110,7 +110,7 @@ class IdsToBigints < ActiveRecord::Migration[5.1]
   end
 
   def show_warning
-    return if ENV['PAWOO_SKIP_ID_MIGRATE_WARNING']
+    return if Rails.env.test?
 
     # Print out a warning that this will probably take a while.
     say ''

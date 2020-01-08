@@ -15,7 +15,6 @@ aliases:
       RAILS_ENV: test
       ALLOW_NOPAM: true
       DISABLE_SIMPLECOV: true
-      PAWOO_SKIP_ID_MIGRATE_WARNING: true
     working_directory: /app
 
   - &attach_workspace
