@@ -30,19 +30,6 @@ const announcements = [
       },
     ],
   },
-  {
-    id: 22,
-    icon,
-    body: 'Pawoo事業譲渡のお知らせ',
-    link: [
-      {
-        reactRouter: true,
-        inline: false,
-        href: '/statuses/103128619742175257',
-        body: '確認する',
-      },
-    ],
-  },
 ];
 
 @injectIntl
