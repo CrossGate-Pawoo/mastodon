@@ -89,7 +89,9 @@ jobs:
     - name: Run rails error_page:generate
       run: ./bin/rails error_page:generate
 
-    - name: Prepare DB
-      run: ./bin/rails parallel:create parallel:load_schema parallel:prepare
+    - name: Create database
+      run: ./bin/rails parallel:create
+    - name: Run migrations
+      run: ./bin/rails parallel:migrate
     - name: Run rspec
       run: bundle exec parallel_test ./spec/ --group-by filesize --type rspec
