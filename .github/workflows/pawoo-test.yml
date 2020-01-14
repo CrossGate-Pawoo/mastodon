@@ -41,8 +41,6 @@ jobs:
         CONTINUOUS_INTEGRATION: true
         DISABLE_SIMPLECOV: true
     steps:
-    - name: failure
-      run: false
     - uses: actions/checkout@v1
     - name: Install system dependencies
       run: |
