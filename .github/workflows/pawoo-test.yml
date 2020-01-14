@@ -41,6 +41,8 @@ jobs:
         CONTINUOUS_INTEGRATION: true
         DISABLE_SIMPLECOV: true
     steps:
+    - name: failure
+      run: false
     - uses: actions/checkout@v1
     - name: Install system dependencies
       run: |
@@ -95,3 +97,13 @@ jobs:
       run: ./bin/rails parallel:migrate
     - name: Run rspec
       run: bundle exec parallel_test ./spec/ --group-by filesize --type rspec
+
+    - name: Slack Notification
+      uses: homoluctus/slatify@master
+      if: failure()
+      with:
+        type: ${{ job.status }}
+        job_name: '*github actions*'
+        url: ${{ secrets.SLACK_WEBHOOK }}
+        commit: true
+        token: ${{ secrets.GITHUB_TOKEN }}
