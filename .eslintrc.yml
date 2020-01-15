@@ -7,9 +7,6 @@ env:
   es6: true
   jest: true
 
-globals:
-  ATTACHMENT_HOST: false
-
 parser: babel-eslint
 
 plugins:

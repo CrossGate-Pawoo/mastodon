@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe HomeController, type: :controller do
+  render_views
+
   describe 'GET #index' do
     subject { get :index }
 
@@ -34,10 +36,6 @@ RSpec.describe HomeController, type: :controller do
         expect(initial_state_json[:accounts]).to_not be_nil
         expect(initial_state_json[:settings]).to_not be_nil
         expect(initial_state_json[:media_attachments]).to_not be_nil
-      end
-
-      it 'renders default' do
-        expect(response).to have_http_status(:success)
       end
     end
   end

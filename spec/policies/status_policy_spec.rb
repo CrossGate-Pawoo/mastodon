@@ -24,54 +24,52 @@ RSpec.describe StatusPolicy, type: :model do
   end
 
   permissions :show? do
-    context 'with posted statuses' do
-      it 'grants access when direct and account is viewer' do
-        status.visibility = :direct
+    it 'grants access when direct and account is viewer' do
+      status.visibility = :direct
 
-        expect(subject).to permit(status.account, status)
-      end
+      expect(subject).to permit(status.account, status)
+    end
 
-      it 'grants access when direct and viewer is mentioned' do
-        status.visibility = :direct
-        status.mentions = [Fabricate(:mention, account: alice)]
+    it 'grants access when direct and viewer is mentioned' do
+      status.visibility = :direct
+      status.mentions = [Fabricate(:mention, account: alice)]
 
-        expect(subject).to permit(alice, status)
-      end
+      expect(subject).to permit(alice, status)
+    end
 
-      it 'denies access when direct and viewer is not mentioned' do
-        viewer = Fabricate(:account)
-        status.visibility = :direct
+    it 'denies access when direct and viewer is not mentioned' do
+      viewer = Fabricate(:account)
+      status.visibility = :direct
 
-        expect(subject).to_not permit(viewer, status)
-      end
+      expect(subject).to_not permit(viewer, status)
+    end
 
-      it 'grants access when private and account is viewer' do
-        status.visibility = :private
+    it 'grants access when private and account is viewer' do
+      status.visibility = :private
 
-        expect(subject).to permit(status.account, status)
-      end
+      expect(subject).to permit(status.account, status)
+    end
 
-      it 'grants access when private and account is following viewer' do
-        follow = Fabricate(:follow)
-        status.visibility = :private
-        status.account = follow.target_account
+    it 'grants access when private and account is following viewer' do
+      follow = Fabricate(:follow)
+      status.visibility = :private
+      status.account = follow.target_account
 
-        expect(subject).to permit(follow.account, status)
-      end
+      expect(subject).to permit(follow.account, status)
+    end
 
-      it 'grants access when private and viewer is mentioned' do
-        status.visibility = :private
-        status.mentions = [Fabricate(:mention, account: alice)]
+    it 'grants access when private and viewer is mentioned' do
+      status.visibility = :private
+      status.mentions = [Fabricate(:mention, account: alice)]
 
-        expect(subject).to permit(alice, status)
-      end
+      expect(subject).to permit(alice, status)
+    end
 
-      it 'denies access when private and viewer is not mentioned or followed' do
-        viewer = Fabricate(:account)
-        status.visibility = :private
+    it 'denies access when private and viewer is not mentioned or followed' do
+      viewer = Fabricate(:account)
+      status.visibility = :private
 
-        expect(subject).to_not permit(viewer, status)
-      end
+      expect(subject).to_not permit(viewer, status)
     end
   end
 
