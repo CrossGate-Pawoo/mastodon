@@ -19,8 +19,8 @@ const mapStateToProps = (state, props) => ({
 });
 
 const messages = defineMessages({
-  normal: { id: 'suggestion_tags.normal', defaultMessage: 'Suggested tags' },
-  comiket: { id: 'suggestion_tags.comiket', defaultMessage: 'Comiket tags' },
+  normal: { id: 'pawoo.suggestion_tags.normal', defaultMessage: 'Suggested tags' },
+  comiket: { id: 'pawoo.suggestion_tags.comiket', defaultMessage: 'Comiket tags' },
 });
 
 class SuggestionTags extends React.PureComponent {

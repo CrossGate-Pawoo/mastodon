@@ -186,6 +186,31 @@
   {
     "descriptors": [
       {
+        "defaultMessage": "now",
+        "id": "relative_time.just_now"
+      },
+      {
+        "defaultMessage": "{number}s",
+        "id": "relative_time.seconds"
+      },
+      {
+        "defaultMessage": "{number}m",
+        "id": "relative_time.minutes"
+      },
+      {
+        "defaultMessage": "{number}h",
+        "id": "relative_time.hours"
+      },
+      {
+        "defaultMessage": "{number}d",
+        "id": "relative_time.days"
+      }
+    ],
+    "path": "app/javascript/mastodon/components/relative_timestamp.json"
+  },
+  {
+    "descriptors": [
+      {
         "defaultMessage": "Delete",
         "id": "status.delete"
       },
@@ -240,10 +265,6 @@
       {
         "defaultMessage": "Favourite",
         "id": "status.favourite"
-      },
-      {
-        "defaultMessage": "This post cannot be favourited",
-        "id": "status.cannot_favourite"
       },
       {
         "defaultMessage": "Expand in another column",
@@ -314,31 +335,6 @@
       }
     ],
     "path": "app/javascript/mastodon/components/status.json"
-  },
-  {
-    "descriptors": [
-      {
-        "defaultMessage": "now",
-        "id": "relative_time.just_now"
-      },
-      {
-        "defaultMessage": "{number}s",
-        "id": "relative_time.seconds"
-      },
-      {
-        "defaultMessage": "{number}m",
-        "id": "relative_time.minutes"
-      },
-      {
-        "defaultMessage": "{number}h",
-        "id": "relative_time.hours"
-      },
-      {
-        "defaultMessage": "{number}d",
-        "id": "relative_time.days"
-      }
-    ],
-    "path": "app/javascript/mastodon/components/relative_timestamp.json"
   },
   {
     "descriptors": [
@@ -623,7 +619,7 @@
       },
       {
         "defaultMessage": "Append tag (press enter to add)",
-        "id": "compose_form.hashtag_editor_placeholder"
+        "id": "pawoo.compose_form.hashtag_editor_placeholder"
       },
       {
         "defaultMessage": "Toot",
@@ -814,23 +810,23 @@
     "descriptors": [
       {
         "defaultMessage": "{days, number} {days, plural, one {day} other {days}} later",
-        "id": "time_limit.days"
+        "id": "pawoo.time_limit.days"
       },
       {
         "defaultMessage": "{hours, number} {hours, plural, one {hour} other {hours}} later",
-        "id": "time_limit.hours"
+        "id": "pawoo.time_limit.hours"
       },
       {
         "defaultMessage": "{minutes, number} {minutes, plural, one {minute} other {minutes}} later",
-        "id": "time_limit.minutes"
+        "id": "pawoo.time_limit.minutes"
       },
       {
         "defaultMessage": "Specify the time of automatic disappearance (Beta)",
-        "id": "time_limit.select_time_limit"
+        "id": "pawoo.time_limit.select_time_limit"
       },
       {
         "defaultMessage": "Note: If specified, it will not be delivered to external instances.",
-        "id": "time_limit.time_limit_note"
+        "id": "pawoo.time_limit.time_limit_note"
       }
     ],
     "path": "app/javascript/mastodon/features/compose/components/time_limit_dropdown.json"
@@ -887,7 +883,7 @@
     "descriptors": [
       {
         "defaultMessage": "Please be sure to click on the eye icon and set NSFW if the image you are trying to post is erotic content",
-        "id": "compose_form.sensitive_message"
+        "id": "pawoo.compose_form.sensitive_message"
       }
     ],
     "path": "app/javascript/mastodon/features/compose/containers/sensitive_guide_container.json"
@@ -946,15 +942,19 @@
       },
       {
         "defaultMessage": "Active Users",
-        "id": "column.suggested_accounts"
+        "id": "pawoo.column.suggested_accounts"
       },
       {
         "defaultMessage": "Local timeline",
         "id": "navigation_bar.community_timeline"
       },
       {
+        "defaultMessage": "Media timeline",
+        "id": "pawoo.column.media"
+      },
+      {
         "defaultMessage": "Help",
-        "id": "navigation_bar.help"
+        "id": "pawoo.navigation_bar.help"
       }
     ],
     "path": "app/javascript/mastodon/features/compose/index.json"
@@ -1080,7 +1080,7 @@
       },
       {
         "defaultMessage": "Pawoo Help",
-        "id": "navigation_bar.help"
+        "id": "pawoo.navigation_bar.help"
       },
       {
         "defaultMessage": "Extended information",
@@ -1100,11 +1100,15 @@
       },
       {
         "defaultMessage": "Active Accounts",
-        "id": "navigation_bar.suggested_accounts"
+        "id": "pawoo.navigation_bar.suggested_accounts"
       },
       {
         "defaultMessage": "Media timeline",
-        "id": "navigation_bar.media_timeline"
+        "id": "pawoo.navigation_bar.media_timeline"
+      },
+      {
+        "defaultMessage": "Gallery",
+        "id": "pawoo.navigation_bar.gallery"
       },
       {
         "defaultMessage": "FAQ",
@@ -1179,7 +1183,7 @@
       },
       {
         "defaultMessage": "the active accounts",
-        "id": "empty_column.home.suggested_accounts"
+        "id": "pawoo.empty_column.home.suggested_accounts"
       }
     ],
     "path": "app/javascript/mastodon/features/home_timeline/index.json"
@@ -1338,11 +1342,11 @@
     "descriptors": [
       {
         "defaultMessage": "Media timeline",
-        "id": "column.media"
+        "id": "pawoo.column.media"
       },
       {
-        "defaultMessage": "There is nothing here! Write something publicly, or manually follow users from other instances to fill it up",
-        "id": "empty_column.public"
+        "defaultMessage": "The local timeline is empty. Write something publicly to get the ball rolling!",
+        "id": "empty_column.community"
       }
     ],
     "path": "app/javascript/mastodon/features/media_timeline/index.json"
@@ -1590,11 +1594,11 @@
     "descriptors": [
       {
         "defaultMessage": "Suggested tags",
-        "id": "suggestion_tags.normal"
+        "id": "pawoo.suggestion_tags.normal"
       },
       {
         "defaultMessage": "Comiket tags",
-        "id": "suggestion_tags.comiket"
+        "id": "pawoo.suggestion_tags.comiket"
       }
     ],
     "path": "app/javascript/mastodon/features/suggestion_tags/index.json"
@@ -1835,7 +1839,7 @@
       },
       {
         "defaultMessage": "Media",
-        "id": "tabs_bar.media_timeline"
+        "id": "pawoo.tabs_bar.media_timeline"
       },
       {
         "defaultMessage": "Active",
@@ -1923,6 +1927,15 @@
   {
     "descriptors": [
       {
+        "defaultMessage": "Followers you follow",
+        "id": "pawoo.followers_you_follow.title"
+      }
+    ],
+    "path": "app/javascript/pawoo/components/followers_you_follow.json"
+  },
+  {
+    "descriptors": [
+      {
         "defaultMessage": "Follow",
         "id": "account.follow"
       },
@@ -1949,11 +1962,11 @@
     "descriptors": [
       {
         "defaultMessage": "Active Users",
-        "id": "column.suggested_accounts"
+        "id": "pawoo.column.suggested_accounts"
       },
       {
         "defaultMessage": "Go To Local Timeline",
-        "id": "suggested_accounts.go_to_local_timeline"
+        "id": "pawoo.suggested_accounts.go_to_local_timeline"
       }
     ],
     "path": "app/javascript/pawoo/components/suggested_accounts_column.json"
@@ -1962,7 +1975,7 @@
     "descriptors": [
       {
         "defaultMessage": "Active Users",
-        "id": "column.suggested_accounts"
+        "id": "pawoo.column.suggested_accounts"
       }
     ],
     "path": "app/javascript/pawoo/components/suggested_accounts_page.json"
@@ -1971,10 +1984,31 @@
     "descriptors": [
       {
         "defaultMessage": "Suggested tag",
-        "id": "trend_tags.title"
+        "id": "pawoo.trend_tags.title"
       }
     ],
     "path": "app/javascript/pawoo/components/trend_tags.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Boost",
+        "id": "status.reblog"
+      },
+      {
+        "defaultMessage": "Favourite",
+        "id": "status.favourite"
+      },
+      {
+        "defaultMessage": "ブラックリストに追加",
+        "id": "pawoo.gallery.status.blacklist"
+      },
+      {
+        "defaultMessage": "This post cannot be boosted",
+        "id": "status.cannot_reblog"
+      }
+    ],
+    "path": "app/javascript/pawoo/containers/gallery_item_container.json"
   },
   {
     "descriptors": [
@@ -2104,7 +2138,7 @@
     "descriptors": [
       {
         "defaultMessage": "Active Users",
-        "id": "column.suggested_accounts"
+        "id": "pawoo.column.suggested_accounts"
       }
     ],
     "path": "app/javascript/pawoo/containers/standalone/suggestion_strip_container.json"

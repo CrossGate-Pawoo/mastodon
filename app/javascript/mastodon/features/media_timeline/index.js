@@ -12,7 +12,7 @@ import { connectCommunityStream } from '../../actions/streaming';
 import ColumnHeader from '../../../pawoo/components/animated_timeline_column_header';
 
 const messages = defineMessages({
-  title: { id: 'column.media', defaultMessage: 'Media timeline' },
+  title: { id: 'pawoo.column.media', defaultMessage: 'Media timeline' },
 });
 
 const mapStateToProps = state => ({

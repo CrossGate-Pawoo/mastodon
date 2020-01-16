@@ -61,7 +61,7 @@ export default class StandaloneSuggestionTagsContainer extends PureComponent {
                 role='presentation'
               />
               <FormattedMessage
-                id='column.suggested_accounts'
+                id='pawoo.column.suggested_accounts'
                 defaultMessage='Active Users'
               />
             </h1>

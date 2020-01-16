@@ -120,7 +120,7 @@ export default class HomeTimeline extends React.PureComponent {
           scrollKey={`home_timeline-${columnId}`}
           onLoadMore={this.handleLoadMore}
           timelineId='home'
-          emptyMessage={<FormattedMessage id='empty_column.home' defaultMessage='Your home timeline is empty! Visit {public} or use search to get started and meet other users.' values={{ public: <Link to='/suggested_accounts'><FormattedMessage id='empty_column.home.suggested_accounts' defaultMessage='the active accounts' /></Link> }} />}
+          emptyMessage={<FormattedMessage id='empty_column.home' defaultMessage='Your home timeline is empty! Visit {public} or use search to get started and meet other users.' values={{ public: <Link to='/suggested_accounts'><FormattedMessage id='pawoo.empty_column.home.suggested_accounts' defaultMessage='the active accounts' /></Link> }} />}
         />
       </Column>
     );
