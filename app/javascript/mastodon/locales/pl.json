@@ -282,7 +282,7 @@
   "search_results.hashtags": "Hashtagi",
   "search_results.statuses": "Wpisy",
   "search_results.total": "{count, number} {count, plural, one {wynik} few {wyniki} many {wyników} more {wyników}}",
-  "standalone.public_title": "A look inside...",
+  "standalone.public_title": "Spojrzenie w głąb…",
   "status.block": "Zablokuj @{name}",
   "status.cancel_reblog_private": "Cofnij podbicie",
   "status.cannot_reblog": "Ten wpis nie może zostać podbity",
