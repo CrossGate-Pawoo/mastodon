@@ -141,7 +141,7 @@ RSpec.describe Pawoo::OauthRegistrationsController, type: :controller do
 
         it 'makes alert' do
           subject
-          expect(flash[:alert]).to eq I18n.t('pawoo.oauth_registrations.already_registered')
+          expect(flash[:alert]).to eq I18n.t('pawoo.oauth_registrations.create.already_registered')
         end
       end
 
