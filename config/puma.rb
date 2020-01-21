@@ -13,6 +13,10 @@ workers     ENV.fetch('WEB_CONCURRENCY') { 2 }
 app_root = File.expand_path('../../', __FILE__)
 stdout_redirect(nil, "#{app_root}/log/puma_stderr", true)
 
+# pawoo extensions
+# see: https://github.com/puma/puma/blob/master/docs/restart.md#release-directory
+directory app_root
+
 preload_app!
 
 on_worker_boot do
