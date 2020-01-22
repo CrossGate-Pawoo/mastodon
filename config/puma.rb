@@ -10,12 +10,12 @@ end
 environment ENV.fetch('RAILS_ENV') { 'development' }
 workers     ENV.fetch('WEB_CONCURRENCY') { 2 }
 
-app_root = File.expand_path('../../', __FILE__)
-stdout_redirect(nil, "#{app_root}/log/puma_stderr", true)
-
 # pawoo extensions
+app_root = ENV.fetch('PAWOO_APP_ROOT') { File.expand_path('../../', __FILE__) }
+
 # see: https://github.com/puma/puma/blob/master/docs/restart.md#release-directory
 directory app_root
+stdout_redirect(nil, "#{app_root}/log/puma_stderr", true)
 
 preload_app!
 
