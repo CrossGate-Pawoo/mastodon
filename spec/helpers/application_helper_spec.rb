@@ -105,7 +105,7 @@ describe ApplicationHelper do
     end
   end
 
-  xdescribe 'title' do
+  describe 'title' do
     around do |example|
       site_title = Setting.site_title
       example.run
@@ -114,7 +114,7 @@ describe ApplicationHelper do
 
     it 'returns site title on production enviroment' do
       Setting.site_title = 'site title'
-      expect(Rails.env).to receive(:production?).and_return(true)
+      expect(Rails.env).to receive(:production?).and_return(true).twice
       expect(helper.title).to eq 'site title'
     end
   end

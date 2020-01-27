@@ -4,12 +4,9 @@
 # or operating system, you probably want to add a global ignore instead:
 #   git config --global core.excludesfile '~/.gitignore_global'
 
-.envrc
-streaming/build.js
-
 # Ignore bundler config and downloaded libraries.
 /.bundle
-/vendor
+/vendor/bundle
 
 # Ignore the default SQLite database.
 /db/*.sqlite3
@@ -61,7 +58,7 @@ yarn-debug.log
 # Ignore Docker option files
 docker-compose.override.yml
 
-# Ignore generated error pages
+# Pawoo extension: Ignore generated error pages
 public/400*.html
 public/403*.html
 public/410*.html

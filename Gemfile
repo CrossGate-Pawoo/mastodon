@@ -1,11 +1,7 @@
 # frozen_string_literal: true
 
-gem 'omniauth-pixiv-public', require: 'omniauth-pixiv'
-
 source 'https://rubygems.org'
 ruby '>= 2.3.0', '< 2.6.0'
-
-gem 'pixiv_api', git: 'https://github.com/pixiv/pixiv-api-ruby-public.git'
 
 gem 'pkg-config', '~> 1.3'
 
@@ -99,6 +95,8 @@ gem 'json-ld', '~> 2.2'
 gem 'rdf-normalize', '~> 0.3'
 
 # pawoo extra
+gem 'omniauth-pixiv-public', require: 'omniauth-pixiv'
+gem 'pixiv_api', git: 'https://github.com/pixiv/pixiv-api-ruby-public.git'
 gem 'slack-notifier'
 gem 'sentry-raven'
 gem 'type_attributes'
@@ -108,16 +106,17 @@ gem 'puma_worker_killer'
 gem 'sidekiq-worker-killer'
 
 group :development, :test do
-  gem 'spring'
-  gem 'spring-commands-rspec'
-
   gem 'fabrication', '~> 2.20'
   gem 'fuubar', '~> 2.2'
   gem 'i18n-tasks', '~> 0.9', require: false
   gem 'pry-byebug', '~> 3.6'
   gem 'pry-rails', '~> 0.3'
-  gem 'pry-doc'
   gem 'rspec-rails', '~> 3.7'
+
+  # pawoo extra
+  gem 'pry-doc'
+  gem 'spring'
+  gem 'spring-commands-rspec'
 end
 
 group :production, :test do
@@ -161,6 +160,7 @@ group :development do
   gem 'derailed_benchmarks'
   gem 'stackprof'
 
+  # pawoo extra
   gem 'guard-rspec'
 end
 

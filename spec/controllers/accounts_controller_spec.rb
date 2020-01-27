@@ -118,7 +118,7 @@ RSpec.describe AccountsController, type: :controller do
           include_examples 'responsed statuses'
         end
 
-        xcontext 'with since_id nor max_id' do
+        context 'with since_id nor max_id' do
           let(:max_id) { status4.id }
           let(:since_id) { status1.id }
           let(:expected_statuses) { [status3, status2] }

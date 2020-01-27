@@ -154,7 +154,7 @@ RSpec.describe Status, type: :model do
 
   describe '#target' do
     it 'returns nil if the status is self-contained' do
-     expect(subject.target).to be_nil
+      expect(subject.target).to be_nil
     end
 
     it 'returns nil if the status is a reply' do
@@ -333,18 +333,14 @@ RSpec.describe Status, type: :model do
       expect(@results).to_not include(@followed_public_status)
     end
 
-    it 'does not include direct statuses not mentioning recipient from followed' do
-      expect(@results).to_not include(@followed_direct_status)
-    end
-
-    it 'does not include direct statuses not mentioning recipient from non-followed' do
-      expect(@results).to_not include(@not_followed_direct_status)
-    end
-
     it 'includes direct statuses mentioning recipient from followed' do
       Fabricate(:mention, account: account, status: @followed_direct_status)
       results2 = Status.as_direct_timeline(account)
       expect(results2).to include(@followed_direct_status)
+    end
+
+    it 'does not include direct statuses not mentioning recipient from followed' do
+      expect(@results).to_not include(@followed_direct_status)
     end
 
     it 'includes direct statuses mentioning recipient from non-followed' do
@@ -352,6 +348,11 @@ RSpec.describe Status, type: :model do
       results2 = Status.as_direct_timeline(account)
       expect(results2).to include(@not_followed_direct_status)
     end
+
+    it 'does not include direct statuses not mentioning recipient from non-followed' do
+      expect(@results).to_not include(@not_followed_direct_status)
+    end
+
   end
 
   describe '.as_public_timeline' do
@@ -574,58 +575,55 @@ RSpec.describe Status, type: :model do
   end
 
   describe '.permitted_for' do
+    subject { described_class.permitted_for(target_account, account).pluck(:visibility) }
+
     let(:target_account) { alice }
+    let(:account) { bob }
+    let!(:public_status) { Fabricate(:status, account: target_account, visibility: 'public') }
+    let!(:unlisted_status) { Fabricate(:status, account: target_account, visibility: 'unlisted') }
+    let!(:private_status) { Fabricate(:status, account: target_account, visibility: 'private') }
 
-    context 'with posted statuses' do
-      subject { described_class.permitted_for(target_account, account).pluck(:visibility) }
+    let!(:direct_status) do
+      Fabricate(:status, account: target_account, visibility: 'direct').tap do |status|
+        Fabricate(:mention, status: status, account: account)
+      end
+    end
 
-      let(:account) { bob }
-      let!(:public_status) { Fabricate(:status, account: target_account, visibility: 'public') }
-      let!(:unlisted_status) { Fabricate(:status, account: target_account, visibility: 'unlisted') }
-      let!(:private_status) { Fabricate(:status, account: target_account, visibility: 'private') }
+    let!(:other_direct_status) do
+      Fabricate(:status, account: target_account, visibility: 'direct').tap do |status|
+        Fabricate(:mention, status: status)
+      end
+    end
 
-      let!(:direct_status) do
-        Fabricate(:status, account: target_account, visibility: 'direct').tap do |status|
-          Fabricate(:mention, status: status, account: account)
-        end
+    context 'given nil' do
+      let(:account) { nil }
+      let(:direct_status) { nil }
+      it { is_expected.to eq(%w(unlisted public)) }
+    end
+
+    context 'given blocked account' do
+      before do
+        target_account.block!(account)
       end
 
-      let!(:other_direct_status) do
-        Fabricate(:status, account: target_account, visibility: 'direct').tap do |status|
-          Fabricate(:mention, status: status)
-        end
+      it { is_expected.to be_empty }
+    end
+
+    context 'given same account' do
+      let(:account) { target_account }
+      it { is_expected.to eq(%w(direct direct private unlisted public)) }
+    end
+
+    context 'given followed account' do
+      before do
+        account.follow!(target_account)
       end
 
-      context 'given nil' do
-        let(:account) { nil }
-        let(:direct_status) { nil }
-        it { is_expected.to eq(%w(unlisted public)) }
-      end
+      it { is_expected.to eq(%w(direct private unlisted public)) }
+    end
 
-      context 'given blocked account' do
-        before do
-          target_account.block!(account)
-        end
-
-        it { is_expected.to be_empty }
-      end
-
-      context 'given same account' do
-        let(:account) { target_account }
-        it { is_expected.to eq(%w(direct direct private unlisted public)) }
-      end
-
-      context 'given followed account' do
-        before do
-          account.follow!(target_account)
-        end
-
-        it { is_expected.to eq(%w(direct private unlisted public)) }
-      end
-
-      context 'given unfollowed account' do
-        it { is_expected.to eq(%w(direct unlisted public)) }
-      end
+    context 'given unfollowed account' do
+      it { is_expected.to eq(%w(direct unlisted public)) }
     end
   end
 

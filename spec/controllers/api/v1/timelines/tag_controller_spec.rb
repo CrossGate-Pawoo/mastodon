@@ -16,7 +16,7 @@ describe Api::V1::Timelines::TagController do
 
     describe 'GET #show' do
       before do
-        Fabricate(:status, account: user.account, tags: [Fabricate(:tag, name: 'test')])
+        PostStatusService.new.call(user.account, 'It is a #test')
       end
 
       it 'returns http success' do
