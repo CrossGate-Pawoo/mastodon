@@ -8,7 +8,6 @@ pl:
     closed_registrations: Rejestracja na tej instancji jest obecnie zamknięta. Możesz jednak zarejestrować się na innej instancji, uzyskując dostęp do tej samej sieci.
     contact: Kontakt
     contact_body_mastodon: Z Pawoo
-    contact_body_twitter: Z Twittera
     contact_missing: Nie ustawiono
     contact_unavailable: Nie dotyczy
     description_headline: Czym jest %{domain}?
@@ -628,7 +627,8 @@ pl:
     truncate: "&hellip;"
   pawoo:
     oauth_registrations:
-      already_registered: Jesteś już zarejestrowany. Po zalogowaniu z użyciem adresu e-mail i hasła, połącz się z kontem pixiv z ustawień.
+      create:
+        already_registered: Jesteś już zarejestrowany. Po zalogowaniu z użyciem adresu e-mail i hasła, połącz się z kontem pixiv z ustawień.
     validations:
       crashed_unicode: zawiera nieprawidłowe znaki
   preferences:

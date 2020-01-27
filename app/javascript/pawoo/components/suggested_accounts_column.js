@@ -11,8 +11,8 @@ import ColumnBackButtonSlim from '../../mastodon/components/column_back_button_s
 import SuggestedAccountsContainer from '../containers/suggested_accounts_container';
 
 const messages = defineMessages({
-  title: { id: 'column.suggested_accounts', defaultMessage: 'Active Users' },
-  goToLocalTimeline: { id: 'suggested_accounts.go_to_local_timeline', defaultMessage: 'Go To Local Timeline' },
+  title: { id: 'pawoo.column.suggested_accounts', defaultMessage: 'Active Users' },
+  goToLocalTimeline: { id: 'pawoo.suggested_accounts.go_to_local_timeline', defaultMessage: 'Go To Local Timeline' },
 });
 
 const buttonStyle = {

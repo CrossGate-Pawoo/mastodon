@@ -8,7 +8,6 @@ en:
     closed_registrations: Registrations are currently closed on this instance. However! You can find a different instance to make an account on and get access to the very same network from there.
     contact: Contact
     contact_body_mastodon: From here inside Pawoo
-    contact_body_twitter: From here inside Twitter
     contact_missing: Not set
     contact_unavailable: N/A
     description_headline: What is %{domain}?
@@ -622,6 +621,10 @@ en:
     prev: Prev
     truncate: "&hellip;"
   pawoo:
+    admin:
+      report_summations:
+        nav_title: Count of reports by day
+        title: Count of reports in %{month} %{year}
     extensions:
       statuses:
         pin_errors:
@@ -630,10 +633,8 @@ en:
       index: Galleries
       show: "%{name} - Gallery"
     oauth_registrations:
-      already_registered: It has already been registered. After logging in with your e-mail address and password, please link with pixiv account from setting page.
-    report_summations:
-      nav_title: Count of reports by day
-      title: Count of reports in %{month} %{year}
+      create:
+        already_registered: It has already been registered. After logging in with your e-mail address and password, please link with pixiv account from setting page.
     validations:
       crashed_unicode: includes invalid characters
   preferences:

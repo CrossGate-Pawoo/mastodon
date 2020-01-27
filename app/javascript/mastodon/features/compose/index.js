@@ -23,10 +23,10 @@ const messages = defineMessages({
   start: { id: 'getting_started.heading', defaultMessage: 'Getting started' },
   home_timeline: { id: 'tabs_bar.home', defaultMessage: 'Home' },
   notifications: { id: 'tabs_bar.notifications', defaultMessage: 'Notifications' },
-  suggested_accounts: { id: 'column.suggested_accounts', defaultMessage: 'Active Users' },
+  suggested_accounts: { id: 'pawoo.column.suggested_accounts', defaultMessage: 'Active Users' },
   community: { id: 'navigation_bar.community_timeline', defaultMessage: 'Local timeline' },
-  media: { id: 'column.media_timeline', defaultMessage: 'Media timeline' },
-  help: { id: 'navigation_bar.help', defaultMessage: 'Help' },
+  media: { id: 'pawoo.column.media', defaultMessage: 'Media timeline' },
+  help: { id: 'pawoo.navigation_bar.help', defaultMessage: 'Help' },
 });
 
 const mapStateToProps = (state, ownProps) => ({

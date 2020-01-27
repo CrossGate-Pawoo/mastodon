@@ -5,7 +5,7 @@ import { Motion, spring } from 'react-motion';
 import { injectIntl, defineMessages } from 'react-intl';
 
 const messages = defineMessages({
-  message: { id: 'compose_form.sensitive_message', defaultMessage: 'Please be sure to click on the eye icon and set NSFW if the image you are trying to post is erotic content' },
+  message: { id: 'pawoo.compose_form.sensitive_message', defaultMessage: 'Please be sure to click on the eye icon and set NSFW if the image you are trying to post is erotic content' },
 });
 
 const mapStateToProps = state => ({

@@ -11,5 +11,4 @@
 *.webm                        -text
 *.woff                        -text
 *.woff2                       -text
-*.mp4                         -text
 spec/fixtures/requests/**     -text !eol

@@ -11,7 +11,6 @@ ja:
     closed_registrations: 現在このインスタンスでの新規登録は受け付けていません。しかし、他のインスタンスにアカウントを作成しても全く同じネットワークに参加することができます。
     contact: お問い合わせ先
     contact_body_mastodon: Pawoo内からはこちら
-    contact_body_twitter: Twitter内からはこちら
     contact_missing: 未設定
     contact_unavailable: N/A
     description_headline: "%{domain} とは？"
@@ -665,7 +664,8 @@ ja:
       index: ギャラリー一覧
       show: "%{name} - ギャラリー"
     oauth_registrations:
-      already_registered: すでに登録されています。メールアドレスとパスワードでログイン後、設定ページよりpixivアカウント連携してください。
+      create:
+        already_registered: すでに登録されています。メールアドレスとパスワードでログイン後、設定ページよりpixivアカウント連携してください。
     validations:
       crashed_unicode: に無効な文字が含まれています
   preferences:

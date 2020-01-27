@@ -5,7 +5,7 @@ import Column from '../../mastodon/features/ui/components/column';
 import SuggestedAccountsContainer from '../containers/suggested_accounts_container';
 
 const messages = defineMessages({
-  title: { id: 'column.suggested_accounts', defaultMessage: 'Active Users' },
+  title: { id: 'pawoo.column.suggested_accounts', defaultMessage: 'Active Users' },
 });
 
 function SuggestedAccountsPage({ intl }) {

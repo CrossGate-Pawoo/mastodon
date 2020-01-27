@@ -31,13 +31,13 @@ const messages = defineMessages({
   blocks: { id: 'navigation_bar.blocks', defaultMessage: 'Blocked users' },
   domain_blocks: { id: 'navigation_bar.domain_blocks', defaultMessage: 'Hidden domains' },
   mutes: { id: 'navigation_bar.mutes', defaultMessage: 'Muted users' },
-  help: { id: 'navigation_bar.help', defaultMessage: 'Pawoo Help' },
+  help: { id: 'pawoo.navigation_bar.help', defaultMessage: 'Pawoo Help' },
   info: { id: 'navigation_bar.info', defaultMessage: 'Extended information' },
   pins: { id: 'navigation_bar.pins', defaultMessage: 'Pinned toots' },
   lists: { id: 'navigation_bar.lists', defaultMessage: 'Lists' },
   keyboard_shortcuts: { id: 'navigation_bar.keyboard_shortcuts', defaultMessage: 'Keyboard shortcuts' },
-  suggested_accounts: { id: 'navigation_bar.suggested_accounts', defaultMessage: 'Active Accounts' },
-  media_timeline: { id: 'navigation_bar.media_timeline', defaultMessage: 'Media timeline' },
+  suggested_accounts: { id: 'pawoo.navigation_bar.suggested_accounts', defaultMessage: 'Active Accounts' },
+  media_timeline: { id: 'pawoo.navigation_bar.media_timeline', defaultMessage: 'Media timeline' },
   gallery: { id: 'pawoo.navigation_bar.gallery', defaultMessage: 'Gallery' },
 });
 

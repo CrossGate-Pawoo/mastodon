@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
 
 const messages = defineMessages({
-  title: { id: 'trend_tags.title', defaultMessage: 'Suggested tag' },
+  title: { id: 'pawoo.trend_tags.title', defaultMessage: 'Suggested tag' },
 });
 
 @injectIntl

@@ -9,11 +9,11 @@ import detectPassiveEvents from 'detect-passive-events';
 import classNames from 'classnames';
 
 const messages = defineMessages({
-  days: { id: 'time_limit.days', defaultMessage: '{days, number} {days, plural, one {day} other {days}} later' },
-  hours: { id: 'time_limit.hours', defaultMessage: '{hours, number} {hours, plural, one {hour} other {hours}} later' },
-  minutes: { id: 'time_limit.minutes', defaultMessage: '{minutes, number} {minutes, plural, one {minute} other {minutes}} later' },
-  select_time_limit: { id: 'time_limit.select_time_limit', defaultMessage: 'Specify the time of automatic disappearance (Beta)' },
-  time_limit_note: { id: 'time_limit.time_limit_note', defaultMessage: 'Note: If specified, it will not be delivered to external instances.' },
+  days: { id: 'pawoo.time_limit.days', defaultMessage: '{days, number} {days, plural, one {day} other {days}} later' },
+  hours: { id: 'pawoo.time_limit.hours', defaultMessage: '{hours, number} {hours, plural, one {hour} other {hours}} later' },
+  minutes: { id: 'pawoo.time_limit.minutes', defaultMessage: '{minutes, number} {minutes, plural, one {minute} other {minutes}} later' },
+  select_time_limit: { id: 'pawoo.time_limit.select_time_limit', defaultMessage: 'Specify the time of automatic disappearance (Beta)' },
+  time_limit_note: { id: 'pawoo.time_limit.time_limit_note', defaultMessage: 'Note: If specified, it will not be delivered to external instances.' },
 });
 
 const listenerOptions = detectPassiveEvents.hasSupport ? { passive: true } : false;
