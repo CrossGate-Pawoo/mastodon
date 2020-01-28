@@ -40,7 +40,7 @@ module ApplicationHelper
   end
 
   def title
-    if pawoo_is_staging?
+    if ENV['PAWOO_STAGING'].present?
       "#{site_title} (Staging)"
     elsif Rails.env.production?
       site_title
@@ -72,14 +72,5 @@ module ApplicationHelper
 
   def react_component(name, props = {})
     content_tag(:div, nil, data: { component: name.to_s.camelcase, props: Oj.dump(props) })
-  end
-
-  private
-
-  def pawoo_is_staging?
-    Rails.env.production? && Socket.gethostname == 'ap-staging002'
-  rescue
-    # FIXME: Socket.gethostname あんまり使わないから。。rescueいらないと思うねんけどね。
-    false
   end
 end

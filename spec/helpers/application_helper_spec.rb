@@ -114,7 +114,7 @@ describe ApplicationHelper do
 
     it 'returns site title on production enviroment' do
       Setting.site_title = 'site title'
-      expect(Rails.env).to receive(:production?).and_return(true).twice
+      expect(Rails.env).to receive(:production?).and_return(true)
       expect(helper.title).to eq 'site title'
     end
   end
