@@ -1,3 +1,14 @@
+require 'dotenv'
+
+# pawoo extensions
+app_root = ENV.fetch('PAWOO_APP_ROOT') { File.expand_path('..', __dir__) }
+rails_env = ENV.fetch('RAILS_ENV') { 'development' }
+Dotenv.load("#{app_root}/.env.#{rails_env}")
+
+# see: https://github.com/puma/puma/blob/master/docs/restart.md#release-directory
+directory app_root
+stdout_redirect(nil, "#{app_root}/log/puma_stderr", true)
+
 threads_count = ENV.fetch('MAX_THREADS') { 5 }.to_i
 threads threads_count, threads_count
 
@@ -10,19 +21,13 @@ end
 environment ENV.fetch('RAILS_ENV') { 'development' }
 workers     ENV.fetch('WEB_CONCURRENCY') { 2 }
 
-# pawoo extensions
-app_root = ENV.fetch('PAWOO_APP_ROOT') { File.expand_path('../../', __FILE__) }
-
-# see: https://github.com/puma/puma/blob/master/docs/restart.md#release-directory
-directory app_root
-stdout_redirect(nil, "#{app_root}/log/puma_stderr", true)
-
 preload_app!
 
 on_worker_boot do
   ActiveRecord::Base.establish_connection if defined?(ActiveRecord)
 end
 
+# pawoo extensions
 before_fork do
   require 'puma_worker_killer'
 
