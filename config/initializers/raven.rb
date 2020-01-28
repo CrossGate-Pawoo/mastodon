@@ -4,7 +4,8 @@ Raven.configure do |config|
   config.dsn = ENV['PAWOO_SENTRY_RAILS']
 
   # Sentry通知を有効にしたいRAILS_ENV
-  config.environments = %w[production]
+  config.environments = %w[production staging]
+  config.current_environment = 'staging' if ENV['PAWOO_STAGING'].present?
 
   config.async = ->(event) {
     Thread.new { Raven.send_event(event) }
