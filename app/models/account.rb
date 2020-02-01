@@ -71,13 +71,12 @@ class Account < ApplicationRecord
   has_one :user, inverse_of: :account
 
   validates :username, presence: true
+  validates_with UniqueUsernameValidator, if: -> { will_save_change_to_username? }
 
   # Remote user validations
-  validates :username, uniqueness: { scope: :domain, case_sensitive: true }, if: -> { !local? && will_save_change_to_username? }
 
   # Local user validations
   validates :username, format: { with: /\A[a-z0-9_]+\z/i }, length: { maximum: 30 }, if: -> { local? && will_save_change_to_username? }
-  validates_with UniqueUsernameValidator, if: -> { local? && will_save_change_to_username? }
   validates_with UnreservedUsernameValidator, if: -> { local? && will_save_change_to_username? }
   validates :display_name, length: { maximum: 30 }, if: -> { local? && will_save_change_to_display_name? }
   validates :note, length: { maximum: 160 }, if: -> { local? && will_save_change_to_note? }
