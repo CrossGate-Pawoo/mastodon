@@ -233,12 +233,6 @@ end
         end
       end
 
-      it 'follows a local account if queued' do
-        followee = Fabricate(:account, domain: nil, username: 'followee')
-        get :pixiv, session: { 'pawoo.follow': 'followee' }
-        expect(oauth_authentication.user.account.following?(followee)).to eq true
-      end
-
       it 'enqueues pixiv follows fetch' do
         Sidekiq::Testing.fake! do
           subject
@@ -255,11 +249,6 @@ end
       end
 
       it { is_expected.to redirect_to(new_user_oauth_registration_path) }
-    end
-
-    it 'deletes follow queue' do
-      get :pixiv, session: { 'pawoo.follow': 'followee' }
-      expect(session).not_to have_key 'pawoo.follow'
     end
   end
 end

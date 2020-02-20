@@ -20,7 +20,7 @@ window.addEventListener('message', e => {
 function main() {
   const { length } = require('stringz');
   const IntlRelativeFormat = require('intl-relativeformat').default;
-  const { delegate, csrfParam, csrfToken } = require('rails-ujs');
+  const { delegate } = require('rails-ujs');
   const emojify = require('../mastodon/features/emoji/emoji').default;
   const { getLocale } = require('../mastodon/locales');
   const { localeData } = getLocale();
@@ -167,52 +167,6 @@ function main() {
 
     if (noteCounter) {
       noteCounter.textContent = 160 - length(target.value);
-    }
-  });
-
-  delegate(document, '.omniauth-pixiv', 'click', (event) => {
-    event.preventDefault();
-
-    const follow = event.target.getAttribute('data-follow');
-    const action = 'login';
-    const service = 'pawoo';
-
-    if (location.port.length === 0 && !follow) {
-      let urlBase = window.pixivSignupSDKSettings.urlBase;
-      if (!/\/$/.test(urlBase)) {
-        urlBase += '/';
-      }
-
-      const returnToUrl = encodeURIComponent(`${location.origin}/auth/oauth/pixiv`);
-
-      location.href = `${urlBase}${action}?view_type=popup&source=${service}&return_to=${returnToUrl}`;
-    } else {
-      window.pixivSignupSDK.start(action, service, () => {
-        if (follow) {
-          const form = document.createElement('form');
-          const button = document.createElement('button');
-          const csrfInput = document.createElement('input');
-          const followInput = document.createElement('input');
-
-          csrfInput.name = csrfParam();
-          csrfInput.value = csrfToken();
-
-          followInput.name = 'follow';
-          followInput.value = follow;
-
-          form.method = 'POST';
-          form.action = '/auth/oauth/pixiv';
-          form.style.display = 'none';
-          form.appendChild(button);
-          form.appendChild(csrfInput);
-          form.appendChild(followInput);
-
-          document.body.appendChild(form);
-          button.click();
-        } else {
-          location.href = '/auth/oauth/pixiv';
-        }
-      });
     }
   });
 

@@ -21,8 +21,7 @@
     .actions
       - resource_class.omniauth_providers.each do |provider|
         - if provider == :pixiv
-          %button.omniauth-pixiv
-            = 'pixiv'
+          = render 'oauth/authorizations/pixiv_auth', auth_type: 'signin'
         - else
           = link_to omniauth_authorize_path(resource_name, provider), class: "button button-#{provider}" do
             = t("auth.providers.#{provider}", default: provider.to_s.chomp("_oauth2").capitalize)

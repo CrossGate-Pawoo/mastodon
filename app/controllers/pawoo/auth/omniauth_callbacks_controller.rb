@@ -5,8 +5,6 @@ class Pawoo::Auth::OmniauthCallbacksController < Devise::OmniauthCallbacksContro
   include Pawoo::WithRedisSessionStore
   include Localized
 
-  after_action :delete_follow_queue
-
   def pixiv
     data = request.env['omniauth.auth']
 
@@ -63,15 +61,7 @@ class Pawoo::Auth::OmniauthCallbacksController < Devise::OmniauthCallbacksContro
 
   private
 
-  def delete_follow_queue
-    session.delete 'pawoo.follow'
-  end
-
   def after_sign_in_for(user)
-    if session['pawoo.follow']
-      FollowService.new.call(user.account, session['pawoo.follow'])
-    end
-
     redirect_to after_sign_in_path_for(user)
   end
 

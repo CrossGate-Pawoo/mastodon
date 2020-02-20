@@ -30,5 +30,7 @@
             / Do nothing
           - elsif oauth_authentication
             = link_to t('oauth_authentications.unlink'), settings_oauth_authentication_path(oauth_authentication), method: :delete, data: { confirm: t('oauth_authentications.confirm') }
+          - elsif provider == :pixiv
+            = link_to t('oauth_authentications.link'), pawoo_pixiv_auth_url
           - else
-            = link_to t('oauth_authentications.link'), public_send(:"user_#{provider}_omniauth_authorize_path"), class: 'omniauth-pixiv'
+            = link_to t('oauth_authentications.link'), public_send(:"user_#{provider}_omniauth_authorize_path")

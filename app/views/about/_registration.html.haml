@@ -1,10 +1,4 @@
 = simple_form_for(new_user, url: user_registration_path) do |f|
-  .omniauth
-    = render 'oauth/authorizations/pixiv_auth', auth_type: 'register'
-
-  .separate
-    %span= t('simple_form.labels.omniauth.or')
-
   = f.simple_fields_for :account do |account_fields|
     .input-with-append
       = account_fields.input :username, autofocus: true, placeholder: t('simple_form.labels.defaults.username'), required: true, input_html: { 'aria-label' => t('simple_form.labels.defaults.username'), :autocomplete => 'off' }
@@ -19,10 +13,3 @@
     = f.button :button, t('auth.register'), type: :submit, class: 'button button-primary'
 
   %p.hint.subtle-hint=t('auth.agreement_html', rules_path: about_more_path, terms_path: terms_path)
-
-  .separate
-    %span= t('simple_form.labels.omniauth.or')
-
-%div
-  = link_to new_user_session_path, class: 'action signin' do
-    %button= t('auth.login')
