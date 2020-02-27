@@ -2,12 +2,12 @@
 
 require 'rails_helper'
 
-describe Api::V1::Statuses::FavouritesController do
+describe Api::V1::Statuses::BookmarksController do
   render_views
 
   let(:user)  { Fabricate(:user, account: Fabricate(:account, username: 'alice')) }
   let(:app)   { Fabricate(:application, name: 'Test app', website: 'http://testapp.com') }
-  let(:token) { Fabricate(:accessible_access_token, resource_owner_id: user.id, scopes: 'write', application: app) }
+  let(:token) { Fabricate(:accessible_access_token, resource_owner_id: user.id, scopes: 'write:bookmarks', application: app) }
 
   context 'with an oauth token' do
     before do
@@ -23,23 +23,18 @@ describe Api::V1::Statuses::FavouritesController do
 
       context 'with public status' do
         it 'returns http success' do
-          expect(response).to have_http_status(200)
+          expect(response).to have_http_status(:success)
         end
 
-        it 'updates the favourites count' do
-          expect(status.favourites.count).to eq 1
-        end
-
-        it 'updates the favourited attribute' do
-          expect(user.account.favourited?(status)).to be true
+        it 'updates the bookmarked attribute' do
+          expect(user.account.bookmarked?(status)).to be true
         end
 
         it 'returns json with updated attributes' do
           hash_body = body_as_json
 
           expect(hash_body[:id]).to eq status.id.to_s
-          expect(hash_body[:favourites_count]).to eq 1
-          expect(hash_body[:favourited]).to be true
+          expect(hash_body[:bookmarked]).to be true
         end
       end
 
@@ -57,32 +52,27 @@ describe Api::V1::Statuses::FavouritesController do
         let(:status) { Fabricate(:status, account: user.account) }
 
         before do
-          FavouriteService.new.call(user.account, status)
+          Bookmark.find_or_create_by!(account: user.account, status: status)
           post :destroy, params: { status_id: status.id }
         end
 
         it 'returns http success' do
-          expect(response).to have_http_status(200)
+          expect(response).to have_http_status(:success)
         end
 
-        it 'updates the favourites count' do
-          expect(status.favourites.count).to eq 0
-        end
-
-        it 'updates the favourited attribute' do
-          expect(user.account.favourited?(status)).to be false
+        it 'updates the bookmarked attribute' do
+          expect(user.account.bookmarked?(status)).to be false
         end
 
         it 'returns json with updated attributes' do
           hash_body = body_as_json
 
           expect(hash_body[:id]).to eq status.id.to_s
-          expect(hash_body[:favourites_count]).to eq 0
-          expect(hash_body[:favourited]).to be false
+          expect(hash_body[:bookmarked]).to be false
         end
       end
 
-      context 'with private status that was not favourited' do
+      context 'with private status that was not bookmarked' do
         let(:status) { Fabricate(:status, visibility: :private) }
 
         before do
