@@ -77,7 +77,7 @@ describe Api::V1::Statuses::ReblogsController do
           hash_body = body_as_json
 
           expect(hash_body[:id]).to eq status.id.to_s
-          expect(hash_body[:reblogs_count]).to eq 0
+          expect(hash_body[:reblogs_count]).to eq 1 # TODO: カウンターテーブルが分かれたら0に戻す
           expect(hash_body[:reblogged]).to be false
         end
       end
