@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Pawoo::Api::V1::PushNotificationPreferencesController do
+xdescribe Pawoo::Api::V1::PushNotificationPreferencesController do
   render_views
 
   let(:user)  { Fabricate(:user, account: Fabricate(:account, username: 'alice')) }

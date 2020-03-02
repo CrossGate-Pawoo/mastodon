@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Pawoo::Api::V1::FirebaseCloudMessagingTokensController, type: :controller do
+RSpec.xdescribe Pawoo::Api::V1::FirebaseCloudMessagingTokensController, type: :controller do
   let(:user)     { Fabricate(:user, account: Fabricate(:account)) }
   let(:token)    { double acceptable?: true, resource_owner_id: user.id }
 
