@@ -705,7 +705,6 @@ en:
     notifications: Notifications
     oauth_authentications: pixiv Login
     preferences: Preferences
-    push_notification_preferences: Notification Preferences
     settings: Settings
     two_factor_authentication: Two-factor Auth
     your_apps: Your applications

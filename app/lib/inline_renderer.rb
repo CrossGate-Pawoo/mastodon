@@ -13,8 +13,6 @@ class InlineRenderer
       serializer = REST::StatusSerializer
     when :notification
       serializer = REST::NotificationSerializer
-    when :firebase_cloud_messaging_push_notification
-      serializer = FirebaseCloudMessaging::PushNotificationSerializer
     else
       return
     end

@@ -699,7 +699,6 @@ pl:
     notifications: Powiadomienia
     oauth_authentications: Logowanie pixiv
     preferences: Preferencje
-    push_notification_preferences: Ustawienia powiadomień
     settings: Ustawienia
     two_factor_authentication: Uwierzytelnianie dwuetapowe
     your_apps: Twoje aplikacje

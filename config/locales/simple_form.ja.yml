@@ -72,12 +72,6 @@ ja:
         follow_request: フォローリクエストを受けた時にメールで通知
         mention: 返信された時にメールで通知
         reblog: ブーストされた時にメールで通知
-      notification_firebase_cloud_messagings:
-        favourite: お気に入りに登録された時にアプリで通知
-        follow: フォローされた時にアプリで通知
-        follow_request: フォローリクエストを受けた時にアプリで通知
-        mention: 返信された時にアプリで通知
-        reblog: ブーストされた時にアプリで通知
       omniauth:
         or: または
       omniauth_pixiv:

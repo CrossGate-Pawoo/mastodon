@@ -72,12 +72,6 @@ zh-CN:
         follow_request: 当有用户向我发送关注请求时，发送电子邮件提醒我
         mention: 当有用户在嘟文中提及我时，发送电子邮件提醒我
         reblog: 当有用户转嘟了我的嘟文时，发送电子邮件提醒我
-      notification_firebase_cloud_messagings:
-        favourite: 当有用户收藏了你的嘟文时，通过应用通知提醒我
-        follow: 当有用户关注你时，通过应用通知提醒我
-        follow_request: 当有用户向你发送关注请求时，通过应用通知提醒我
-        mention: 当有用户在嘟文中提及你时，通过应用通知提醒我
-        reblog: 当有用户转嘟了你的嘟文时，通过应用通知提醒我
       omniauth:
         or: 或
       omniauth_pixiv:
