@@ -368,11 +368,11 @@ Rails.application.routes.draw do
 
     namespace :api do
       namespace :v1 do
-        resource :push_notification_preferences, only: [:show, :update]
+        # resource :push_notification_preferences, only: [:show, :update]
         resources :trend_tags, only: [:index]
         resources :suggestion_tags, only: [:index]
         resources :pixiv_twitter_images, only: [:create]
-        resources :firebase_cloud_messaging_tokens, only: [:create, :destroy], param: :platform
+        # resources :firebase_cloud_messaging_tokens, only: [:create, :destroy], param: :platform
         resources :suggested_accounts, only: [:index]
         resources :oauth_authentications, only: [:show], param: :uid
 
