@@ -80,12 +80,6 @@ pl:
         follow_request: Powiadamiaj mnie e-mailem, gdy ktoś poprosi o pozwolenie na śledzenie mnie
         mention: Powiadamiaj mnie e-mailem, gdy ktoś o mnie wspomni
         reblog: Powiadamiaj mnie e-mailem, gdy ktoś podbije mój wpis
-      notification_firebase_cloud_messagings:
-        favourite: Wysyłaj powiadomienia na urządzenie mobilne, jeżeli ktoś doda Twój wpis do ulubionych
-        follow: Wysyłaj powiadomienia na urządzenia mobilne, jeżeli ktoś zacznie Cię śledzić
-        follow_request: Wysyłaj powiadomienia na urządzenia mobilne, jeżeli ktoś będzie chciał Cię śledzić
-        mention: Wysyłaj powiadomienia na urządzenia mobilne, jeżeli ktoś wspomni o Tobie
-        reblog: Wysyłaj powiadomienia na urządzenia mobilne, jeżeli ktoś podbije Twój wpis
       omniauth:
         or: lub
       omniauth_pixiv:

@@ -693,7 +693,6 @@ zh-CN:
     notifications: 通知
     oauth_authentications: 关联的 pixiv 帐户
     preferences: 首选项
-    push_notification_preferences: 通知首选项
     settings: 设置
     two_factor_authentication: 双重认证
     your_apps: 你的应用

@@ -59,7 +59,6 @@ class User < ApplicationRecord
   belongs_to :account, inverse_of: :user
   belongs_to :invite, counter_cache: :uses, optional: true
   has_many :oauth_authentications, dependent: :destroy
-  has_many :firebase_cloud_messaging_tokens, dependent: :destroy
   has_one :initial_password_usage, dependent: :destroy
   accepts_nested_attributes_for :account
 

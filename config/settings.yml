@@ -37,12 +37,6 @@ defaults: &defaults
     mention: false
     follow_request: true
     digest: true
-  notification_firebase_cloud_messagings:
-    follow: true
-    reblog: true
-    favourite: true
-    mention: true
-    follow_request: false
   interactions:
     must_be_follower: false
     must_be_following: false

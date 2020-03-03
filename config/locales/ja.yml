@@ -736,7 +736,6 @@ ja:
     notifications: 通知
     oauth_authentications: pixivアカウント連携
     preferences: ユーザー設定
-    push_notification_preferences: 通知設定
     settings: 設定
     two_factor_authentication: 二段階認証
     your_apps: アプリ

@@ -29,16 +29,10 @@ class UserSettingsDecorator
     user.settings['noindex']                 = noindex_preference if change?('setting_noindex')
     user.settings['theme']                   = theme_preference if change?('setting_theme')
     user.settings['hide_network']            = hide_network_preference if change?('setting_hide_network')
-
-    user.settings['notification_firebase_cloud_messagings'] = merged_notification_firebase_cloud_messagings if change?('notification_firebase_cloud_messagings')
   end
 
   def merged_notification_emails
     user.settings['notification_emails'].merge coerced_settings('notification_emails').to_h
-  end
-
-  def merged_notification_firebase_cloud_messagings
-    user.settings['notification_firebase_cloud_messagings'].merge coerced_settings('notification_firebase_cloud_messagings').to_h
   end
 
   def merged_interactions
