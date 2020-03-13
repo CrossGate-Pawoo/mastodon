@@ -464,7 +464,6 @@ ja:
       content: もうしわけありませんが、なにかが間違っています。
       title: このページは正しくありません
     noscript_html: Pawooのウェブアプリケーションを利用する場合はJavaScriptを有効にしてください。またはあなたのプラットフォーム向けの<a href="https://github.com/tootsuite/documentation/blob/master/Using-Mastodon/Apps.md">Mastodonネイティブアプリ</a>を探すことができます。
-    top: トップに戻る
   exports:
     archive_takeout:
       date: 日時

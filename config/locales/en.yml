@@ -461,7 +461,6 @@ en:
       content: We're sorry, but something went wrong on our end.
       title: This page is not correct
     noscript_html: To use the Pawoo web application, please enable JavaScript. Alternatively, try one of the <a href="https://github.com/tootsuite/documentation/blob/master/Using-Mastodon/Apps.md">native apps</a> for Mastodon for your platform.
-    top: Go to top
   exports:
     archive_takeout:
       date: Date
@@ -693,7 +692,7 @@ en:
       unlisted_long: Everyone can see, but not listed on public timelines
   stream_entries:
     click_to_show: Click to show
-    pinned: Pinned Toot
+    pinned: Pinned toot
     reblogged: boosted
     sensitive_content: Sensitive content
   terms:

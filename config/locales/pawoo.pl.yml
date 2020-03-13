@@ -47,6 +47,7 @@ pl:
     exists_oauth_authentications_html: Odłącz <a href="%{path}">logowanie pixiv</a>, zanim usuniesz konto
   errors:
     '503': Przepraszamy, strona nie działa z powodu prac konserwacyjnych
+    top: Przejdź na górę
   oauth_authentications:
     confirm: Czy jesteś pewien?
     failed_linking: Nie udało się połączyć

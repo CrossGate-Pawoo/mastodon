@@ -62,6 +62,7 @@ ja:
     exists_oauth_authentications_html: アカウント削除の前に、<a href="%{path}">pixivアカウント連携</a>を解除してください。
   errors:
     '503': ただいまメンテナンスを行なっております。
+    top: トップに戻る
   oauth_authentications:
     confirm: 本当によろしいですか？
     failed_linking: 連携できませんでした

@@ -13,10 +13,4 @@ pl:
         status:
           attributes:
             reblog:
-              taken: wpis już istnieje
-        status_pin:
-          attributes:
-            status:
-              no_permission: nie jest Twoim wpisem
-              private: jest wiadomością bezpośrednią
-              reblog: jest podbiciem
+              taken: status już istnieje

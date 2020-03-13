@@ -52,6 +52,7 @@ en:
     exists_oauth_authentications_html: Please unlink <a href="%{path}">pixiv Login</a> before deleting account
   errors:
     '503': Sorry, we're down for maincenance
+    top: Go to top
   oauth_authentications:
     confirm: Are you sure?
     failed_linking: Failed linking

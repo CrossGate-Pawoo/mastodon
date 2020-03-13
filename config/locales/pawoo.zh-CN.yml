@@ -47,6 +47,7 @@ zh-CN:
     exists_oauth_authentications_html: 删除帐户前请先解除绑定<a href="%{path}">关联的 pixiv 帐户</a>。
   errors:
     '503': 服务器正在维护中
+    top: 返回首页
   oauth_authentications:
     confirm: 你确定要解除绑定吗？
     failed_linking: 绑定失败
