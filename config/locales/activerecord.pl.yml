@@ -1,23 +1,7 @@
 ---
 pl:
-  activemodel:
-    attributes:
-      form/account_filter:
-        keyword: Słowo kluczowe
-        search_type: Rodzaj
-      form/account_filter/search_type:
-        email: adres e-mail
-        ip: Adres IP
-        name: Nazwa
   activerecord:
     attributes:
-      media_attachment:
-        file: Plik
-        file_content_type: Rodzaj zawartości
-        file_file_size: Rozmiar pliku
-      oauth_authentication:
-        provider: Dostawca
-        uid: ID użytkownika
       user:
         email: adres e-mail
     errors:

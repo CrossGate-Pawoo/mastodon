@@ -1,0 +1,117 @@
+---
+ja:
+  activemodel:
+    attributes:
+      form/account_filter:
+        keyword: キーワード
+        search_type: 検索対象
+      form/account_filter/search_type:
+        email: Email
+        ip: IP
+        name: 名前
+  activerecord:
+    attributes:
+      media_attachment:
+        file: ファイル
+        file_content_type: Content-Type
+        file_file_size: ファイルサイズ
+      oauth_authentication:
+        provider: プロバイダー
+        uid: ユーザーID
+
+  devise:
+    registrations:
+      user:
+        send_paranoid_instructions: パスワード設定メールを送信しました
+
+  about:
+    contact_body_mastodon: Pawoo内からはこちら
+  admin:
+    accounts:
+      oauth_authentications: pixivアカウント連携
+    action_logs:
+      actions:
+        pawoo_report_target_change_to_pending_account: "%{name} さんが %{target} さんを保留中に変更しました"
+        pawoo_report_target_change_to_pending_status: "%{name} さんが %{target} さんの投稿を保留中に変更しました"
+        pawoo_report_target_delete_status: "%{name} さんが %{target} さんの投稿を削除しました"
+        pawoo_report_target_no_problem_account: "%{name} さんが %{target} さんを問題なしと判断しました"
+        pawoo_report_target_no_problem_status: "%{name} さんが %{target} さんの投稿を問題なしと判断しました"
+        pawoo_report_target_set_nsfw_status: "%{name} さんが %{target} さんの投稿をNSFWに設定しました"
+        pawoo_report_target_silence_account: "%{name} さんが %{target} さんをサイレンスにしました"
+        pawoo_report_target_suspend_account: "%{name} さんが %{target} さんを停止しました"
+    oauth_authentications:
+      linked: 連携中
+      not_linked: 連携なし
+      unlink_forcibly: 強制的に解除
+    suggestion:
+      title: 運営タグ
+    trend_ng_word:
+      title: NGワード
+  auth:
+    confirmed_email: "(認証済み)"
+    oauth_registration: 登録を続ける
+    send_password_setting_url: パスワードの設定URLを登録されたメールアドレス（%{email}）に送る
+    synchronize_email_address: pixivアカウントのメールアドレスと同期する
+    omniauth_pixiv:
+      register: pixivアカウントで参加する
+      signin: pixivアカウントでログイン
+      signup: pixivアカウントではじめる
+      synchronize_email_address: メールアドレスを同期する
+  deletes:
+    exists_initial_password_usage: セキュリティ上の理由により、パスワードが設定されていないアカウントを削除することができません。
+    exists_oauth_authentications_html: アカウント削除の前に、<a href="%{path}">pixivアカウント連携</a>を解除してください。
+  errors:
+    '503': ただいまメンテナンスを行なっております。
+  oauth_authentications:
+    confirm: 本当によろしいですか？
+    failed_linking: 連携できませんでした
+    failed_synchronization: メールアドレスが認証されていないかサポートしていないため同期に失敗しました
+    initial_password_usage_note_html: pixivアカウント連携を変更する場合は、先に%{link}する必要があります。
+    link: 連携する
+    successfully_linked: 連携しました
+    successfully_synchronization: 同期しました
+    successfully_unlinked: 解除しました
+    unlink: 解除する
+  pawoo:
+    admin:
+      report_summations:
+        nav_title: 日別のレポート件数
+        title: "%{year}年%{month}のレポート件数"
+      report_targets:
+        all_report: すべて
+        failed_msg: レポートの処理に失敗しました
+        media: メディア
+        only_media: メディアあり
+        pending: 保留中
+        report_type:
+          donotlike: 好みではない
+          nsfw: NSFW設定の不足
+          other: その他
+          prohibited: 禁止行為に該当
+          reproduction: 無断転載
+          spam: スパム・迷惑行為
+          title: 種類
+        state: 状態
+        submit: 送信
+        success_msg: レポートを処理しました
+        title: レポート対象
+        unresolved: 未解決
+    extensions:
+      statuses:
+        pin_errors:
+          time_limit: 自動消滅するトゥートを固定することはできません
+    gallery:
+      index: ギャラリー一覧
+      show: "%{name} - ギャラリー"
+    oauth_registrations:
+      create:
+        already_registered: すでに登録されています。メールアドレスとパスワードでログイン後、設定ページよりpixivアカウント連携してください。
+    validations:
+      crashed_unicode: に無効な文字が含まれています
+  settings:
+    oauth_authentications: pixivアカウント連携
+
+  recaptcha:
+    errors:
+      verification_failed: reCAPTCHAの検証に失敗しました。もう一度お試しください。
+      recaptcha_unreachable: 申し訳ありませんが、reCAPTCHAレスポンスの検証に失敗しました。 もう一度やり直してください。

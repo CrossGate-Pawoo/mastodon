@@ -72,13 +72,6 @@ ja:
         follow_request: フォローリクエストを受けた時にメールで通知
         mention: 返信された時にメールで通知
         reblog: ブーストされた時にメールで通知
-      omniauth:
-        or: または
-      omniauth_pixiv:
-        register: pixivアカウントで参加する
-        signin: pixivアカウントでログイン
-        signup: pixivアカウントではじめる
-        synchronize_email_address: メールアドレスを同期する
     'no': いいえ
     required:
       mark: "*"

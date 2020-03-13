@@ -1,25 +1,6 @@
 ---
 zh-CN:
-  activemodel:
-    attributes:
-      form/account_filter:
-        keyword: 关键字
-        search_type: 搜索类型
-      form/account_filter/search_type:
-        email: 电子邮件地址
-        ip: IP
-        name: 用户名
   activerecord:
-    attributes:
-      media_attachment:
-        file: 文件
-        file_content_type: Content-Type
-        file_file_size: 文件大小
-      oauth_authentication:
-        provider: 提供商
-        uid: 用户 ID
-      user:
-        email: 电子邮件地址
     errors:
       models:
         account:

@@ -7,7 +7,6 @@ en:
     administered_by: 'Administered by:'
     closed_registrations: Registrations are currently closed on this instance. However! You can find a different instance to make an account on and get access to the very same network from there.
     contact: Contact
-    contact_body_mastodon: From here inside Pawoo
     contact_missing: Not set
     contact_unavailable: N/A
     description_headline: What is %{domain}?
@@ -40,7 +39,6 @@ en:
     followers: Followers
     following: Following
     media: Media
-    medium: "%{name}'s Media"
     moved_html: "%{name} has moved to %{new_profile_link}:"
     network_hidden: This information is not available
     nothing_here: There is nothing here!
@@ -109,7 +107,6 @@ en:
       most_recent_activity: Most recent activity
       most_recent_ip: Most recent IP
       not_subscribed: Not subscribed
-      oauth_authentications: pixiv Login
       order:
         alphabetic: Alphabetic
         most_recent: Most recent
@@ -264,10 +261,6 @@ en:
         expired: Expired
         title: Filter
       title: Invites
-    oauth_authentications:
-      linked: Linked
-      not_linked: Not linked
-      unlink_forcibly: Unlink forcibly
     report_notes:
       created_msg: Report note successfully created!
       destroyed_msg: Report note successfully deleted!
@@ -378,11 +371,7 @@ en:
       last_delivery: Last delivery
       title: WebSub
       topic: Topic
-    suggestion:
-      title: Suggestion Tags
     title: Administration
-    trend_ng_word:
-      title: NG word
   admin_mailer:
     new_report:
       body: "%{reporter} has reported %{target}"
@@ -407,7 +396,6 @@ en:
     agreement_html: By signing up you agree to follow <a href="%{rules_path}">the rules of the instance</a> and <a href="%{terms_path}">our terms of service</a>.
     change_password: Password
     confirm_email: Confirm email
-    confirmed_email: "(confirmed)"
     delete_account: Delete account
     delete_account_html: If you wish to delete your account, you can <a href="%{path}">proceed here</a>. You will be asked for confirmation.
     didnt_get_confirmation: Didn't receive confirmation instructions?
@@ -417,7 +405,6 @@ en:
     logout: Logout
     migrate_account: Move to a different account
     migrate_account_html: If you wish to redirect this account to a different one, you can <a href="%{path}">configure it here</a>.
-    oauth_registration: Continue sign up
     or: or
     or_log_in_with: Or log in with
     providers:
@@ -428,9 +415,7 @@ en:
     resend_confirmation: Resend confirmation instructions
     reset_password: Reset password
     security: Security
-    send_password_setting_url: Send password setting URL to your registered email address(%{email}).
     set_new_password: Set new password
-    synchronize_email_address: Synchronize with e-mail address of pixiv account
   authorize_follow:
     already_following: You are already following this account
     error: Unfortunately, there was an error looking up the remote account
@@ -460,8 +445,6 @@ en:
     bad_password_msg: Nice try, hackers! Incorrect password
     confirm_password: Enter your current password to verify your identity
     description_html: This will <strong>permanently, irreversibly</strong> remove content from your account and deactivate it. Your username will remain reserved to prevent future impersonations.
-    exists_initial_password_usage: Please change your password before deleting account
-    exists_oauth_authentications_html: Please unlink <a href="%{path}">pixiv Login</a> before deleting account
     proceed: Delete account
     success_msg: Your account was successfully deleted
     warning_html: Only deletion of content from this particular instance is guaranteed. Content that has been widely shared is likely to leave traces. Offline servers and servers that have unsubscribed from your updates will not update their databases.
@@ -477,7 +460,6 @@ en:
     '500':
       content: We're sorry, but something went wrong on our end.
       title: This page is not correct
-    '503': Sorry, we're down for maincenance
     noscript_html: To use the Pawoo web application, please enable JavaScript. Alternatively, try one of the <a href="https://github.com/tootsuite/documentation/blob/master/Using-Mastodon/Apps.md">native apps</a> for Mastodon for your platform.
     top: Go to top
   exports:
@@ -544,7 +526,6 @@ en:
     title: Invite people
   landing_strip_html: "<strong>%{name}</strong> is a user on %{link_to_root_path}. You can follow them or interact with them if you have an account anywhere in the fediverse."
   landing_strip_signup_html: If you don't, you can <a href="%{sign_up_path}">sign up here</a>.
-  landing_strip_tag_html: There are tagged with <strong>#%{name}</strong>. You can interact with them if you have an account anywhere in the fediverse. If you don't, you can <a href="%{sign_up_path}">sign up here</a>.
   lists:
     errors:
       limit: You have reached the maximum amount of lists
@@ -604,39 +585,12 @@ en:
           thousand: K
           trillion: T
           unit: ''
-  oauth_authentications:
-    confirm: Are you sure?
-    failed_linking: Failed linking
-    failed_synchronization: Sync failed because email address is not authenticated or does not support
-    initial_password_usage_note_html: To change pixiv login, please %{link} at the first.
-    link: Link
-    successfully_linked: Successfully linked
-    successfully_synchronization: Successfully synchronized
-    successfully_unlinked: Successfully unlinked
-    unlink: Unlink
   pagination:
     newer: Newer
     next: Next
     older: Older
     prev: Prev
     truncate: "&hellip;"
-  pawoo:
-    admin:
-      report_summations:
-        nav_title: Count of reports by day
-        title: Count of reports in %{month} %{year}
-    extensions:
-      statuses:
-        pin_errors:
-          time_limit: Toot with automatic disapperance setting cannot be pinned
-    gallery:
-      index: Galleries
-      show: "%{name} - Gallery"
-    oauth_registrations:
-      create:
-        already_registered: It has already been registered. After logging in with your e-mail address and password, please link with pixiv account from setting page.
-    validations:
-      crashed_unicode: includes invalid characters
   preferences:
     languages: Languages
     other: Other
@@ -703,7 +657,6 @@ en:
     import: Import
     migrate: Account migration
     notifications: Notifications
-    oauth_authentications: pixiv Login
     preferences: Preferences
     settings: Settings
     two_factor_authentication: Two-factor Auth

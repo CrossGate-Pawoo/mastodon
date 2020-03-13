@@ -80,13 +80,6 @@ pl:
         follow_request: Powiadamiaj mnie e-mailem, gdy ktoś poprosi o pozwolenie na śledzenie mnie
         mention: Powiadamiaj mnie e-mailem, gdy ktoś o mnie wspomni
         reblog: Powiadamiaj mnie e-mailem, gdy ktoś podbije mój wpis
-      omniauth:
-        or: lub
-      omniauth_pixiv:
-        register: Rozpocznij z kontem pixiv
-        signin: Zaloguj się z kontem pixiv
-        signup: Zarejestruj się z kontem pixiv
-        synchronize_email_address: Zsynchronizuj adres e-mail
     'no': Nie
     required:
       mark: "*"

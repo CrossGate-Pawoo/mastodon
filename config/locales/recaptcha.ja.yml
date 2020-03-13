@@ -1,6 +1,0 @@
----
-ja:
-  recaptcha:
-    errors:
-      verification_failed: reCAPTCHAの検証に失敗しました。もう一度お試しください。
-      recaptcha_unreachable: 申し訳ありませんが、reCAPTCHAレスポンスの検証に失敗しました。 もう一度やり直してください。

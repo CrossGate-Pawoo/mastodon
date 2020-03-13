@@ -72,13 +72,6 @@ zh-CN:
         follow_request: 当有用户向我发送关注请求时，发送电子邮件提醒我
         mention: 当有用户在嘟文中提及我时，发送电子邮件提醒我
         reblog: 当有用户转嘟了我的嘟文时，发送电子邮件提醒我
-      omniauth:
-        or: 或
-      omniauth_pixiv:
-        register: 使用 pixiv 帐户加入
-        signin: 使用 pixiv 帐户登录
-        signup: 使用 pixiv 帐户注册
-        synchronize_email_address: 同步电子邮件地址
     'no': 否
     required:
       mark: "*"
