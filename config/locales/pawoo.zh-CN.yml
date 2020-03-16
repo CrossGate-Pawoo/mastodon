@@ -1,0 +1,71 @@
+---
+zh-CN:
+  activemodel:
+    attributes:
+      form/account_filter:
+        keyword: 关键字
+        search_type: 搜索类型
+      form/account_filter/search_type:
+        email: 电子邮件地址
+        ip: IP
+        name: 用户名
+  activerecord:
+    attributes:
+      media_attachment:
+        file: 文件
+        file_content_type: Content-Type
+        file_file_size: 文件大小
+      oauth_authentication:
+        provider: 提供商
+        uid: 用户 ID
+
+  about:
+    contact_body_mastodon: 在 Pawoo 上联系我们
+  admin:
+    accounts:
+      oauth_authentications: 关联的 pixiv 帐户
+    oauth_authentications:
+      linked: 已绑定
+      not_linked: 未绑定
+      unlink_forcibly: 强制解除绑定
+    suggestion:
+      title: 建议的标签
+    trend_ng_word:
+      title: NG 词汇
+  auth:
+    confirmed_email: "（已确认）"
+    oauth_registration: 完成注册
+    send_password_setting_url: 发送密码设置链接至你关联的电子邮件地址（%{email}）
+    synchronize_email_address: 同步 pixiv 帐户中的电子邮件地址设置
+    omniauth_pixiv:
+      register: 使用 pixiv 帐户加入
+      signin: 使用 pixiv 帐户登录
+      signup: 使用 pixiv 帐户注册
+      synchronize_email_address: 同步电子邮件地址
+  deletes:
+    exists_initial_password_usage: 出于安全考虑，你必须先设置密码才能够删除帐户。
+    exists_oauth_authentications_html: 删除帐户前请先解除绑定<a href="%{path}">关联的 pixiv 帐户</a>。
+  errors:
+    '503': 服务器正在维护中
+    top: 返回首页
+  oauth_authentications:
+    confirm: 你确定要解除绑定吗？
+    failed_linking: 绑定失败
+    initial_password_usage_note_html: 更改关联的 pixiv 帐户前请先%{link}。
+    link: 绑定
+    successfully_linked: 绑定成功
+    successfully_synchronization: 同步成功
+    successfully_unlinked: 解除绑定成功
+    unlink: 解除绑定
+  pawoo:
+    extensions:
+      statuses:
+        pin_errors:
+          time_limit: 无法置顶带自毁设定的嘟文
+    oauth_registrations:
+      create:
+        already_registered: 此电子邮件地址已经被注册。请使用你的电子邮件地址和密码登录，然后前往设置页面绑定 pixiv 帐户。
+    validations:
+      crashed_unicode: 含有无效字符
+  settings:
+    oauth_authentications: pixiv Login

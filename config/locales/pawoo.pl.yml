@@ -1,0 +1,67 @@
+---
+pl:
+  activemodel:
+    attributes:
+      form/account_filter:
+        keyword: Słowo kluczowe
+        search_type: Rodzaj
+      form/account_filter/search_type:
+        email: adres e-mail
+        ip: Adres IP
+        name: Nazwa
+  activerecord:
+    attributes:
+      media_attachment:
+        file: Plik
+        file_content_type: Rodzaj zawartości
+        file_file_size: Rozmiar pliku
+      oauth_authentication:
+        provider: Dostawca
+        uid: ID użytkownika
+
+  about:
+    contact_body_mastodon: Z Pawoo
+  admin:
+    accounts:
+      oauth_authentications: Logowanie pixiv
+    oauth_authentications:
+      linked: Połączono
+      not_linked: Nie połączono
+      unlink_forcibly: Wymuś rozłączenie
+    suggestion:
+      title: Sugerowane tagi
+    trend_ng_word:
+      title: NG word
+  auth:
+    confirmed_email: "(confirmed)"
+    oauth_registration: Kontynuuj rejestrację
+    send_password_setting_url: Wyślij adres zmiany hasła na adres e-mail użyty przy instalacji (%{email}).
+    synchronize_email_address: Zsynchronizuj adres e-mail z kontem pixiv
+    omniauth_pixiv:
+      register: Rozpocznij z kontem pixiv
+      signin: Zaloguj się z kontem pixiv
+      signup: Zarejestruj się z kontem pixiv
+      synchronize_email_address: Zsynchronizuj adres e-mail
+  deletes:
+    exists_initial_password_usage: Zmień hasło, zanim usuniesz konto
+    exists_oauth_authentications_html: Odłącz <a href="%{path}">logowanie pixiv</a>, zanim usuniesz konto
+  errors:
+    '503': Przepraszamy, strona nie działa z powodu prac konserwacyjnych
+    top: Przejdź na górę
+  oauth_authentications:
+    confirm: Czy jesteś pewien?
+    failed_linking: Nie udało się połączyć
+    initial_password_usage_note_html: To change pixiv login, please %{link} at the first.
+    link: Połącz
+    successfully_linked: Pomyślnie połączono
+    successfully_synchronization: Pomyślnie zsynchronizowano
+    successfully_unlinked: Pomyślnie odłączono
+    unlink: Odłącz
+  pawoo:
+    oauth_registrations:
+      create:
+        already_registered: Jesteś już zarejestrowany. Po zalogowaniu z użyciem adresu e-mail i hasła, połącz się z kontem pixiv z ustawień.
+    validations:
+      crashed_unicode: zawiera nieprawidłowe znaki
+  settings:
+    oauth_authentications: 关联的 pixiv 帐户

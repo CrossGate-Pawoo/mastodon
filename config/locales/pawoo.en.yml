@@ -1,0 +1,84 @@
+---
+en:
+  activemodel:
+    attributes:
+      form/account_filter:
+        keyword: Keyword
+        search_type: Type
+      form/account_filter/search_type:
+        email: Email
+        ip: IP
+        name: Name
+  activerecord:
+    attributes:
+      media_attachment:
+        file: File
+        file_content_type: Content-Type
+        file_file_size: File size
+      oauth_authentication:
+        provider: Provider
+        uid: User ID
+
+  devise:
+    registrations:
+      user:
+        send_paranoid_instructions: Password setting email sent
+
+  about:
+    contact_body_mastodon: From here inside Pawoo
+  admin:
+    accounts:
+      oauth_authentications: pixiv Login
+    oauth_authentications:
+      linked: Linked
+      not_linked: Not linked
+      unlink_forcibly: Unlink forcibly
+    suggestion:
+      title: Suggestion Tags
+    trend_ng_word:
+      title: NG word
+  auth:
+    confirmed_email: "(confirmed)"
+    oauth_registration: Continue sign up
+    send_password_setting_url: Send password setting URL to your registered email address(%{email}).
+    synchronize_email_address: Synchronize with e-mail address of pixiv account
+    omniauth_pixiv:
+      register: Start with pixiv account
+      signin: Sign in with pixiv account
+      signup: Sign up with pixiv account
+      synchronize_email_address: Synchronize email address
+  deletes:
+    exists_initial_password_usage: Please change your password before deleting account
+    exists_oauth_authentications_html: Please unlink <a href="%{path}">pixiv Login</a> before deleting account
+  errors:
+    '503': Sorry, we're down for maincenance
+    top: Go to top
+  oauth_authentications:
+    confirm: Are you sure?
+    failed_linking: Failed linking
+    failed_synchronization: Sync failed because email address is not authenticated or does not support
+    initial_password_usage_note_html: To change pixiv login, please %{link} at the first.
+    link: Link
+    successfully_linked: Successfully linked
+    successfully_synchronization: Successfully synchronized
+    successfully_unlinked: Successfully unlinked
+    unlink: Unlink
+  pawoo:
+    admin:
+      report_summations:
+        nav_title: Count of reports by day
+        title: Count of reports in %{month} %{year}
+    extensions:
+      statuses:
+        pin_errors:
+          time_limit: Toot with automatic disapperance setting cannot be pinned
+    gallery:
+      index: Galleries
+      show: "%{name} - Gallery"
+    oauth_registrations:
+      create:
+        already_registered: It has already been registered. After logging in with your e-mail address and password, please link with pixiv account from setting page.
+    validations:
+      crashed_unicode: includes invalid characters
+  settings:
+    oauth_authentications: pixiv Login

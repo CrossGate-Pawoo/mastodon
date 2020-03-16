@@ -62,8 +62,6 @@ ja:
       signed_up_but_unconfirmed: メールアドレスの確認用のリンクが入力したメールアドレスに送信されました。メール内のリンクをクリックしてアカウントを有効化してください。
       update_needs_confirmation: アカウント情報の更新に成功しました。しかし、メールアドレスの確認が必要です。送信されたメール内のリンクをクリックしてメールアドレスを確認してください。
       updated: アカウント情報の更新に成功しました。
-      user:
-        send_paranoid_instructions: パスワード設定メールを送信しました
     sessions:
       already_signed_out: 既にログアウトしています。
       signed_in: ログインしました。

@@ -7,7 +7,6 @@ pl:
     administered_by: 'Administrowana przez:'
     closed_registrations: Rejestracja na tej instancji jest obecnie zamknięta. Możesz jednak zarejestrować się na innej instancji, uzyskując dostęp do tej samej sieci.
     contact: Kontakt
-    contact_body_mastodon: Z Pawoo
     contact_missing: Nie ustawiono
     contact_unavailable: Nie dotyczy
     description_headline: Czym jest %{domain}?
@@ -40,7 +39,6 @@ pl:
     followers: Śledzący
     following: Śledzeni
     media: Zawartość multimedialna
-    medium: "%Zawartość multimedialna {name}"
     moved_html: "%{name} korzysta teraz z konta %{new_profile_link}:"
     network_hidden: Ta informacja nie jest dostępna
     nothing_here: Niczego tu nie ma!
@@ -109,7 +107,6 @@ pl:
       most_recent_activity: Najnowsza aktywność
       most_recent_ip: Ostatnie IP
       not_subscribed: Nie zasubskrybowano
-      oauth_authentications: Logowanie pixiv
       order:
         alphabetic: Alfabetycznie
         most_recent: Najnowsze
@@ -265,10 +262,6 @@ pl:
         expired: Wygasłe
         title: Filtruj
       title: Zaproszenia
-    oauth_authentications:
-      linked: Połączono
-      not_linked: Nie połączono
-      unlink_forcibly: Wymuś rozłączenie
     report_notes:
       created_msg: Pomyslnie utworzono notatkę moderacyjną.
       destroyed_msg: Pomyślnie usunięto notatkę moderacyjną.
@@ -379,8 +372,6 @@ pl:
       last_delivery: Ostatnio doręczono
       title: WebSub
       topic: Temat
-    suggestion:
-      title: Sugerowane tagi
     title: Administracja
   admin_mailer:
     new_report:
@@ -415,7 +406,6 @@ pl:
     logout: Wyloguj się
     migrate_account: Przenieś konto
     migrate_account_html: Jeżeli chcesz skonfigurować przekierowanie z obecnego konta na inne, możesz <a href="%{path}">skonfigurować to tutaj</a>.
-    oauth_registration: Kontynuuj rejestrację
     or: lub
     or_log_in_with: Lub zaloguj się z użyciem
     providers:
@@ -426,9 +416,7 @@ pl:
     resend_confirmation: Ponownie prześlij instrukcje weryfikacji
     reset_password: Zresetuj hasło
     security: Bezpieczeństwo
-    send_password_setting_url: Wyślij adres zmiany hasła na adres e-mail użyty przy instalacji (%{email}).
     set_new_password: Ustaw nowe hasło
-    synchronize_email_address: Zsynchronizuj adres e-mail z kontem pixiv
   authorize_follow:
     already_following: Już śledzisz to konto
     error: Niestety, podczas sprawdzania zdalnego konta wystąpił błąd
@@ -458,8 +446,6 @@ pl:
     bad_password_msg: Niezła próba, hakerze! Wprowadzono nieprawidłowe hasło
     confirm_password: Wprowadź aktualne hasło, aby potwierdzić tożsamość
     description_html: Ta opcja usunie <strong>bezpowrotnie i nieodwracalnie</strong> całą zawartość konta i zdezaktywuje je. Twoja nazwa użytkownika pozostanie zarezerwowana, aby zapobiec nadużyciom.
-    exists_initial_password_usage: Zmień hasło, zanim usuniesz konto
-    exists_oauth_authentications_html: Odłącz <a href="%{path}">logowanie pixiv</a>, zanim usuniesz konto
     proceed: Usuń konto
     success_msg: Twoje konto zostało pomyślnie usunięte
     warning_html: Możemy usunąć zawartość jedynie w obrębie tej instancji. Zawartość udostępniona publicznie pozostawia trwałe ślady. Serwery niepodłączone do sieci bądź nieśledzące Twoich aktualizacji mogą zachować Twoje dane.
@@ -475,9 +461,7 @@ pl:
     '500':
       content: Przepraszamy, coś poszło nie tak, po naszej stronie.
       title: Ta strona jest nieprawidłowa
-    '503': Przepraszamy, strona nie działa z powodu prac konserwacyjnych
     noscript_html: Aby korzystać z aplikacji Mastodon, włącz JavaScript. Możesz też skorzystać z jednej z <a href="https://github.com/tootsuite/documentation/blob/master/Using-Mastodon/Apps.md">natywnych aplikacji</a> obsługującej Twoje urządzenie.
-    top: Przejdź na górę
   exports:
     archive_takeout:
       date: Data
@@ -546,7 +530,6 @@ pl:
     title: Zaproś użytkowników
   landing_strip_html: "<strong>%{name}</strong> ma konto na %{link_to_root_path}. Możesz je śledzić i wejść z nim w interakcję jeśli masz konto gdziekolwiek w Fediwersum."
   landing_strip_signup_html: Jeśli jeszcze go nie masz, możesz <a href="%{sign_up_path}">stworzyć konto</a>.
-  landing_strip_tag_html: Są to wpisy oznaczone <strong>#%{name}</strong>. Możesz odpowiadać na nie, jeżeli masz konto w Fediwersum. Jeżeli nie masz, możesz <a href="%{sign_up_path}">zarejestrować się tutaj</a>.
   lists:
     errors:
       limit: Przekroczyłeś maksymalną liczbę utworzonych list
@@ -610,27 +593,12 @@ pl:
           thousand: K
           trillion: T
           unit: ''
-  oauth_authentications:
-    confirm: Czy jesteś pewien?
-    failed_linking: Nie udało się połączyć
-    initial_password_usage_note_html: To change pixiv login, please %{link} at the first.
-    link: Połącz
-    successfully_linked: Pomyślnie połączono
-    successfully_synchronization: Pomyślnie zsynchronizowano
-    successfully_unlinked: Pomyślnie odłączono
-    unlink: Odłącz
   pagination:
     newer: Nowsze
     next: Następna
     older: Starsze
     prev: Poprzednia
     truncate: "&hellip;"
-  pawoo:
-    oauth_registrations:
-      create:
-        already_registered: Jesteś już zarejestrowany. Po zalogowaniu z użyciem adresu e-mail i hasła, połącz się z kontem pixiv z ustawień.
-    validations:
-      crashed_unicode: zawiera nieprawidłowe znaki
   preferences:
     languages: Języki
     other: Pozostałe
@@ -697,7 +665,6 @@ pl:
     import: Importowanie danych
     migrate: Migracja konta
     notifications: Powiadomienia
-    oauth_authentications: Logowanie pixiv
     preferences: Preferencje
     settings: Ustawienia
     two_factor_authentication: Uwierzytelnianie dwuetapowe

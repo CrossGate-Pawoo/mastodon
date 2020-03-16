@@ -26,7 +26,7 @@
     = f.button :button, t('auth.register'), type: :submit
 
   .separate
-    %span= t('simple_form.labels.omniauth.or')
+    %span= t('auth.or')
 
   .omniauth
     = render 'oauth/authorizations/pixiv_auth', auth_type: 'signup'

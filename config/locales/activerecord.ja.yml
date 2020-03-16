@@ -1,23 +1,7 @@
 ---
 ja:
-  activemodel:
-    attributes:
-      form/account_filter:
-        keyword: キーワード
-        search_type: 検索対象
-      form/account_filter/search_type:
-        email: Email
-        ip: IP
-        name: 名前
   activerecord:
     attributes:
-      media_attachment:
-        file: ファイル
-        file_content_type: Content-Type
-        file_file_size: ファイルサイズ
-      oauth_authentication:
-        provider: プロバイダー
-        uid: ユーザーID
       user:
         email: メールアドレス
     errors:

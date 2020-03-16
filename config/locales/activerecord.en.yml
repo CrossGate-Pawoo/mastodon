@@ -1,23 +1,6 @@
 ---
 en:
-  activemodel:
-    attributes:
-      form/account_filter:
-        keyword: Keyword
-        search_type: Type
-      form/account_filter/search_type:
-        email: Email
-        ip: IP
-        name: Name
   activerecord:
-    attributes:
-      media_attachment:
-        file: File
-        file_content_type: Content-Type
-        file_file_size: File size
-      oauth_authentication:
-        provider: Provider
-        uid: User ID
     errors:
       models:
         account:
@@ -28,9 +11,3 @@ en:
           attributes:
             reblog:
               taken: of status already exists
-        status_pin:
-          attributes:
-            status:
-              no_permission: isn't own toot
-              private: is direct toot
-              reblog: is boost

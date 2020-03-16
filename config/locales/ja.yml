@@ -10,7 +10,6 @@ ja:
     administered_by: '管理者:'
     closed_registrations: 現在このインスタンスでの新規登録は受け付けていません。しかし、他のインスタンスにアカウントを作成しても全く同じネットワークに参加することができます。
     contact: お問い合わせ先
-    contact_body_mastodon: Pawoo内からはこちら
     contact_missing: 未設定
     contact_unavailable: N/A
     description_headline: "%{domain} とは？"
@@ -32,7 +31,6 @@ ja:
     hosted_on: Mastodon hosted on %{domain}
     learn_more: もっと詳しく
     other_instances: 他のインスタンス
-    register: 登録する
     source_code: ソースコード
     status_count_after: トゥート
     status_count_before: トゥート数
@@ -44,7 +42,6 @@ ja:
     followers: フォロワー
     following: フォロー中
     media: メディア
-    medium: "%{name} さんのメディア"
     moved_html: "%{name} さんは引っ越しました %{new_profile_link}:"
     network_hidden: この情報は利用できません
     nothing_here: 何もありません！
@@ -113,7 +110,6 @@ ja:
       most_recent_activity: 直近の活動
       most_recent_ip: 直近のIP
       not_subscribed: 購読していない
-      oauth_authentications: pixivアカウント連携
       order:
         alphabetic: アルファベット順
         most_recent: 直近の活動順
@@ -175,14 +171,6 @@ ja:
         enable_custom_emoji: "%{name} さんがカスタム絵文字 %{target} を有効化しました"
         enable_user: "%{name} さんが %{target} さんのログインを有効化しました"
         memorialize_account: "%{name} さんが %{target} さんを追悼アカウントページに登録しました"
-        pawoo_report_target_change_to_pending_account: "%{name} さんが %{target} さんを保留中に変更しました"
-        pawoo_report_target_change_to_pending_status: "%{name} さんが %{target} さんの投稿を保留中に変更しました"
-        pawoo_report_target_delete_status: "%{name} さんが %{target} さんの投稿を削除しました"
-        pawoo_report_target_no_problem_account: "%{name} さんが %{target} さんを問題なしと判断しました"
-        pawoo_report_target_no_problem_status: "%{name} さんが %{target} さんの投稿を問題なしと判断しました"
-        pawoo_report_target_set_nsfw_status: "%{name} さんが %{target} さんの投稿をNSFWに設定しました"
-        pawoo_report_target_silence_account: "%{name} さんが %{target} さんをサイレンスにしました"
-        pawoo_report_target_suspend_account: "%{name} さんが %{target} さんを停止しました"
         promote_user: "%{name} さんが %{target} さんを昇格しました"
         remove_avatar_user: "%{name} さんが %{target} さんのアイコンを削除しました"
         reopen_report: "%{name} さんがレポート %{target} を再び開きました"
@@ -276,10 +264,6 @@ ja:
         expired: 期限切れ
         title: フィルター
       title: 招待
-    oauth_authentications:
-      linked: 連携中
-      not_linked: 連携なし
-      unlink_forcibly: 強制的に解除
     report_notes:
       created_msg: レポートメモを書き込みました！
       destroyed_msg: レポートメモを削除しました！
@@ -390,11 +374,7 @@ ja:
       last_delivery: 最終配送
       title: WebSub
       topic: トピック
-    suggestion:
-      title: 運営タグ
     title: 管理
-    trend_ng_word:
-      title: NGワード
   admin_mailer:
     new_report:
       body: "%{reporter} が %{target} を通報しました"
@@ -419,7 +399,6 @@ ja:
     agreement_html: 登録すると <a href="%{rules_path}">インスタンスのルール</a> と <a href="%{terms_path}">利用規約</a> に従うことに同意したことになります。
     change_password: パスワード
     confirm_email: メールアドレスの確認
-    confirmed_email: "(認証済み)"
     delete_account: アカウントの削除
     delete_account_html: アカウントを削除したい場合、<a href="%{path}">こちら</a> から手続きが行えます。削除する前に、確認画面があります。
     didnt_get_confirmation: 確認メールを受信できませんか？
@@ -429,7 +408,6 @@ ja:
     logout: ログアウト
     migrate_account: 別のアカウントに引っ越す
     migrate_account_html: 引っ越し先を明記したい場合は<a href="%{path}">こちら</a>で設定できます。
-    oauth_registration: 登録を続ける
     or: または
     or_log_in_with: または次のサービスでログイン
     providers:
@@ -440,9 +418,7 @@ ja:
     resend_confirmation: 確認メールを再送する
     reset_password: パスワードを再発行
     security: セキュリティ
-    send_password_setting_url: パスワードの設定URLを登録されたメールアドレス（%{email}）に送る
     set_new_password: 新しいパスワード
-    synchronize_email_address: pixivアカウントのメールアドレスと同期する
   authorize_follow:
     already_following: あなたは既にこのアカウントをフォローしています
     error: 残念ながら、リモートアカウント情報の取得中にエラーが発生しました
@@ -472,8 +448,6 @@ ja:
     bad_password_msg: パスワードが違います
     confirm_password: 本人確認のため、現在のパスワードを入力してください
     description_html: あなたのアカウントに含まれるコンテンツは全て削除され、アカウントは無効化されます。これは恒久的なもので、<strong>取り消すことはできません</strong>。なりすましを防ぐために、同じユーザー名で再度登録することはできなくなります。
-    exists_initial_password_usage: セキュリティ上の理由により、パスワードが設定されていないアカウントを削除することができません。
-    exists_oauth_authentications_html: アカウント削除の前に、<a href="%{path}">pixivアカウント連携</a>を解除してください。
     proceed: アカウントを削除する
     success_msg: アカウントは正常に削除されました
     warning_html: 削除が保証されるのはこのインスタンス上のコンテンツのみです。他のインスタンス等、外部に広く共有されたコンテンツについては痕跡が残ることがあります。また、現在接続できないサーバーや、あなたの更新を受け取らなくなったサーバーに対しては、削除は反映されません。
@@ -489,9 +463,7 @@ ja:
     '500':
       content: もうしわけありませんが、なにかが間違っています。
       title: このページは正しくありません
-    '503': ただいまメンテナンスを行なっております。
     noscript_html: Pawooのウェブアプリケーションを利用する場合はJavaScriptを有効にしてください。またはあなたのプラットフォーム向けの<a href="https://github.com/tootsuite/documentation/blob/master/Using-Mastodon/Apps.md">Mastodonネイティブアプリ</a>を探すことができます。
-    top: トップに戻る
   exports:
     archive_takeout:
       date: 日時
@@ -556,7 +528,6 @@ ja:
     title: 新規ユーザーの招待
   landing_strip_html: "<strong>%{name}</strong> さんはインスタンス %{link_to_root_path} のユーザーです。アカウントさえ持っていればフォローしたり会話したりできます。"
   landing_strip_signup_html: もしお持ちでないなら <a href="%{sign_up_path}">こちら</a> からサインアップできます。
-  landing_strip_tag_html: ハッシュタグ <strong>%{name}</strong> がついているトゥート一覧です。アカウントさえ持っていれば会話に参加できます。もしお持ちでないなら <a href="%{sign_up_path}">こちら</a> からサインアップできます。
   lists:
     errors:
       limit: リストの上限に達しました
@@ -616,58 +587,12 @@ ja:
           thousand: K
           trillion: T
           unit: ''
-  oauth_authentications:
-    confirm: 本当によろしいですか？
-    failed_linking: 連携できませんでした
-    failed_synchronization: メールアドレスが認証されていないかサポートしていないため同期に失敗しました
-    initial_password_usage_note_html: pixivアカウント連携を変更する場合は、先に%{link}する必要があります。
-    link: 連携する
-    successfully_linked: 連携しました
-    successfully_synchronization: 同期しました
-    successfully_unlinked: 解除しました
-    unlink: 解除する
   pagination:
     newer: 新しいトゥート
     next: 次
     older: 以前のトゥート
     prev: 前
     truncate: "&hellip;"
-  pawoo:
-    admin:
-      report_summations:
-        nav_title: 日別のレポート件数
-        title: "%{year}年%{month}のレポート件数"
-      report_targets:
-        all_report: すべて
-        failed_msg: レポートの処理に失敗しました
-        media: メディア
-        only_media: メディアあり
-        pending: 保留中
-        report_type:
-          donotlike: 好みではない
-          nsfw: NSFW設定の不足
-          other: その他
-          prohibited: 禁止行為に該当
-          reproduction: 無断転載
-          spam: スパム・迷惑行為
-          title: 種類
-        state: 状態
-        submit: 送信
-        success_msg: レポートを処理しました
-        title: レポート対象
-        unresolved: 未解決
-    extensions:
-      statuses:
-        pin_errors:
-          time_limit: 自動消滅するトゥートを固定することはできません
-    gallery:
-      index: ギャラリー一覧
-      show: "%{name} - ギャラリー"
-    oauth_registrations:
-      create:
-        already_registered: すでに登録されています。メールアドレスとパスワードでログイン後、設定ページよりpixivアカウント連携してください。
-    validations:
-      crashed_unicode: に無効な文字が含まれています
   preferences:
     languages: 言語
     other: その他
@@ -734,7 +659,6 @@ ja:
     import: データのインポート
     migrate: アカウントの引っ越し
     notifications: 通知
-    oauth_authentications: pixivアカウント連携
     preferences: ユーザー設定
     settings: 設定
     two_factor_authentication: 二段階認証

@@ -76,13 +76,6 @@ en:
         follow_request: Send e-mail when someone requests to follow you
         mention: Send e-mail when someone mentions you
         reblog: Send e-mail when someone boosts your status
-      omniauth:
-        or: or
-      omniauth_pixiv:
-        register: Start with pixiv account
-        signin: Sign in with pixiv account
-        signup: Sign up with pixiv account
-        synchronize_email_address: Synchronize email address
     'no': 'No'
     required:
       mark: "*"

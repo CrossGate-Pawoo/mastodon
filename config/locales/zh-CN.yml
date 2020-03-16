@@ -10,7 +10,6 @@ zh-CN:
     administered_by: 本实例的管理员：
     closed_registrations: 这个实例目前没有开放注册。不过，你可以前往其他实例注册一个帐户，同样可以加入到这个网络中哦！
     contact: 联系方式
-    contact_body_mastodon: 在 Pawoo 上联系我们
     contact_missing: 未设定
     contact_unavailable: 未公开
     description_headline: 关于 %{domain}
@@ -32,7 +31,6 @@ zh-CN:
     hosted_on: 一个在 %{domain} 上运行的 Mastodon 实例
     learn_more: 了解详情
     other_instances: 其他实例
-    register: 注册
     source_code: 源代码
     status_count_after: 条嘟文
     status_count_before: 他们共嘟出了
@@ -44,7 +42,6 @@ zh-CN:
     followers: 关注者
     following: 正在关注
     media: 媒体
-    medium: "%{name} 的媒体内容"
     moved_html: "%{name} 已经迁移到 %{new_profile_link}："
     network_hidden: 此信息不可用。
     nothing_here: 这里神马都没有！
@@ -113,7 +110,6 @@ zh-CN:
       most_recent_activity: 最后一次活跃的时间
       most_recent_ip: 最后一次活跃的 IP 地址
       not_subscribed: 未订阅
-      oauth_authentications: 关联的 pixiv 帐户
       order:
         alphabetic: 按字母
         most_recent: 按时间
@@ -266,10 +262,6 @@ zh-CN:
         expired: 已失效
         title: 筛选
       title: 邀请用户
-    oauth_authentications:
-      linked: 已绑定
-      not_linked: 未绑定
-      unlink_forcibly: 强制解除绑定
     report_notes:
       created_msg: 举报记录建立成功！
       destroyed_msg: 举报记录删除成功！
@@ -380,11 +372,7 @@ zh-CN:
       last_delivery: 最后一次接收数据的时间
       title: WebSub
       topic: Topic
-    suggestion:
-      title: 建议的标签
     title: 管理
-    trend_ng_word:
-      title: NG 词汇
   admin_mailer:
     new_report:
       body: "%{reporter} 举报了用户 %{target}"
@@ -409,7 +397,6 @@ zh-CN:
     agreement_html: 注册即表示你同意遵守<a href="%{rules_path}">本实例的相关规定</a>和<a href="%{terms_path}">我们的使用条款</a>。
     change_password: 密码
     confirm_email: 确认电子邮件地址
-    confirmed_email: "（已确认）"
     delete_account: 删除帐户
     delete_account_html: 如果你想删除你的帐户，请<a href="%{path}">点击这里继续</a>。你需要确认你的操作。
     didnt_get_confirmation: 没有收到确认邮件？
@@ -419,7 +406,6 @@ zh-CN:
     logout: 登出
     migrate_account: 迁移到另一个帐户
     migrate_account_html: 如果你希望引导他人关注另一个帐户，请<a href="%{path}">点击这里进行设置</a>。
-    oauth_registration: 完成注册
     or: 或者
     or_log_in_with: 或通过其他方式登录
     providers:
@@ -430,9 +416,7 @@ zh-CN:
     resend_confirmation: 重新发送确认邮件
     reset_password: 重置密码
     security: 帐户安全
-    send_password_setting_url: 发送密码设置链接至你关联的电子邮件地址（%{email}）
     set_new_password: 设置新密码
-    synchronize_email_address: 同步 pixiv 帐户中的电子邮件地址设置
   authorize_follow:
     already_following: 你已经在关注此用户了
     error: 对不起，寻找这个跨站用户时出错
@@ -462,8 +446,6 @@ zh-CN:
     bad_password_msg: 想得美，黑客！密码输入错误
     confirm_password: 输入你当前的密码来验证身份
     description_html: 继续操作将会<strong>永久地、不可撤销地</strong>删除帐户中的所有内容，然后冻结帐户。你的用户名将会被保留，以防有人冒用你的身份。
-    exists_initial_password_usage: 出于安全考虑，你必须先设置密码才能够删除帐户。
-    exists_oauth_authentications_html: 删除帐户前请先解除绑定<a href="%{path}">关联的 pixiv 帐户</a>。
     proceed: 删除帐户
     success_msg: 你的帐户已经成功删除
     warning_html: 我们只能保证本实例上的内容将会被彻底删除。对于已经被广泛传播的内容，它们在本实例以外的某些地方可能仍然可见。此外，失去连接的服务器以及停止接收订阅的服务器所存储的数据亦无法删除。
@@ -479,9 +461,7 @@ zh-CN:
     '500':
       content: 抱歉，我们的后台出错了。
       title: 这个页面有问题
-    '503': 服务器正在维护中
     noscript_html: 使用 Pawoo 网页版应用需要启用 JavaScript。你也可以选择适用于你的平台的 <a href="https://github.com/tootsuite/documentation/blob/master/Using-Mastodon/Apps.md">Mastodon 应用</a>。
-    top: 返回首页
   exports:
     archive_takeout:
       date: 日期
@@ -542,7 +522,6 @@ zh-CN:
     title: 邀请用户
   landing_strip_html: "<strong>%{name}</strong> 是一位来自 %{link_to_root_path} 的用户。如果你想关注他们或者与他们互动，你需要在任意一个 Mastodon 实例或与其兼容的网站上拥有一个帐户。"
   landing_strip_signup_html: 还没有这种帐户？你可以<a href="%{sign_up_path}">在本站注册一个</a>。
-  landing_strip_tag_html: 这里展示的是带有话题标签 <strong>#%{name}</strong> 的公开嘟文。如果你想与他们互动，你需要在任意一个 Mastodon 实例或与其兼容的网站上拥有一个帐户。还没有这种帐户？你可以<a href="%{sign_up_path}">在本站注册一个</a>。
   lists:
     errors:
       limit: 你所建立的列表数量已经达到上限
@@ -600,31 +579,12 @@ zh-CN:
           thousand: K
           trillion: T
           unit: ''
-  oauth_authentications:
-    confirm: 你确定要解除绑定吗？
-    failed_linking: 绑定失败
-    initial_password_usage_note_html: 更改关联的 pixiv 帐户前请先%{link}。
-    link: 绑定
-    successfully_linked: 绑定成功
-    successfully_synchronization: 同步成功
-    successfully_unlinked: 解除绑定成功
-    unlink: 解除绑定
   pagination:
     newer: 更新
     next: 下一页
     older: 更早
     prev: 上一页
     truncate: "…"
-  pawoo:
-    extensions:
-      statuses:
-        pin_errors:
-          time_limit: 无法置顶带自毁设定的嘟文
-    oauth_registrations:
-      create:
-        already_registered: 此电子邮件地址已经被注册。请使用你的电子邮件地址和密码登录，然后前往设置页面绑定 pixiv 帐户。
-    validations:
-      crashed_unicode: 含有无效字符
   preferences:
     languages: 语言
     other: 其他
@@ -691,7 +651,6 @@ zh-CN:
     import: 导入
     migrate: 帐户迁移
     notifications: 通知
-    oauth_authentications: 关联的 pixiv 帐户
     preferences: 首选项
     settings: 设置
     two_factor_authentication: 双重认证
