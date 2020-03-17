@@ -1,0 +1,17 @@
+---
+cs:
+  activerecord:
+    attributes:
+      poll:
+        expires_at: Uzávěrka
+        options: Volby
+    errors:
+      models:
+        account:
+          attributes:
+            username:
+              invalid: pouze písmena, číslice a podtržítka
+        status:
+          attributes:
+            reblog:
+              taken: příspěvku již existuje

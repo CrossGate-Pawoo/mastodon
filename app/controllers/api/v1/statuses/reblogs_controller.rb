@@ -3,14 +3,14 @@
 class Api::V1::Statuses::ReblogsController < Api::BaseController
   include Authorization
 
-  before_action -> { doorkeeper_authorize! :write }
+  before_action -> { doorkeeper_authorize! :write, :'write:statuses' }
   before_action :require_user!
   before_action :set_reblog
 
   respond_to :json
 
   def create
-    @status = ReblogService.new.call(current_account, @reblog)
+    @status = ReblogService.new.call(current_account, @reblog, reblog_params)
     render json: @status, serializer: REST::StatusSerializer
   end
 
@@ -19,8 +19,6 @@ class Api::V1::Statuses::ReblogsController < Api::BaseController
 
     if @status
       authorize @status, :unreblog?
-      # 論理削除はまだサポートしてない。忘れそうなのでコメントアウトで残しておく
-      # @status.discard
       RemovalWorker.perform_async(@status.id)
     end
 
@@ -34,5 +32,9 @@ class Api::V1::Statuses::ReblogsController < Api::BaseController
     authorize @reblog, :show?
   rescue Mastodon::NotPermittedError
     not_found
+  end
+
+  def reblog_params
+    params.permit(:visibility)
   end
 end

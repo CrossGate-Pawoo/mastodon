@@ -6,12 +6,10 @@ import errorsMiddleware from '../middleware/errors';
 import soundsMiddleware from '../middleware/sounds';
 
 export default function configureStore() {
-  const store = createStore(appReducer, compose(applyMiddleware(
+  return createStore(appReducer, compose(applyMiddleware(
     thunk,
     loadingBarMiddleware({ promiseTypeSuffixes: ['REQUEST', 'SUCCESS', 'FAIL'] }),
     errorsMiddleware(),
     soundsMiddleware()
-  ), window.devToolsExtension ? window.devToolsExtension() : f => f));
-
-  return store;
+  ), window.__REDUX_DEVTOOLS_EXTENSION__ ? window.__REDUX_DEVTOOLS_EXTENSION__() : f => f));
 };

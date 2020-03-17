@@ -1,4 +1,7 @@
 import loadPolyfills from '../mastodon/load_polyfills';
+import { start } from '../mastodon/common';
+
+start();
 
 function loaded() {
   const TimelineContainer = require('../mastodon/containers/timeline_container').default;
@@ -9,6 +12,13 @@ function loaded() {
   if (mountNode !== null) {
     const props = JSON.parse(mountNode.getAttribute('data-props'));
     ReactDOM.render(<TimelineContainer {...props} />, mountNode);
+  }
+
+  const pawooMountNode = document.getElementById('pawoo-community-timeline');
+  if (pawooMountNode !== null) {
+    const CommunityTimelineContainer = require('../pawoo/containers/standalone/timeline_container').default;
+    const props = JSON.parse(pawooMountNode.getAttribute('data-props'));
+    ReactDOM.render(<CommunityTimelineContainer {...props} />, pawooMountNode);
   }
 }
 

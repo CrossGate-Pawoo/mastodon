@@ -1,1 +1,17 @@
-{}
+---
+sl:
+  activerecord:
+    attributes:
+      poll:
+        expires_at: Rok
+        options: Izbire
+    errors:
+      models:
+        account:
+          attributes:
+            username:
+              invalid: samo črke, številke in podčrtaji
+        status:
+          attributes:
+            reblog:
+              taken: od statusa že obstajajo

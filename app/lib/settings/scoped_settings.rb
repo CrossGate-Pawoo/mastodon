@@ -2,6 +2,10 @@
 
 module Settings
   class ScopedSettings
+    DEFAULTING_TO_UNSCOPED = %w(
+      theme
+    ).freeze
+
     def initialize(object)
       @object = object
     end
@@ -27,7 +31,7 @@ module Settings
 
     def all_as_records
       vars = thing_scoped
-      records = vars.map { |r| [r.var, r] }.to_h
+      records = vars.each_with_object({}) { |r, h| h[r.var] = r }
 
       Setting.default_settings.each do |key, default_value|
         next if records.key?(key) || default_value.is_a?(Hash)
@@ -50,12 +54,19 @@ module Settings
       Rails.cache.fetch(Setting.cache_key(key, @object)) do
         db_val = thing_scoped.find_by(var: key.to_s)
         if db_val
-          default_value = Setting.default_settings[key]
+          default_value = ScopedSettings.default_settings[key]
           return default_value.with_indifferent_access.merge!(db_val.value) if default_value.is_a?(Hash)
           db_val.value
         else
-          Setting.default_settings[key]
+          ScopedSettings.default_settings[key]
         end
+      end
+    end
+
+    class << self
+      def default_settings
+        defaulting = DEFAULTING_TO_UNSCOPED.each_with_object({}) { |k, h| h[k] = Setting[k] }
+        Setting.default_settings.merge!(defaulting)
       end
     end
 

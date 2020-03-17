@@ -169,7 +169,7 @@ p {
   font-family: Helvetica, Arial, sans-serif;
 
   @media only screen {
-    font-family: 'mastodon-font-sans-serif', sans-serif !important;
+    font-family: $font-sans-serif, sans-serif !important;
   }
 }
 
@@ -279,6 +279,8 @@ h5 {
 }
 
 .hero-with-button {
+  padding-bottom: 16px;
+
   h1 {
     margin-bottom: 4px;
   }
@@ -286,8 +288,6 @@ h5 {
   p.lead {
     margin-bottom: 32px;
   }
-
-  padding-bottom: 16px;
 }
 
 .header {
@@ -424,6 +424,10 @@ h5 {
     padding: 16px;
     border-radius: 80px;
     background: $success-green;
+  }
+
+  &.alert-icon td {
+    background: $error-red;
   }
 
   img {

@@ -1,67 +1,83 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import StatusListContainer from '../../ui/containers/status_list_container';
-import { expandHashtagTimeline } from '../../../actions/timelines';
-import Column from '../../../components/column';
-import { connectHashtagStream } from '../../../actions/streaming';
-import ColumnHeader from '../../../../pawoo/components/animated_timeline_column_header';
+import ImmutablePropTypes from 'react-immutable-proptypes';
+import { expandHashtagTimeline } from 'mastodon/actions/timelines';
+import Masonry from 'react-masonry-infinite';
+import { List as ImmutableList } from 'immutable';
+import DetailedStatusContainer from 'mastodon/features/status/containers/detailed_status_container';
+import { debounce } from 'lodash';
+import LoadingIndicator from 'mastodon/components/loading_indicator';
 
-@connect()
-export default class HashtagTimeline extends React.PureComponent {
+const mapStateToProps = (state, { hashtag }) => ({
+  statusIds: state.getIn(['timelines', `hashtag:${hashtag}`, 'items'], ImmutableList()),
+  isLoading: state.getIn(['timelines', `hashtag:${hashtag}`, 'isLoading'], false),
+  hasMore: state.getIn(['timelines', `hashtag:${hashtag}`, 'hasMore'], false),
+});
+
+export default @connect(mapStateToProps)
+class HashtagTimeline extends React.PureComponent {
 
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
+    statusIds: ImmutablePropTypes.list.isRequired,
+    isLoading: PropTypes.bool.isRequired,
+    hasMore: PropTypes.bool.isRequired,
     hashtag: PropTypes.string.isRequired,
   };
-
-  handleHeaderClick = () => {
-    this.column.scrollTop();
-  }
-
-  setRef = c => {
-    this.column = c;
-  }
 
   componentDidMount () {
     const { dispatch, hashtag } = this.props;
 
     dispatch(expandHashtagTimeline(hashtag));
-    this.disconnect = dispatch(connectHashtagStream(hashtag));
   }
 
-  componentWillUnmount () {
-    if (this.disconnect) {
-      this.disconnect();
-      this.disconnect = null;
+  handleLoadMore = () => {
+    const maxId = this.props.statusIds.last();
+
+    if (maxId) {
+      this.props.dispatch(expandHashtagTimeline(this.props.hashtag, { maxId }));
     }
   }
 
-  handleLoadMore = maxId => {
-    this.props.dispatch(expandHashtagTimeline(this.props.hashtag, { maxId }));
+  setRef = c => {
+    this.masonry = c;
   }
 
+  handleHeightChange = debounce(() => {
+    if (!this.masonry) {
+      return;
+    }
+
+    this.masonry.forcePack();
+  }, 50)
+
   render () {
-    const { hashtag } = this.props;
+    const { statusIds, hasMore, isLoading } = this.props;
+
+    const sizes = [
+      { columns: 1, gutter: 0 },
+      { mq: '415px', columns: 1, gutter: 10 },
+      { mq: '640px', columns: 2, gutter: 10 },
+      { mq: '960px', columns: 3, gutter: 10 },
+      { mq: '1255px', columns: 3, gutter: 10 },
+    ];
+
+    const loader = (isLoading && statusIds.isEmpty()) ? <LoadingIndicator key={0} /> : undefined;
 
     return (
-      <Column ref={this.setRef}>
-        <ColumnHeader
-          icon='hashtag'
-          title={hashtag}
-          onClick={this.handleHeaderClick}
-          timelineId={`hashtag:${hashtag}`}
-        />
-
-        <StatusListContainer
-          trackScroll={false}
-          scrollKey='standalone_hashtag_timeline'
-          timelineId={`hashtag:${hashtag}`}
-          onLoadMore={this.handleLoadMore}
-          pawooMediaScale='230px'
-          pawooWideMedia
-        />
-      </Column>
+      <Masonry ref={this.setRef} className='statuses-grid' hasMore={hasMore} loadMore={this.handleLoadMore} sizes={sizes} loader={loader}>
+        {statusIds.map(statusId => (
+          <div className='statuses-grid__item' key={statusId}>
+            <DetailedStatusContainer
+              id={statusId}
+              compact
+              measureHeight
+              onHeightChange={this.handleHeightChange}
+            />
+          </div>
+        )).toArray()}
+      </Masonry>
     );
   }
 

@@ -22,11 +22,24 @@ module Admin
       @form     = Form::StatusBatch.new
     end
 
+    def show
+      authorize :status, :index?
+
+      @statuses = @account.statuses.where(id: params[:id])
+      authorize @statuses.first, :show?
+
+      @form = Form::StatusBatch.new
+    end
+
     def create
       authorize :status, :update?
 
       @form         = Form::StatusBatch.new(form_status_batch_params.merge(current_account: current_account, action: action_from_button))
       flash[:alert] = I18n.t('admin.statuses.failed_to_execute') unless @form.save
+
+      redirect_to admin_account_statuses_path(@account.id, current_params)
+    rescue ActionController::ParameterMissing
+      flash[:alert] = I18n.t('admin.statuses.no_status_selected')
 
       redirect_to admin_account_statuses_path(@account.id, current_params)
     end

@@ -3,6 +3,7 @@ default: &default
   pool: <%= ENV["DB_POOL"] || ENV['MAX_THREADS'] || 5 %>
   timeout: 5000
   encoding: unicode
+  sslmode: <%= ENV['DB_SSLMODE'] || "prefer" %>
   variables:
     statement_timeout: <%= ENV['STATEMENT_TIMEOUT'] || 0 %>
 
@@ -33,3 +34,4 @@ production: &production
   host: <%= ENV['DB_HOST'] || 'localhost' %>
   port: <%= ENV['DB_PORT'] || 5432 %>
   prepared_statements: <%= ENV['PREPARED_STATEMENTS'] || 'true' %>
+

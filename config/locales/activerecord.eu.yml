@@ -1,9 +1,17 @@
 ---
 eu:
   activerecord:
+    attributes:
+      poll:
+        expires_at: Epemuga
+        options: Aukerak
     errors:
       models:
         account:
           attributes:
             username:
               invalid: letrak, zenbakiak eta gidoi baxuak besterik ez
+        status:
+          attributes:
+            reblog:
+              taken: mezu honentzat bazegoen aurretik

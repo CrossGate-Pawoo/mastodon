@@ -17,15 +17,16 @@ const messages = defineMessages({
 
 const mapStateToProps = state => ({
   hasUnread: state.getIn(['timelines', 'home', 'unread']) > 0,
-  isPartial: state.getIn(['timelines', 'home', 'items', 0], null) === null,
+  isPartial: state.getIn(['timelines', 'home', 'isPartial']),
 });
 
-@connect(mapStateToProps)
+export default @connect(mapStateToProps)
 @injectIntl
-export default class HomeTimeline extends React.PureComponent {
+class HomeTimeline extends React.PureComponent {
 
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
+    shouldUpdateScroll: PropTypes.func,
     intl: PropTypes.object.isRequired,
     hasUnread: PropTypes.bool,
     isPartial: PropTypes.bool,
@@ -95,11 +96,11 @@ export default class HomeTimeline extends React.PureComponent {
   }
 
   render () {
-    const { intl, hasUnread, columnId, multiColumn, pawoo } = this.props;
+    const { intl, shouldUpdateScroll, hasUnread, columnId, multiColumn, pawoo } = this.props;
     const pinned = !!columnId;
 
     return (
-      <Column ref={this.setRef}>
+      <Column ref={this.setRef} label={intl.formatMessage(messages.title)}>
         <ColumnHeader
           icon='home'
           active={hasUnread}
@@ -117,10 +118,12 @@ export default class HomeTimeline extends React.PureComponent {
         </ColumnHeader>
 
         <StatusListContainer
+          trackScroll={!pinned}
           scrollKey={`home_timeline-${columnId}`}
           onLoadMore={this.handleLoadMore}
           timelineId='home'
           emptyMessage={<FormattedMessage id='empty_column.home' defaultMessage='Your home timeline is empty! Visit {public} or use search to get started and meet other users.' values={{ public: <Link to='/suggested_accounts'><FormattedMessage id='pawoo.empty_column.home.suggested_accounts' defaultMessage='the active accounts' /></Link> }} />}
+          shouldUpdateScroll={shouldUpdateScroll}
         />
       </Column>
     );

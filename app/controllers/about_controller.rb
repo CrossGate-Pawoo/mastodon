@@ -1,12 +1,18 @@
 # frozen_string_literal: true
 
 class AboutController < ApplicationController
-  before_action :set_body_classes
+  layout 'public'
+
   before_action :set_instance_presenter, only: [:show, :more, :terms]
 
+  skip_before_action :check_user_permissions, only: [:more, :terms]
+
+  include Pawoo::AboutControllerConcern
+
   def show
-    serializable_resource = ActiveModelSerializers::SerializableResource.new(InitialStatePresenter.new(initial_state_params), serializer: InitialStateSerializer)
-    @initial_state_json   = serializable_resource.to_json
+    @hide_navbar = true
+
+    render 'pawoo/extensions/about/show'
   end
 
   def more; end
@@ -16,27 +22,15 @@ class AboutController < ApplicationController
   private
 
   def new_user
-    User.new.tap(&:build_account)
+    User.new.tap do |user|
+      user.build_account
+      user.build_invite_request
+    end
   end
 
   helper_method :new_user
 
   def set_instance_presenter
     @instance_presenter = InstancePresenter.new
-  end
-
-  def set_body_classes
-    @body_classes = 'about-body'
-  end
-
-  def initial_state_params
-    {
-      settings: { known_fediverse: Setting.show_known_fediverse_at_about_page },
-      token: current_session&.token,
-      pawoo: {
-        user_count: @instance_presenter.user_count,
-        status_count: @instance_presenter.status_count,
-      },
-    }
   end
 end

@@ -2,9 +2,9 @@
 
 module Admin
   class AccountsController < BaseController
-    before_action :set_account, only: [:show, :subscribe, :unsubscribe, :redownload, :remove_avatar, :enable, :disable, :memorialize]
+    before_action :set_account, only: [:show, :subscribe, :unsubscribe, :redownload, :remove_avatar, :remove_header, :enable, :unsilence, :unsuspend, :memorialize, :approve, :reject]
     before_action :require_remote_account!, only: [:subscribe, :unsubscribe, :redownload]
-    before_action :require_local_account!, only: [:enable, :disable, :memorialize]
+    before_action :require_local_account!, only: [:enable, :memorialize, :approve, :reject]
 
     def index
       authorize :account, :index?
@@ -13,9 +13,11 @@ module Admin
 
     def show
       authorize @account, :show?
+
       @pawoo_oauth_authentication = @account.oauth_authentications.find_by(provider: :pixiv)
       @account_moderation_note = current_account.account_moderation_notes.new(target_account: @account)
-      @moderation_notes = @account.targeted_moderation_notes.latest
+      @moderation_notes        = @account.targeted_moderation_notes.latest
+      @warnings                = @account.targeted_account_warnings.latest.custom
     end
 
     def subscribe
@@ -44,19 +46,37 @@ module Admin
       redirect_to admin_account_path(@account.id)
     end
 
-    def disable
-      authorize @account.user, :disable?
-      @account.user.disable!
-      log_action :disable, @account.user
+    def approve
+      authorize @account.user, :approve?
+      @account.user.approve!
+      redirect_to admin_pending_accounts_path
+    end
+
+    def reject
+      authorize @account.user, :reject?
+      SuspendAccountService.new.call(@account, including_user: true, destroy: true, skip_distribution: true)
+      redirect_to admin_pending_accounts_path
+    end
+
+    def unsilence
+      authorize @account, :unsilence?
+      @account.unsilence!
+      log_action :unsilence, @account
+      redirect_to admin_account_path(@account.id)
+    end
+
+    def unsuspend
+      authorize @account, :unsuspend?
+      @account.unsuspend!
+      log_action :unsuspend, @account
       redirect_to admin_account_path(@account.id)
     end
 
     def redownload
       authorize @account, :redownload?
 
-      @account.reset_avatar!
-      @account.reset_header!
-      @account.save!
+      @account.update!(last_webfingered_at: nil)
+      ResolveAccountService.new.call(@account)
 
       redirect_to admin_account_path(@account.id)
     end
@@ -68,6 +88,17 @@ module Admin
       @account.save!
 
       log_action :remove_avatar, @account.user
+
+      redirect_to admin_account_path(@account.id)
+    end
+
+    def remove_header
+      authorize @account, :remove_header?
+
+      @account.header = nil
+      @account.save!
+
+      log_action :remove_header, @account.user
 
       redirect_to admin_account_path(@account.id)
     end
@@ -95,8 +126,10 @@ module Admin
         :local,
         :remote,
         :by_domain,
+        :active,
+        :pending,
+        :disabled,
         :silenced,
-        :recent,
         :suspended,
         :username,
         :display_name,

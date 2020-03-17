@@ -275,7 +275,7 @@ RSpec.describe Account, type: :model do
 
     subject { Fabricate(:account) }
 
-    context 'when the status is a reblog of another status'do
+    context 'when the status is a reblog of another status' do
       let(:original_reblog) do
         author = Fabricate(:account, username: 'original_reblogger')
         Fabricate(:status, reblog: original_status, account: author)
@@ -454,74 +454,34 @@ RSpec.describe Account, type: :model do
     end
   end
 
-  describe '.triadic_closures' do
-    let!(:me) { Fabricate(:account) }
-    let!(:friend) { Fabricate(:account) }
-    let!(:friends_friend) { Fabricate(:account, statuses: [Fabricate(:status)]) }
-    let!(:both_follow) { Fabricate(:account) }
+  describe '#statuses_count' do
+    subject { Fabricate(:account) }
 
-    before do
-      me.follow!(friend)
-      friend.follow!(friends_friend)
-
-      me.follow!(both_follow)
-      friend.follow!(both_follow)
+    it 'counts statuses' do
+      Fabricate(:status, account: subject)
+      Fabricate(:status, account: subject)
+      expect(subject.statuses_count).to eq 2
     end
 
-    it 'finds accounts you dont follow which are followed by accounts you do follow' do
-      expect(described_class.triadic_closures(me)).to eq [friends_friend]
+    it 'does not count direct statuses' do
+      Fabricate(:status, account: subject, visibility: :direct)
+      expect(subject.statuses_count).to eq 0
     end
 
-    it 'limits by 5 with offset 0 by defualt' do
-      first_degree = 6.times.map { Fabricate(:account) }
-      matches = 5.times.map { Fabricate(:account, statuses: [Fabricate(:status)]) }
-      first_degree.each { |account| me.follow!(account) }
-      matches.each do |match|
-        first_degree.each { |account| account.follow!(match) }
-        first_degree.shift
-      end
-
-      expect(described_class.triadic_closures(me)).to eq matches
+    it 'is decremented when status is removed' do
+      status = Fabricate(:status, account: subject)
+      expect(subject.statuses_count).to eq 1
+      status.destroy
+      expect(subject.statuses_count).to eq 0
     end
 
-    it 'accepts arbitrary limits' do
-      another_friend = Fabricate(:account)
-      higher_friends_friend = Fabricate(:account, statuses: [Fabricate(:status)])
-      me.follow!(another_friend)
-      friend.follow!(higher_friends_friend)
-      another_friend.follow!(higher_friends_friend)
-
-      expect(described_class.triadic_closures(me, limit: 1)).to eq [higher_friends_friend]
-    end
-
-    it 'accepts arbitrary offset' do
-      another_friend = Fabricate(:account)
-      higher_friends_friend = Fabricate(:account, statuses: [Fabricate(:status)])
-      me.follow!(another_friend)
-      friend.follow!(higher_friends_friend)
-      another_friend.follow!(higher_friends_friend)
-
-      expect(described_class.triadic_closures(me, offset: 1)).to eq [friends_friend]
-    end
-
-    context 'when you block account' do
-      before do
-        me.block!(friends_friend)
-      end
-
-      it 'rejects blocked accounts' do
-        expect(described_class.triadic_closures(me)).to be_empty
-      end
-    end
-
-    context 'when you mute account' do
-      before do
-        me.mute!(friends_friend)
-      end
-
-      it 'rejects muted accounts' do
-        expect(described_class.triadic_closures(me)).to be_empty
-      end
+    it 'is decremented when status is removed when account is not preloaded' do
+      status = Fabricate(:status, account: subject)
+      expect(subject.reload.statuses_count).to eq 1
+      clean_status = Status.find(status.id)
+      expect(clean_status.association(:account).loaded?).to be false
+      clean_status.destroy
+      expect(subject.reload.statuses_count).to eq 0
     end
   end
 
@@ -598,8 +558,13 @@ RSpec.describe Account, type: :model do
       expect(account).to model_have_error_on_field(:username)
     end
 
+    it 'squishes the username before validation' do
+      account = Fabricate(:account, domain: nil, username: " \u3000bob \t \u00a0 \n ")
+      expect(account.username).to eq 'bob'
+    end
+
     context 'when is local' do
-      it 'is invalid if the username is not unique in case-insensitive comparsion among local accounts' do
+      it 'is invalid if the username is not unique in case-insensitive comparison among local accounts' do
         account_1 = Fabricate(:account, username: 'the_doctor')
         account_2 = Fabricate.build(:account, username: 'the_Doctor')
         account_2.valid?
@@ -636,8 +601,8 @@ RSpec.describe Account, type: :model do
         expect(account).to model_have_error_on_field(:display_name)
       end
 
-      it 'is invalid if the note is longer than 160 characters' do
-        account = Fabricate.build(:account, note: Faker::Lorem.characters(161))
+      it 'is invalid if the note is longer than 500 characters' do
+        account = Fabricate.build(:account, note: Faker::Lorem.characters(501))
         account.valid?
         expect(account).to model_have_error_on_field(:note)
       end
@@ -658,10 +623,16 @@ RSpec.describe Account, type: :model do
         expect(account).not_to model_have_error_on_field(:username)
       end
 
-      it 'is valid even if the username doesn\'t only contains letters, numbers and underscores' do
+      it 'is valid even if the username contains hyphens' do
         account = Fabricate.build(:account, domain: 'domain', username: 'the-doctor')
         account.valid?
-        expect(account).not_to model_have_error_on_field(:username)
+        expect(account).to_not model_have_error_on_field(:username)
+      end
+
+      it 'is invalid if the username doesn\'t only contains letters, numbers, underscores and hyphens' do
+        account = Fabricate.build(:account, domain: 'domain', username: 'the doctor')
+        account.valid?
+        expect(account).to model_have_error_on_field(:username)
       end
 
       it 'is valid even if the username is longer then 30 characters' do
@@ -676,8 +647,8 @@ RSpec.describe Account, type: :model do
         expect(account).not_to model_have_error_on_field(:display_name)
       end
 
-      it 'is valid even if the note is longer than 160 characters' do
-        account = Fabricate.build(:account, domain: 'domain', note: Faker::Lorem.characters(161))
+      it 'is valid even if the note is longer than 500 characters' do
+        account = Fabricate.build(:account, domain: 'domain', note: Faker::Lorem.characters(501))
         account.valid?
         expect(account).not_to model_have_error_on_field(:note)
       end
@@ -713,6 +684,23 @@ RSpec.describe Account, type: :model do
         Fabricate(:account, username: 'prefix_and_pattern')
 
         expect(Account.matches_username('pattern')).to eq [match]
+      end
+    end
+
+    describe 'by_domain_and_subdomains' do
+      it 'returns exact domain matches' do
+        account = Fabricate(:account, domain: 'example.com')
+        expect(Account.by_domain_and_subdomains('example.com')).to eq [account]
+      end
+
+      it 'returns subdomains' do
+        account = Fabricate(:account, domain: 'foo.example.com')
+        expect(Account.by_domain_and_subdomains('example.com')).to eq [account]
+      end
+
+      it 'does not return partially matching domains' do
+        account = Fabricate(:account, domain: 'grexample.com')
+        expect(Account.by_domain_and_subdomains('example.com')).to_not eq [account]
       end
     end
 
@@ -792,24 +780,6 @@ RSpec.describe Account, type: :model do
         account_1 = Fabricate(:account, suspended: true)
         account_2 = Fabricate(:account, suspended: false)
         expect(Account.suspended).to match_array([account_1])
-      end
-    end
-
-    describe 'without_followers' do
-      it 'returns a relation of accounts without followers' do
-        account_1 = Fabricate(:account)
-        account_2 = Fabricate(:account)
-        Fabricate(:follow, account: account_1, target_account: account_2)
-        expect(Account.without_followers).to match_array([account_1])
-      end
-    end
-
-    describe 'with_followers' do
-      it 'returns a relation of accounts with followers' do
-        account_1 = Fabricate(:account)
-        account_2 = Fabricate(:account)
-        Fabricate(:follow, account: account_1, target_account: account_2)
-        expect(Account.with_followers).to match_array([account_2])
       end
     end
   end

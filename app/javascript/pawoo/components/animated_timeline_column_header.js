@@ -3,6 +3,7 @@ import React from 'react';
 import { pawooAddListener, pawooRemoveListener } from '../../mastodon/actions/streaming';
 import ColumnHeader from '../../mastodon/components/column_header';
 
+// TODO: 削除
 export default class AnimatedTimelineColumnHeader extends React.PureComponent {
 
   static propTypes = {

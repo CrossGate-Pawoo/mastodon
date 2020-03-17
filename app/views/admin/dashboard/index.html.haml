@@ -1,0 +1,109 @@
+- content_for :page_title do
+  = t('admin.dashboard.title')
+
+.dashboard__counters
+  %div
+    = link_to admin_accounts_url(local: 1, recent: 1) do
+      .dashboard__counters__num= number_with_delimiter @users_count
+      .dashboard__counters__label= t 'admin.dashboard.total_users'
+  %div
+    %div
+      .dashboard__counters__num= number_with_delimiter @registrations_week
+      .dashboard__counters__label= t 'admin.dashboard.week_users_new'
+  %div
+    %div
+      .dashboard__counters__num= number_with_delimiter @logins_week
+      .dashboard__counters__label= t 'admin.dashboard.week_users_active'
+  %div
+    %div
+      .dashboard__counters__num= number_with_delimiter @interactions_week
+      .dashboard__counters__label= t 'admin.dashboard.week_interactions'
+  %div
+    = link_to admin_reports_url do
+      .dashboard__counters__num= number_with_delimiter @reports_count
+      .dashboard__counters__label= t 'admin.dashboard.open_reports'
+  %div
+    = link_to sidekiq_url do
+      .dashboard__counters__num= number_with_delimiter @queue_backlog
+      .dashboard__counters__label= t 'admin.dashboard.backlog'
+
+.dashboard__widgets
+  .dashboard__widgets__users
+    %div
+      %h4= t 'admin.dashboard.recent_users'
+      %ul
+        - @recent_users.each do |user|
+          %li= admin_account_link_to(user.account)
+
+  .dashboard__widgets__features
+    %div
+      %h4= t 'admin.dashboard.features'
+      %ul
+        %li
+          = feature_hint(link_to(t('admin.dashboard.feature_registrations'), edit_admin_settings_path), @registrations_enabled)
+        %li
+          = feature_hint(link_to(t('admin.dashboard.feature_invites'), edit_admin_settings_path), @invites_enabled)
+        %li
+          = feature_hint(link_to(t('admin.dashboard.feature_deletions'), edit_admin_settings_path), @deletions_enabled)
+        %li
+          = feature_hint(link_to(t('admin.dashboard.feature_profile_directory'), edit_admin_settings_path), @profile_directory)
+        %li
+          = feature_hint(link_to(t('admin.dashboard.feature_timeline_preview'), edit_admin_settings_path), @timeline_preview)
+        %li
+          = feature_hint(link_to(t('admin.dashboard.feature_relay'), admin_relays_path), @relay_enabled)
+
+  .dashboard__widgets__versions
+    %div
+      %h4= t 'admin.dashboard.software'
+      %ul
+        %li
+          Mastodon
+          %span.pull-right= @version
+        %li
+          Ruby
+          %span.pull-right= "#{RUBY_VERSION}p#{RUBY_PATCHLEVEL}"
+        %li
+          PostgreSQL
+          %span.pull-right= @database_version
+        %li
+          Redis
+          %span.pull-right= @redis_version
+
+  .dashboard__widgets__space
+    %div
+      %h4= t 'admin.dashboard.space'
+      %ul
+        %li
+          PostgreSQL
+          %span.pull-right= number_to_human_size @database_size
+        %li
+          Redis
+          %span.pull-right= number_to_human_size @redis_size
+
+  .dashboard__widgets__config
+    %div
+      %h4= t 'admin.dashboard.config'
+      %ul
+        %li
+          = feature_hint(t('admin.dashboard.search'), @search_enabled)
+        %li
+          = feature_hint(t('admin.dashboard.single_user_mode'), @single_user_mode)
+        %li
+          = feature_hint('LDAP', @ldap_enabled)
+        %li
+          = feature_hint('CAS', @cas_enabled)
+        %li
+          = feature_hint('SAML', @saml_enabled)
+        %li
+          = feature_hint('PAM', @pam_enabled)
+        %li
+          = feature_hint(t('admin.dashboard.hidden_service'), @hidden_service)
+
+  .dashboard__widgets__trends
+    %div
+      %h4= t 'admin.dashboard.trends'
+      %ul
+        - @trending_hashtags.each do |tag|
+          %li
+            = link_to "##{tag.name}", web_url("timelines/tag/#{tag.name}")
+            %span.pull-right= number_with_delimiter(tag.history[0][:accounts].to_i)

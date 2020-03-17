@@ -1,3 +1,6 @@
+require:
+  - rubocop-rails
+
 AllCops:
   TargetRubyVersion: 2.3
   Exclude:
@@ -11,6 +14,7 @@ AllCops:
   - 'Vagrantfile'
   - 'vendor/**/*'
   - 'lib/json_ld/*'
+  - 'lib/templates/**/*'
 
 Bundler/OrderedGems:
   Enabled: false
@@ -61,6 +65,9 @@ Metrics/ParameterLists:
 Metrics/PerceivedComplexity:
   Max: 20
 
+Naming/MemoizedInstanceVariableName:
+  Enabled: false
+
 Rails:
   Enabled: true
 
@@ -68,6 +75,17 @@ Rails/HasAndBelongsToMany:
   Enabled: false
 
 Rails/SkipsModelValidations:
+  Enabled: false
+
+Rails/HttpStatus:
+  Enabled: false
+
+Rails/Exit:
+  Exclude:
+    - 'lib/mastodon/*'
+    - 'lib/cli.rb'
+
+Rails/HelperInstanceVariable:
   Enabled: false
 
 Style/ClassAndModuleChildren:

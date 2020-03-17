@@ -1,15 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
+import ImmutablePureComponent from 'react-immutable-pure-component';
 import ImmutablePropTypes from 'react-immutable-proptypes';
+import { debounce } from 'lodash';
 import PropTypes from 'prop-types';
 import LoadingIndicator from '../../components/loading_indicator';
-import { ScrollContainer } from 'react-router-scroll-4';
 import Column from '../ui/components/column';
 import ColumnBackButtonSlim from '../../components/column_back_button_slim';
 import AccountContainer from '../../containers/account_container';
 import { fetchBlocks, expandBlocks } from '../../actions/blocks';
-import { defineMessages, injectIntl } from 'react-intl';
-import ImmutablePureComponent from 'react-immutable-pure-component';
+import ScrollableList from '../../components/scrollable_list';
 
 const messages = defineMessages({
   heading: { id: 'column.blocks', defaultMessage: 'Blocked users' },
@@ -17,16 +18,19 @@ const messages = defineMessages({
 
 const mapStateToProps = state => ({
   accountIds: state.getIn(['user_lists', 'blocks', 'items']),
+  hasMore: !!state.getIn(['user_lists', 'blocks', 'next']),
 });
 
-@connect(mapStateToProps)
+export default @connect(mapStateToProps)
 @injectIntl
-export default class Blocks extends ImmutablePureComponent {
+class Blocks extends ImmutablePureComponent {
 
   static propTypes = {
     params: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
+    shouldUpdateScroll: PropTypes.func,
     accountIds: ImmutablePropTypes.list,
+    hasMore: PropTypes.bool,
     intl: PropTypes.object.isRequired,
   };
 
@@ -34,16 +38,12 @@ export default class Blocks extends ImmutablePureComponent {
     this.props.dispatch(fetchBlocks());
   }
 
-  handleScroll = (e) => {
-    const { scrollTop, scrollHeight, clientHeight } = e.target;
-
-    if (scrollTop === scrollHeight - clientHeight) {
-      this.props.dispatch(expandBlocks());
-    }
-  }
+  handleLoadMore = debounce(() => {
+    this.props.dispatch(expandBlocks());
+  }, 300, { leading: true });
 
   render () {
-    const { intl, accountIds } = this.props;
+    const { intl, accountIds, shouldUpdateScroll, hasMore } = this.props;
 
     if (!accountIds) {
       return (
@@ -53,16 +53,22 @@ export default class Blocks extends ImmutablePureComponent {
       );
     }
 
+    const emptyMessage = <FormattedMessage id='empty_column.blocks' defaultMessage="You haven't blocked any users yet." />;
+
     return (
       <Column icon='ban' heading={intl.formatMessage(messages.heading)}>
         <ColumnBackButtonSlim />
-        <ScrollContainer scrollKey='blocks'>
-          <div className='scrollable' onScroll={this.handleScroll}>
-            {accountIds.map(id =>
-              <AccountContainer key={id} id={id} />
-            )}
-          </div>
-        </ScrollContainer>
+        <ScrollableList
+          scrollKey='blocks'
+          onLoadMore={this.handleLoadMore}
+          hasMore={hasMore}
+          shouldUpdateScroll={shouldUpdateScroll}
+          emptyMessage={emptyMessage}
+        >
+          {accountIds.map(id =>
+            <AccountContainer key={id} id={id} />
+          )}
+        </ScrollableList>
       </Column>
     );
   }

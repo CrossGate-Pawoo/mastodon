@@ -3,7 +3,7 @@
 class Api::V1::Statuses::FavouritedByAccountsController < Api::BaseController
   include Authorization
 
-  before_action :authorize_if_got_token
+  before_action -> { authorize_if_got_token! :read, :'read:accounts' }
   before_action :set_status
   after_action :insert_pagination_headers
 
@@ -22,7 +22,7 @@ class Api::V1::Statuses::FavouritedByAccountsController < Api::BaseController
 
   def default_accounts
     Account
-      .includes(:favourites)
+      .includes(:favourites, :account_stat)
       .references(:favourites)
       .where(favourites: { status_id: @status.id })
   end
@@ -68,11 +68,6 @@ class Api::V1::Statuses::FavouritedByAccountsController < Api::BaseController
     authorize @status, :show?
   rescue Mastodon::NotPermittedError
     not_found
-  end
-
-  def authorize_if_got_token
-    request_token = Doorkeeper::OAuth::Token.from_request(request, *Doorkeeper.configuration.access_token_methods)
-    doorkeeper_authorize! :read if request_token
   end
 
   def pagination_params(core_params)

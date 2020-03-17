@@ -11,47 +11,63 @@ import HeaderContainer from './containers/header_container';
 import ColumnBackButton from '../../components/column_back_button';
 import { List as ImmutableList } from 'immutable';
 import ImmutablePureComponent from 'react-immutable-pure-component';
+import { FormattedMessage } from 'react-intl';
+import { fetchAccountIdentityProofs } from '../../actions/identity_proofs';
+import MissingIndicator from 'mastodon/components/missing_indicator';
+
+const emptyList = ImmutableList();
 
 const mapStateToProps = (state, { params: { accountId }, withReplies = false }) => {
   const path = withReplies ? `${accountId}:with_replies` : accountId;
 
   return {
-    statusIds: state.getIn(['timelines', `account:${path}`, 'items'], ImmutableList()),
-    featuredStatusIds: withReplies ? ImmutableList() : state.getIn(['timelines', `account:${accountId}:pinned`, 'items'], ImmutableList()),
+    isAccount: !!state.getIn(['accounts', accountId]),
+    statusIds: state.getIn(['timelines', `account:${path}`, 'items'], emptyList),
+    featuredStatusIds: withReplies ? ImmutableList() : state.getIn(['timelines', `account:${accountId}:pinned`, 'items'], emptyList),
     isLoading: state.getIn(['timelines', `account:${path}`, 'isLoading']),
-    hasMore:   state.getIn(['timelines', `account:${path}`, 'hasMore']),
+    hasMore: state.getIn(['timelines', `account:${path}`, 'hasMore']),
+    blockedBy: state.getIn(['relationships', accountId, 'blocked_by'], false),
   };
 };
 
-@connect(mapStateToProps)
-export default class AccountTimeline extends ImmutablePureComponent {
+export default @connect(mapStateToProps)
+class AccountTimeline extends ImmutablePureComponent {
 
   static propTypes = {
     params: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
+    shouldUpdateScroll: PropTypes.func,
     statusIds: ImmutablePropTypes.list,
     featuredStatusIds: ImmutablePropTypes.list,
     isLoading: PropTypes.bool,
     hasMore: PropTypes.bool,
     withReplies: PropTypes.bool,
+    blockedBy: PropTypes.bool,
+    isAccount: PropTypes.bool,
   };
 
   componentWillMount () {
     const { params: { accountId }, withReplies } = this.props;
 
     this.props.dispatch(fetchAccount(accountId));
+    this.props.dispatch(fetchAccountIdentityProofs(accountId));
+
     if (!withReplies) {
       this.props.dispatch(expandAccountFeaturedTimeline(accountId));
     }
+
     this.props.dispatch(expandAccountTimeline(accountId, { withReplies }));
   }
 
   componentWillReceiveProps (nextProps) {
     if ((nextProps.params.accountId !== this.props.params.accountId && nextProps.params.accountId) || nextProps.withReplies !== this.props.withReplies) {
       this.props.dispatch(fetchAccount(nextProps.params.accountId));
+      this.props.dispatch(fetchAccountIdentityProofs(nextProps.params.accountId));
+
       if (!nextProps.withReplies) {
         this.props.dispatch(expandAccountFeaturedTimeline(nextProps.params.accountId));
       }
+
       this.props.dispatch(expandAccountTimeline(nextProps.params.accountId, { withReplies: nextProps.params.withReplies }));
     }
   }
@@ -61,7 +77,15 @@ export default class AccountTimeline extends ImmutablePureComponent {
   }
 
   render () {
-    const { statusIds, featuredStatusIds, isLoading, hasMore } = this.props;
+    const { shouldUpdateScroll, statusIds, featuredStatusIds, isLoading, hasMore, blockedBy, isAccount } = this.props;
+
+    if (!isAccount) {
+      return (
+        <Column>
+          <MissingIndicator />
+        </Column>
+      );
+    }
 
     if (!statusIds && isLoading) {
       return (
@@ -71,18 +95,23 @@ export default class AccountTimeline extends ImmutablePureComponent {
       );
     }
 
+    const emptyMessage = blockedBy ? <FormattedMessage id='empty_column.account_unavailable' defaultMessage='Profile unavailable' /> : <FormattedMessage id='empty_column.account_timeline' defaultMessage='No toots here!' />;
+
     return (
       <Column>
         <ColumnBackButton />
 
         <StatusList
           prepend={<HeaderContainer accountId={this.props.params.accountId} />}
+          alwaysPrepend
           scrollKey='account_timeline'
-          statusIds={statusIds}
+          statusIds={blockedBy ? emptyList : statusIds}
           featuredStatusIds={featuredStatusIds}
           isLoading={isLoading}
           hasMore={hasMore}
           onLoadMore={this.handleLoadMore}
+          shouldUpdateScroll={shouldUpdateScroll}
+          emptyMessage={emptyMessage}
         />
       </Column>
     );

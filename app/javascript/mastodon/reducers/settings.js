@@ -1,4 +1,5 @@
 import { SETTING_CHANGE, SETTING_SAVE } from '../actions/settings';
+import { NOTIFICATIONS_FILTER_SET } from '../actions/notifications';
 import { COLUMN_ADD, COLUMN_REMOVE, COLUMN_MOVE, COLUMN_PARAMS_CHANGE } from '../actions/columns';
 import { STORE_HYDRATE } from '../actions/store';
 import { EMOJI_USE } from '../actions/emojis';
@@ -30,6 +31,13 @@ const initialState = ImmutableMap({
       favourite: true,
       reblog: true,
       mention: true,
+      poll: true,
+    }),
+
+    quickFilter: ImmutableMap({
+      active: 'all',
+      show: true,
+      advanced: false,
     }),
 
     shows: ImmutableMap({
@@ -37,6 +45,7 @@ const initialState = ImmutableMap({
       favourite: true,
       reblog: true,
       mention: true,
+      poll: true,
     }),
 
     sounds: ImmutableMap({
@@ -44,6 +53,7 @@ const initialState = ImmutableMap({
       favourite: true,
       reblog: true,
       mention: true,
+      poll: true,
     }),
   }),
 
@@ -69,6 +79,10 @@ const initialState = ImmutableMap({
     regex: ImmutableMap({
       body: '',
     }),
+  }),
+
+  trends: ImmutableMap({
+    show: true,
   }),
 
   pawoo: ImmutableMap({
@@ -99,11 +113,11 @@ const moveColumn = (state, uuid, direction) => {
     .set('saved', false);
 };
 
-const changeColumnParams = (state, uuid, params) => {
+const changeColumnParams = (state, uuid, path, value) => {
   const columns = state.get('columns');
   const index   = columns.findIndex(item => item.get('uuid') === uuid);
 
-  const newColumns = columns.update(index, column => column.update('params', () => fromJS(params)));
+  const newColumns = columns.update(index, column => column.updateIn(['params', ...path], () => value));
 
   return state
     .set('columns', newColumns)
@@ -118,6 +132,7 @@ export default function settings(state = initialState, action) {
   switch(action.type) {
   case STORE_HYDRATE:
     return hydrate(state, action.state.get('settings'));
+  case NOTIFICATIONS_FILTER_SET:
   case SETTING_CHANGE:
     return state
       .setIn(action.path, action.value)
@@ -133,7 +148,7 @@ export default function settings(state = initialState, action) {
   case COLUMN_MOVE:
     return moveColumn(state, action.uuid, action.direction);
   case COLUMN_PARAMS_CHANGE:
-    return changeColumnParams(state, action.uuid, action.params);
+    return changeColumnParams(state, action.uuid, action.path, action.value);
   case EMOJI_USE:
     return updateFrequentEmojis(state, action.emoji);
   case SETTING_SAVE:

@@ -33,7 +33,7 @@ if ENV['S3_ENABLED'] == 'true'
     s3_protocol: s3_protocol,
     s3_host_name: s3_hostname,
     s3_headers: {
-      'Cache-Control' => 'max-age=315576000',
+      'Cache-Control' => 'public, max-age=315576000, immutable',
     },
     s3_permissions: ENV.fetch('S3_PERMISSION') { 'public-read' },
     s3_region: s3_region,
@@ -44,6 +44,9 @@ if ENV['S3_ENABLED'] == 'true'
     },
     s3_options: {
       signature_version: ENV.fetch('S3_SIGNATURE_VERSION') { 'v4' },
+      http_open_timeout: 5,
+      http_read_timeout: 5,
+      http_idle_timeout: 5,
     }
   )
 
@@ -55,10 +58,10 @@ if ENV['S3_ENABLED'] == 'true'
     Paperclip::Attachment.default_options[:url] = ':s3_path_url'
   end
 
-  if ENV.has_key?('S3_CLOUDFRONT_HOST')
+  if ENV.has_key?('S3_ALIAS_HOST') || ENV.has_key?('S3_CLOUDFRONT_HOST')
     Paperclip::Attachment.default_options.merge!(
       url: ':s3_alias_url',
-      s3_host_alias: ENV['S3_CLOUDFRONT_HOST']
+      s3_host_alias: ENV['S3_ALIAS_HOST'] || ENV['S3_CLOUDFRONT_HOST']
     )
   end
 elsif ENV['SWIFT_ENABLED'] == 'true'
@@ -82,14 +85,10 @@ elsif ENV['SWIFT_ENABLED'] == 'true'
     fog_public: true
   )
 else
-  require 'fog/local'
-
   Paperclip::Attachment.default_options.merge!(
-    fog_credentials: {
-      provider: 'Local',
-      local_root: ENV.fetch('PAPERCLIP_ROOT_PATH') { Rails.root.join('public', 'system') },
-    },
-    fog_directory: '',
-    fog_host: ENV.fetch('PAPERCLIP_ROOT_URL') { '/system' }
+    storage: :filesystem,
+    use_timestamp: true,
+    path: (ENV['PAPERCLIP_ROOT_PATH'] || ':rails_root/public/system') + '/:class/:attachment/:id_partition/:style/:filename',
+    url: (ENV['PAPERCLIP_ROOT_URL'] || '/system') + '/:class/:attachment/:id_partition/:style/:filename',
   )
 end

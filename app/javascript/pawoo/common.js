@@ -1,8 +1,6 @@
 import GA from './actions/ga';
 import loadPolyfills from '../mastodon/load_polyfills';
 
-require.context('./images/', true);
-
 function main() {
   const ready = require('../mastodon/ready').default;
   ready(() => {
@@ -11,6 +9,10 @@ function main() {
   });
 }
 
-loadPolyfills().then(main).catch(error => {
-  console.error(error);
-});
+export function start() {
+  require.context('./images/', true);
+
+  loadPolyfills().then(main).catch(error => {
+    console.error(error);
+  });
+}

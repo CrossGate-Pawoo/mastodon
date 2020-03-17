@@ -3,7 +3,6 @@
 class StatusesController < ApplicationController
   include SignatureAuthentication
   include Authorization
-  include Pawoo::StatusesControllerConcern
 
   ANCESTORS_LIMIT         = 40
   DESCENDANTS_LIMIT       = 60
@@ -13,14 +12,25 @@ class StatusesController < ApplicationController
 
   before_action :set_account
   before_action :set_status
+  before_action :set_instance_presenter
   before_action :check_account_suspension
   before_action :redirect_to_original, only: [:show]
   before_action :set_referrer_policy_header, only: [:show]
   before_action :set_cache_headers
+  before_action :set_replies, only: [:replies]
+
+
+  content_security_policy only: :embed do |p|
+    p.frame_ancestors(false)
+  end
 
   def show
     respond_to do |format|
       format.html do
+        expires_in 10.seconds, public: true if current_account.nil?
+
+        @body_classes = 'with-modals'
+
         set_ancestors
         set_descendants
 
@@ -34,11 +44,9 @@ class StatusesController < ApplicationController
       end
 
       format.json do
-        return not_found if TimeLimit.from_status(@status)
+        return not_found if TimeLimit.from_status(@status) # TODO: before_actionにできない？
 
-        skip_session! unless @stream_entry.hidden?
-
-        render_cached_json(['activitypub', 'note', @status.cache_key], content_type: 'application/activity+json', public: !@stream_entry.hidden?) do
+        render_cached_json(['activitypub', 'note', @status], content_type: 'application/activity+json', public: !@stream_entry.hidden?) do
           ActiveModelSerializers::SerializableResource.new(@status, serializer: ActivityPub::NoteSerializer, adapter: ActivityPub::Adapter)
         end
       end
@@ -46,28 +54,59 @@ class StatusesController < ApplicationController
   end
 
   def activity
-    return not_found if TimeLimit.from_status(@status)
+    return not_found if TimeLimit.from_status(@status) # TODO: before_actionにできない？
 
-    skip_session!
-
-    render_cached_json(['activitypub', 'activity', @status.cache_key], content_type: 'application/activity+json', public: !@stream_entry.hidden?) do
+    render_cached_json(['activitypub', 'activity', @status], content_type: 'application/activity+json', public: !@stream_entry.hidden?) do
       ActiveModelSerializers::SerializableResource.new(@status, serializer: ActivityPub::ActivitySerializer, adapter: ActivityPub::Adapter)
     end
   end
 
   def embed
+    raise ActiveRecord::RecordNotFound if @status.hidden?
+
+    expires_in 180, public: true
     response.headers['X-Frame-Options'] = 'ALLOWALL'
+    @autoplay = ActiveModel::Type::Boolean.new.cast(params[:autoplay])
+
     render 'stream_entries/embed', layout: 'embedded'
+  end
+
+  def replies
+    render json: replies_collection_presenter,
+           serializer: ActivityPub::CollectionSerializer,
+           adapter: ActivityPub::Adapter,
+           content_type: 'application/activity+json',
+           skip_activities: true
   end
 
   private
 
-  def create_descendant_thread(depth, statuses)
+  def replies_collection_presenter
+    page = ActivityPub::CollectionPresenter.new(
+      id: replies_account_status_url(@account, @status, page_params),
+      type: :unordered,
+      part_of: replies_account_status_url(@account, @status),
+      next: next_page,
+      items: @replies.map { |status| status.local ? status : status.id }
+    )
+    if page_requested?
+      page
+    else
+      ActivityPub::CollectionPresenter.new(
+        id: replies_account_status_url(@account, @status),
+        type: :unordered,
+        first: page
+      )
+    end
+  end
+
+  def create_descendant_thread(starting_depth, statuses)
+    depth = starting_depth + statuses.size
     if depth < DESCENDANTS_DEPTH_LIMIT
-      { statuses: statuses }
+      { statuses: statuses, starting_depth: starting_depth }
     else
       next_status = statuses.pop
-      { statuses: statuses, next_status: next_status }
+      { statuses: statuses, starting_depth: starting_depth, next_status: next_status }
     end
   end
 
@@ -98,16 +137,19 @@ class StatusesController < ApplicationController
     @descendant_threads = []
 
     if descendants.present?
-      statuses = [descendants.first]
-      depth    = 1
+      statuses       = [descendants.first]
+      starting_depth = 0
 
       descendants.drop(1).each_with_index do |descendant, index|
         if descendants[index].id == descendant.in_reply_to_id
-          depth += 1
           statuses << descendant
         else
-          @descendant_threads << create_descendant_thread(depth, statuses)
+          @descendant_threads << create_descendant_thread(starting_depth, statuses)
 
+          # The thread is broken, assume it's a reply to the root status
+          starting_depth = 0
+
+          # ... unless we can find its ancestor in one of the already-processed threads
           @descendant_threads.reverse_each do |descendant_thread|
             statuses = descendant_thread[:statuses]
 
@@ -116,18 +158,16 @@ class StatusesController < ApplicationController
             end
 
             if index.present?
-              depth += index - statuses.size
+              starting_depth = descendant_thread[:starting_depth] + index + 1
               break
             end
-
-            depth -= statuses.size
           end
 
           statuses = [descendant]
         end
       end
 
-      @descendant_threads << create_descendant_thread(depth, statuses)
+      @descendant_threads << create_descendant_thread(starting_depth, statuses)
     end
 
     @max_descendant_thread_id = @descendant_threads.pop[:statuses].first.id if descendants.size >= DESCENDANTS_LIMIT
@@ -155,6 +195,10 @@ class StatusesController < ApplicationController
     raise ActiveRecord::RecordNotFound
   end
 
+  def set_instance_presenter
+    @instance_presenter = InstancePresenter.new
+  end
+
   def check_account_suspension
     gone if @account.suspended?
   end
@@ -166,5 +210,28 @@ class StatusesController < ApplicationController
   def set_referrer_policy_header
     return if @status.public_visibility? || @status.unlisted_visibility?
     response.headers['Referrer-Policy'] = 'origin'
+  end
+
+  def page_requested?
+    params[:page] == 'true'
+  end
+
+  def set_replies
+    @replies = page_params[:other_accounts] ? Status.where.not(account_id: @account.id) : @account.statuses
+    @replies = @replies.where(in_reply_to_id: @status.id, visibility: [:public, :unlisted])
+    @replies = @replies.paginate_by_min_id(DESCENDANTS_LIMIT, params[:min_id])
+  end
+
+  def next_page
+    last_reply = @replies.last
+    return if last_reply.nil?
+    same_account = last_reply.account_id == @account.id
+    return unless same_account || @replies.size == DESCENDANTS_LIMIT
+    same_account = false unless @replies.size == DESCENDANTS_LIMIT
+    replies_account_status_url(@account, @status, page: true, min_id: last_reply.id, other_accounts: !same_account)
+  end
+
+  def page_params
+    { page: true, other_accounts: params[:other_accounts], min_id: params[:min_id] }.compact
   end
 end

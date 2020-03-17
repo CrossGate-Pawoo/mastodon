@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# TODO: 削除する
 class Pawoo::DeletePersonWorker
   include Sidekiq::Worker
 

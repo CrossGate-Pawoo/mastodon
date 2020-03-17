@@ -9,6 +9,14 @@ describe ApplicationHelper do
       expect(result).to eq "active"
     end
 
+    it 'returns active when on a current page' do
+      allow(helper).to receive(:current_page?).with('/foo').and_return(false)
+      allow(helper).to receive(:current_page?).with('/test').and_return(true)
+
+      result = helper.active_nav_class('/foo', '/test')
+      expect(result).to eq "active"
+    end
+
     it 'returns empty string when not on current page' do
       allow(helper).to receive(:current_page?).and_return(false)
 
@@ -17,7 +25,7 @@ describe ApplicationHelper do
     end
   end
 
-  describe 'add_rtl_body_class' do
+  describe 'locale_direction' do
     around do |example|
       current_locale = I18n.locale
       example.run
@@ -26,22 +34,22 @@ describe ApplicationHelper do
 
     it 'adds rtl body class if locale is Arabic' do
       I18n.locale = :ar
-      expect(helper.add_rtl_body_class('other classes')).to eq 'other classes rtl'
+      expect(helper.locale_direction).to eq 'rtl'
     end
 
     it 'adds rtl body class if locale is Farsi' do
       I18n.locale = :fa
-      expect(helper.add_rtl_body_class('other classes')).to eq 'other classes rtl'
+      expect(helper.locale_direction).to eq 'rtl'
     end
 
     it 'adds rtl if locale is Hebrew' do
       I18n.locale = :he
-      expect(helper.add_rtl_body_class('other classes')).to eq 'other classes rtl'
+      expect(helper.locale_direction).to eq 'rtl'
     end
 
     it 'does not add rtl if locale is Thai' do
       I18n.locale = :th
-      expect(helper.add_rtl_body_class('other classes')).to eq 'other classes'
+      expect(helper.locale_direction).to_not eq 'rtl'
     end
   end
 
@@ -61,7 +69,7 @@ describe ApplicationHelper do
   describe 'open_registrations?' do
     it 'returns true when open for registrations' do
       without_partial_double_verification do
-        expect(Setting).to receive(:open_registrations).and_return(true)
+        expect(Setting).to receive(:registrations_mode).and_return('open')
       end
 
       expect(helper.open_registrations?).to eq true
@@ -69,7 +77,7 @@ describe ApplicationHelper do
 
     it 'returns false when closed for registrations' do
       without_partial_double_verification do
-        expect(Setting).to receive(:open_registrations).and_return(false)
+        expect(Setting).to receive(:registrations_mode).and_return('none')
       end
 
       expect(helper.open_registrations?).to eq false

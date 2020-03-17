@@ -66,7 +66,7 @@ export default class ActionsModal extends ImmutablePureComponent {
         {this.props.header}
         {status}
 
-        <ul>
+        <ul className={classNames({ 'with-status': !!status })}>
           {this.props.actions.map(this.renderAction)}
         </ul>
       </div>

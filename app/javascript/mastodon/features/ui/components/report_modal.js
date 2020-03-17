@@ -37,9 +37,9 @@ const makeMapStateToProps = () => {
   return mapStateToProps;
 };
 
-@connect(makeMapStateToProps)
+export default @connect(makeMapStateToProps)
 @injectIntl
-export default class ReportModal extends ImmutablePureComponent {
+class ReportModal extends ImmutablePureComponent {
 
   static propTypes = {
     isSubmitting: PropTypes.bool,
@@ -61,6 +61,12 @@ export default class ReportModal extends ImmutablePureComponent {
 
   handleSubmit = () => {
     this.props.dispatch(submitReport());
+  }
+
+  handleKeyDown = e => {
+    if (e.keyCode === 13 && (e.ctrlKey || e.metaKey)) {
+      this.handleSubmit();
+    }
   }
 
   componentDidMount () {
@@ -91,14 +97,16 @@ export default class ReportModal extends ImmutablePureComponent {
 
         <div className='report-modal__container'>
           <div className='report-modal__comment'>
-            <p><FormattedMessage id='report.hint' defaultMessage='The report will be sent to your instance moderators. You can provide an explanation of why you are reporting this account below:' /></p>
+            <p><FormattedMessage id='report.hint' defaultMessage='The report will be sent to your server moderators. You can provide an explanation of why you are reporting this account below:' /></p>
 
             <textarea
               className='setting-text light'
               placeholder={intl.formatMessage(messages.placeholder)}
               value={comment}
               onChange={this.handleCommentChange}
+              onKeyDown={this.handleKeyDown}
               disabled={isSubmitting}
+              autoFocus
             />
 
             {domain && (

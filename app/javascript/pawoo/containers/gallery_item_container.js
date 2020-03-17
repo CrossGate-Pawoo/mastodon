@@ -22,7 +22,7 @@ import StatusContent from '../../mastodon/components/status_content';
 import IconButton from '../../mastodon/components/icon_button';
 import MediaGallery from '../../mastodon/components/media_gallery';
 import Video from '../../mastodon/features/video';
-import { me, boostModal } from '../../mastodon/initial_state';
+import { me, boostModal, isStaff } from '../../mastodon/initial_state';
 
 const messages = defineMessages({
   reblog: { id: 'status.reblog', defaultMessage: 'Boost' },
@@ -36,7 +36,6 @@ const makeMapStateToProps = () => {
 
   const mapStateToProps = (state, props) => ({
     status: getStatus(state, props.id),
-    isAdmin: state.getIn(['meta', 'is_user_admin']),
   });
 
   return mapStateToProps;
@@ -88,7 +87,6 @@ export default class GalleryItem extends ImmutablePureComponent {
     intl: PropTypes.object.isRequired,
     tag: PropTypes.string.isRequired,
     status: ImmutablePropTypes.map,
-    isAdmin: PropTypes.bool.isRequired,
     onFavourite: PropTypes.func,
     onReblog: PropTypes.func,
     onBlacklist: PropTypes.func,
@@ -152,7 +150,7 @@ export default class GalleryItem extends ImmutablePureComponent {
   }
 
   render () {
-    const { status, isAdmin, intl } = this.props;
+    const { status, intl } = this.props;
     const account = status.get('account');
     const publicStatus = ['public', 'unlisted'].includes(status.get('visibility'));
     let reblogIcon = 'retweet';
@@ -187,7 +185,7 @@ export default class GalleryItem extends ImmutablePureComponent {
             <div className='pawoo-gallery-item__actions'>
               <IconButton className='status__action-bar-button' disabled={!publicStatus} active={status.get('reblogged')} pressed={status.get('reblogged')} title={!publicStatus ? intl.formatMessage(messages.cannot_reblog) : intl.formatMessage(messages.reblog)} icon={reblogIcon} onClick={this.handleReblogClick} />
               <IconButton className='status__action-bar-button star-icon' animate active={status.get('favourited')} pressed={status.get('favourited')} title={intl.formatMessage(messages.favourite)} icon='star' onClick={this.handleFavouriteClick} />
-              {isAdmin && (
+              {isStaff && (
                 <IconButton className='status__action-bar-button ban-icon' title={intl.formatMessage(messages.blacklist)} icon='ban' onClick={this.handleBlacklistClick} />
               )}
             </div>

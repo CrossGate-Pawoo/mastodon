@@ -3,27 +3,22 @@ hr:
   simple_form:
     hints:
       defaults:
-        avatar: PNG, GIF ili JPG. Najviše 2MB. Bit će smanjen na 400x400px
-        display_name: Najviše 30 znakova
-        header: PNG, GIF ili JPG. Najviše 2MB. Bit će smanjen na 700x335px
+        avatar: PNG, GIF ili JPG. Najviše %{size}. Bit će smanjen na %{dimensions}px
+        header: PNG, GIF ili JPG. Najviše %{size}. Bit će smanjen na %{dimensions}px
         locked: traži te da ručno odobriš sljedbenike i postavlja privatnost postova na dostupnu samo sljedbenicima
-        note: Najviše 160 znakova
       imports:
         data: CSV fajl izvezen iz druge Mastodon instance
     labels:
       defaults:
-        avatar: Avatar
         confirm_new_password: Potvrdi novu lozinku
         confirm_password: Potvrdi lozinku
         current_password: Trenutna lozinka
         data: Podaci
         display_name: Ime koje ću prikazati
         email: E-mail adresa
-        header: Header
         locale: Jezik
         locked: Učini račun privatnim
         new_password: Nova lozinka
-        note: Bio
         otp_attempt: Dvo-faktorski kod
         password: Lozinka
         setting_auto_play_gif: Automatski pokreni animirane GIFove
@@ -42,6 +37,5 @@ hr:
         reblog: Pošalji mi e-mail kad netko rebloga moj status
     'no': Ne
     required:
-      mark: "*"
       text: traženo
     'yes': Da

@@ -19,8 +19,6 @@ pl:
         provider: Dostawca
         uid: ID użytkownika
 
-  about:
-    contact_body_mastodon: Z Pawoo
   admin:
     accounts:
       oauth_authentications: Logowanie pixiv

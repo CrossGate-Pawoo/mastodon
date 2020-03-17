@@ -3,13 +3,14 @@
 module AccountHeader
   extend ActiveSupport::Concern
 
-  IMAGE_MIME_TYPES = ['image/jpeg', 'image/png', 'image/gif'].freeze
+  IMAGE_MIME_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'].freeze
   LIMIT = 2.megabytes
+  MAX_PIXELS = 750_000 # 1500x500px
 
   class_methods do
     def header_styles(file)
-      styles = { original: { geometry: '700x335#', file_geometry_parser: FastGeometryParser } }
-      styles[:static] = { geometry: '700x335#', format: 'png', convert_options: '-coalesce', file_geometry_parser: FastGeometryParser } if file.content_type == 'image/gif'
+      styles = { original: { pixels: MAX_PIXELS, file_geometry_parser: FastGeometryParser } }
+      styles[:static] = { format: 'png', convert_options: '-coalesce', file_geometry_parser: FastGeometryParser } if file.content_type == 'image/gif'
       styles
     end
 

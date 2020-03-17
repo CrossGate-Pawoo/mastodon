@@ -9,13 +9,14 @@ import {
   COMPOSE_REPLY,
   COMPOSE_DIRECT,
 } from '../actions/compose';
-import { Map as ImmutableMap, List as ImmutableList } from 'immutable';
+import { Map as ImmutableMap, List as ImmutableList, fromJS } from 'immutable';
 
 const initialState = ImmutableMap({
   value: '',
   submitted: false,
   hidden: false,
   results: ImmutableMap(),
+  searchTerm: '',
 });
 
 export default function search(state = initialState, action) {
@@ -39,8 +40,8 @@ export default function search(state = initialState, action) {
     return state.set('results', ImmutableMap({
       accounts: ImmutableList(action.results.accounts.map(item => item.id)),
       statuses: ImmutableList(action.results.statuses.map(item => item.id)),
-      hashtags: ImmutableList(action.results.hashtags),
-    })).set('submitted', true);
+      hashtags: fromJS(action.results.hashtags),
+    })).set('submitted', true).set('searchTerm', action.searchTerm);
   default:
     return state;
   }

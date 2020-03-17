@@ -3,14 +3,16 @@ import PropTypes from 'prop-types';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import Button from '../../../components/button';
 
-@injectIntl
-export default class ConfirmationModal extends React.PureComponent {
+export default @injectIntl
+class ConfirmationModal extends React.PureComponent {
 
   static propTypes = {
     message: PropTypes.node.isRequired,
     confirm: PropTypes.string.isRequired,
     onClose: PropTypes.func.isRequired,
     onConfirm: PropTypes.func.isRequired,
+    secondary: PropTypes.string,
+    onSecondary: PropTypes.func,
     intl: PropTypes.object.isRequired,
   };
 
@@ -23,6 +25,11 @@ export default class ConfirmationModal extends React.PureComponent {
     this.props.onConfirm();
   }
 
+  handleSecondary = () => {
+    this.props.onClose();
+    this.props.onSecondary();
+  }
+
   handleCancel = () => {
     this.props.onClose();
   }
@@ -32,7 +39,7 @@ export default class ConfirmationModal extends React.PureComponent {
   }
 
   render () {
-    const { message, confirm } = this.props;
+    const { message, confirm, secondary } = this.props;
 
     return (
       <div className='modal-root__modal confirmation-modal'>
@@ -44,6 +51,9 @@ export default class ConfirmationModal extends React.PureComponent {
           <Button onClick={this.handleCancel} className='confirmation-modal__cancel-button'>
             <FormattedMessage id='confirmation_modal.cancel' defaultMessage='Cancel' />
           </Button>
+          {secondary !== undefined && (
+            <Button text={secondary} onClick={this.handleSecondary} className='confirmation-modal__secondary-button' />
+          )}
           <Button text={confirm} onClick={this.handleClick} ref={this.setRef} />
         </div>
       </div>

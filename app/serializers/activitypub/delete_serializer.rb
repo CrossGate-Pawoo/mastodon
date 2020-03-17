@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
-class ActivityPub::DeleteSerializer < ActiveModel::Serializer
-  class TombstoneSerializer < ActiveModel::Serializer
+class ActivityPub::DeleteSerializer < ActivityPub::Serializer
+  class TombstoneSerializer < ActivityPub::Serializer
+    context_extensions :atom_uri
+
     attributes :id, :type, :atom_uri
 
     def id
@@ -17,7 +19,7 @@ class ActivityPub::DeleteSerializer < ActiveModel::Serializer
     end
   end
 
-  attributes :id, :type, :actor
+  attributes :id, :type, :actor, :to
 
   has_one :object, serializer: TombstoneSerializer
 
@@ -31,5 +33,9 @@ class ActivityPub::DeleteSerializer < ActiveModel::Serializer
 
   def actor
     ActivityPub::TagManager.instance.uri_for(object.account)
+  end
+
+  def to
+    [ActivityPub::TagManager::COLLECTIONS[:public]]
   end
 end

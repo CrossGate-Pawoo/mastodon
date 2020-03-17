@@ -1,21 +1,35 @@
 # frozen_string_literal: true
 
-class ActivityPub::NoteSerializer < ActiveModel::Serializer
-  attributes :id, :type, :summary, :content,
+class ActivityPub::NoteSerializer < ActivityPub::Serializer
+  context_extensions :atom_uri, :conversation, :sensitive,
+                     :hashtag, :emoji, :focal_point, :blurhash
+
+  attributes :id, :type, :summary,
              :in_reply_to, :published, :url,
              :attributed_to, :to, :cc, :sensitive,
              :atom_uri, :in_reply_to_atom_uri,
              :conversation
 
+  attribute :content
+  attribute :content_map, if: :language?
+
   has_many :media_attachments, key: :attachment
   has_many :virtual_tags, key: :tag
+
+  has_one :replies, serializer: ActivityPub::CollectionSerializer, if: :local?
+
+  has_many :poll_options, key: :one_of, if: :poll_and_not_multiple?
+  has_many :poll_options, key: :any_of, if: :poll_and_multiple?
+
+  attribute :end_time, if: :poll_and_expires?
+  attribute :closed, if: :poll_and_expired?
 
   def id
     ActivityPub::TagManager.instance.uri_for(object)
   end
 
   def type
-    'Note'
+    object.preloadable_poll ? 'Question' : 'Note'
   end
 
   def summary
@@ -24,6 +38,30 @@ class ActivityPub::NoteSerializer < ActiveModel::Serializer
 
   def content
     Formatter.instance.format(object)
+  end
+
+  def content_map
+    { object.language => Formatter.instance.format(object) }
+  end
+
+  def replies
+    replies = object.self_replies(5).pluck(:id, :uri)
+    last_id = replies.last&.first
+
+    ActivityPub::CollectionPresenter.new(
+      type: :unordered,
+      id: ActivityPub::TagManager.instance.replies_uri_for(object),
+      first: ActivityPub::CollectionPresenter.new(
+        type: :unordered,
+        part_of: ActivityPub::TagManager.instance.replies_uri_for(object),
+        items: replies.map(&:second),
+        next: last_id ? ActivityPub::TagManager.instance.replies_uri_for(object, page: true, min_id: last_id) : nil
+      )
+    )
+  end
+
+  def language?
+    object.language.present?
   end
 
   def in_reply_to
@@ -57,7 +95,7 @@ class ActivityPub::NoteSerializer < ActiveModel::Serializer
   end
 
   def virtual_tags
-    object.mentions.to_a.sort_by(&:id) + object.tags + object.emojis
+    object.active_mentions.to_a.sort_by(&:id) + object.tags + object.emojis
   end
 
   def atom_uri
@@ -86,10 +124,36 @@ class ActivityPub::NoteSerializer < ActiveModel::Serializer
     object.account.local?
   end
 
-  class MediaAttachmentSerializer < ActiveModel::Serializer
+  def poll_options
+    object.preloadable_poll.loaded_options
+  end
+
+  def poll_and_multiple?
+    object.preloadable_poll&.multiple?
+  end
+
+  def poll_and_not_multiple?
+    object.preloadable_poll && !object.preloadable_poll.multiple?
+  end
+
+  def closed
+    object.preloadable_poll.expires_at.iso8601
+  end
+
+  alias end_time closed
+
+  def poll_and_expires?
+    object.preloadable_poll&.expires_at&.present?
+  end
+
+  def poll_and_expired?
+    object.preloadable_poll&.expired?
+  end
+
+  class MediaAttachmentSerializer < ActivityPub::Serializer
     include RoutingHelper
 
-    attributes :type, :media_type, :url, :name
+    attributes :type, :media_type, :url, :name, :blurhash
     attribute :focal_point, if: :focal_point?
 
     def type
@@ -117,7 +181,7 @@ class ActivityPub::NoteSerializer < ActiveModel::Serializer
     end
   end
 
-  class MentionSerializer < ActiveModel::Serializer
+  class MentionSerializer < ActivityPub::Serializer
     attributes :type, :href, :name
 
     def type
@@ -133,7 +197,7 @@ class ActivityPub::NoteSerializer < ActiveModel::Serializer
     end
   end
 
-  class TagSerializer < ActiveModel::Serializer
+  class TagSerializer < ActivityPub::Serializer
     include RoutingHelper
 
     attributes :type, :href, :name
@@ -152,5 +216,35 @@ class ActivityPub::NoteSerializer < ActiveModel::Serializer
   end
 
   class CustomEmojiSerializer < ActivityPub::EmojiSerializer
+  end
+
+  class OptionSerializer < ActivityPub::Serializer
+    class RepliesSerializer < ActivityPub::Serializer
+      attributes :type, :total_items
+
+      def type
+        'Collection'
+      end
+
+      def total_items
+        object.votes_count
+      end
+    end
+
+    attributes :type, :name
+
+    has_one :replies, serializer: ActivityPub::NoteSerializer::OptionSerializer::RepliesSerializer
+
+    def type
+      'Note'
+    end
+
+    def name
+      object.title
+    end
+
+    def replies
+      object
+    end
   end
 end

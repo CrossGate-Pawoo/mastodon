@@ -6,33 +6,44 @@ import Avatar from '../../../components/avatar';
 import DisplayName from '../../../components/display_name';
 import StatusContent from '../../../components/status_content';
 import MediaGallery from '../../../components/media_gallery';
-import AttachmentList from '../../../components/attachment_list';
-import Link from '../../../../pawoo/components/wrapped_link';
+import { Link } from 'react-router-dom';
 import { FormattedDate, FormattedNumber } from 'react-intl';
-import CardContainer from '../containers/card_container';
+import Card from './card';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 import Video from '../../video';
+import scheduleIdleTask from '../../ui/util/schedule_idle_task';
+import classNames from 'classnames';
+import Icon from 'mastodon/components/icon';
 
 export default class DetailedStatus extends ImmutablePureComponent {
 
   static contextTypes = {
     router: PropTypes.object,
-    pawooPushHistory: PropTypes.func,
   };
 
   static propTypes = {
-    status: ImmutablePropTypes.map.isRequired,
+    status: ImmutablePropTypes.map,
     onOpenMedia: PropTypes.func.isRequired,
     onOpenVideo: PropTypes.func.isRequired,
     onToggleHidden: PropTypes.func.isRequired,
+    measureHeight: PropTypes.bool,
+    onHeightChange: PropTypes.func,
+    domain: PropTypes.string.isRequired,
+    compact: PropTypes.bool,
+    showMedia: PropTypes.bool,
+    onToggleMediaVisibility: PropTypes.func,
     pawooMediaScale: PropTypes.string,
     pawooWideMedia: PropTypes.bool,
   };
 
+  state = {
+    height: null,
+  };
+
   handleAccountClick = (e) => {
-    if (e.button === 0) {
+    if (e.button === 0 && !(e.ctrlKey || e.metaKey) && this.context.router) {
       e.preventDefault();
-      this.context.pawooPushHistory(`/accounts/${this.props.status.getIn(['account', 'id'])}`);
+      this.context.router.history.push(`/accounts/${this.props.status.getIn(['account', 'id'])}`);
     }
 
     e.stopPropagation();
@@ -46,13 +57,57 @@ export default class DetailedStatus extends ImmutablePureComponent {
     this.props.onToggleHidden(this.props.status);
   }
 
+  _measureHeight (heightJustChanged) {
+    if (this.props.measureHeight && this.node) {
+      scheduleIdleTask(() => this.node && this.setState({ height: Math.ceil(this.node.scrollHeight) + 1 }));
+
+      if (this.props.onHeightChange && heightJustChanged) {
+        this.props.onHeightChange();
+      }
+    }
+  }
+
+  setRef = c => {
+    this.node = c;
+    this._measureHeight();
+  }
+
+  componentDidUpdate (prevProps, prevState) {
+    this._measureHeight(prevState.height !== this.state.height);
+  }
+
+  handleModalLink = e => {
+    e.preventDefault();
+
+    let href;
+
+    if (e.target.nodeName !== 'A') {
+      href = e.target.parentNode.href;
+    } else {
+      href = e.target.href;
+    }
+
+    window.open(href, 'mastodon-intent', 'width=445,height=600,resizable=no,menubar=no,status=no,scrollbars=yes');
+  }
+
   render () {
-    const status = this.props.status.get('reblog') ? this.props.status.get('reblog') : this.props.status;
+    const status = (this.props.status && this.props.status.get('reblog')) ? this.props.status.get('reblog') : this.props.status;
+    const outerStyle = { boxSizing: 'border-box' };
+    const { compact } = this.props;
+
+    if (!status) {
+      return null;
+    }
 
     let media           = '';
     let applicationLink = '';
     let reblogLink = '';
     let reblogIcon = 'retweet';
+    let favouriteLink = '';
+
+    if (this.props.measureHeight) {
+      outerStyle.height = `${this.state.height}px`;
+    }
 
     let attachments = status.get('media_attachments');
     if (attachments.size === 0 && status.getIn(['pixiv_cards'], Immutable.List()).size > 0) {
@@ -69,19 +124,22 @@ export default class DetailedStatus extends ImmutablePureComponent {
     }
 
     if (attachments.size > 0) {
-      if (attachments.some(item => item.get('type') === 'unknown')) {
-        media = <AttachmentList media={attachments} />;
-      } else if (attachments.first().get('type') === 'video') {
-        const video = attachments.first();
+      if (['video', 'audio'].includes(attachments.getIn([0, 'type']))) {
+        const attachment = attachments.first();
 
         media = (
           <Video
-            preview={video.get('preview_url')}
-            src={video.get('url')}
-            height='50vh'
+            preview={attachment.get('preview_url')}
+            blurhash={attachment.get('blurhash')}
+            src={attachment.get('url')}
+            alt={attachment.get('description')}
+            width={300}
+            height={150}
             inline
             onOpenVideo={this.handleOpenVideo}
             sensitive={status.get('sensitive')}
+            visible={this.props.showMedia}
+            onToggleVisibility={this.props.onToggleMediaVisibility}
           />
         );
       } else {
@@ -90,13 +148,15 @@ export default class DetailedStatus extends ImmutablePureComponent {
             sensitive={status.get('sensitive')}
             media={attachments}
             onOpenMedia={this.props.onOpenMedia}
+            visible={this.props.showMedia}
+            onToggleVisibility={this.props.onToggleMediaVisibility}
             pawooScale={this.props.pawooMediaScale}
             pawooWide={this.props.pawooWideMedia}
           />
         );
       }
     } else if (status.get('spoiler_text').length === 0) {
-      media = <CardContainer onOpenMedia={this.props.onOpenMedia} statusId={status.get('id')} />;
+      media = <Card onOpenMedia={this.props.onOpenMedia} card={status.get('card', null)} />;
     }
 
     if (status.get('application')) {
@@ -110,36 +170,64 @@ export default class DetailedStatus extends ImmutablePureComponent {
     }
 
     if (status.get('visibility') === 'private') {
-      reblogLink = <i className={`fa fa-${reblogIcon}`} />;
+      reblogLink = <Icon id={reblogIcon} />;
+    } else if (this.context.router) {
+      reblogLink = (
+        <Link to={`/statuses/${status.get('id')}/reblogs`} className='detailed-status__link'>
+          <Icon id={reblogIcon} />
+          <span className='detailed-status__reblogs'>
+            <FormattedNumber value={status.get('reblogs_count')} />
+          </span>
+        </Link>
+      );
     } else {
-      reblogLink = (<Link to={`/statuses/${status.get('id')}/reblogs`} className='detailed-status__link'>
-        <i className={`fa fa-${reblogIcon}`} />
-        <span className='detailed-status__reblogs'>
-          <FormattedNumber value={status.get('reblogs_count')} />
-        </span>
-      </Link>);
+      reblogLink = (
+        <a href={`/interact/${status.get('id')}?type=reblog`} className='detailed-status__link' onClick={this.handleModalLink}>
+          <Icon id={reblogIcon} />
+          <span className='detailed-status__reblogs'>
+            <FormattedNumber value={status.get('reblogs_count')} />
+          </span>
+        </a>
+      );
+    }
+
+    if (this.context.router) {
+      favouriteLink = (
+        <Link to={`/statuses/${status.get('id')}/favourites`} className='detailed-status__link'>
+          <Icon id='star' />
+          <span className='detailed-status__favorites'>
+            <FormattedNumber value={status.get('favourites_count')} />
+          </span>
+        </Link>
+      );
+    } else {
+      favouriteLink = (
+        <a href={`/interact/${status.get('id')}?type=favourite`} className='detailed-status__link' onClick={this.handleModalLink}>
+          <Icon id='star' />
+          <span className='detailed-status__favorites'>
+            <FormattedNumber value={status.get('favourites_count')} />
+          </span>
+        </a>
+      );
     }
 
     return (
-      <div className='detailed-status'>
-        <a href={status.getIn(['account', 'url'])} onClick={this.handleAccountClick} className='detailed-status__display-name'>
-          <div className='detailed-status__display-avatar'><Avatar account={status.get('account')} size={48} /></div>
-          <DisplayName account={status.get('account')} />
-        </a>
+      <div style={outerStyle}>
+        <div ref={this.setRef} className={classNames('detailed-status', { compact })}>
+          <a href={status.getIn(['account', 'url'])} onClick={this.handleAccountClick} className='detailed-status__display-name'>
+            <div className='detailed-status__display-avatar'><Avatar account={status.get('account')} size={48} /></div>
+            <DisplayName account={status.get('account')} localDomain={this.props.domain} />
+          </a>
 
-        <StatusContent status={status} expanded={!status.get('hidden')} onExpandedToggle={this.handleExpandedToggle} />
+          <StatusContent status={status} expanded={!status.get('hidden')} onExpandedToggle={this.handleExpandedToggle} />
 
-        {media}
+          {media}
 
-        <div className='detailed-status__meta'>
-          <a className='detailed-status__datetime' href={status.get('url')} target='_blank' rel='noopener'>
-            <FormattedDate value={new Date(status.get('created_at'))} hour12={false} year='numeric' month='short' day='2-digit' hour='2-digit' minute='2-digit' />
-          </a>{applicationLink} · {reblogLink} · <Link to={`/statuses/${status.get('id')}/favourites`} className='detailed-status__link'>
-            <i className='fa fa-star' />
-            <span className='detailed-status__favorites'>
-              <FormattedNumber value={status.get('favourites_count')} />
-            </span>
-          </Link>
+          <div className='detailed-status__meta'>
+            <a className='detailed-status__datetime' href={status.get('url')} target='_blank' rel='noopener'>
+              <FormattedDate value={new Date(status.get('created_at'))} hour12={false} year='numeric' month='short' day='2-digit' hour='2-digit' minute='2-digit' />
+            </a>{applicationLink} · {reblogLink} · {favouriteLink}
+          </div>
         </div>
       </div>
     );

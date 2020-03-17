@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Api::V1::Timelines::ListController < Api::BaseController
-  before_action -> { doorkeeper_authorize! :read }
+  before_action -> { doorkeeper_authorize! :read, :'read:lists' }
   before_action :require_user!
   before_action :set_list
   before_action :set_statuses
@@ -32,7 +32,8 @@ class Api::V1::Timelines::ListController < Api::BaseController
     list_feed.get(
       limit_param(DEFAULT_STATUSES_LIMIT),
       params[:max_id],
-      params[:since_id]
+      params[:since_id],
+      params[:min_id]
     )
   end
 
@@ -53,7 +54,7 @@ class Api::V1::Timelines::ListController < Api::BaseController
   end
 
   def prev_path
-    api_v1_timelines_list_url params[:id], pagination_params(since_id: pagination_since_id)
+    api_v1_timelines_list_url params[:id], pagination_params(min_id: pagination_since_id)
   end
 
   def pagination_max_id

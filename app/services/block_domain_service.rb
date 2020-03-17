@@ -29,7 +29,7 @@ class BlockDomainService < BaseService
   end
 
   def silence_accounts!
-    blocked_domain_accounts.in_batches.update_all(silenced: true)
+    blocked_domain_accounts.without_silenced.in_batches.update_all(silenced_at: @domain_block.created_at)
   end
 
   def clear_media!
@@ -43,14 +43,14 @@ class BlockDomainService < BaseService
   end
 
   def suspend_accounts!
-    blocked_domain_accounts.where(suspended: false).find_each do |account|
+    blocked_domain_accounts.without_suspended.reorder(nil).find_each do |account|
       UnsubscribeService.new.call(account) if account.subscribed?
-      SuspendAccountService.new.call(account)
+      SuspendAccountService.new.call(account, suspended_at: @domain_block.created_at)
     end
   end
 
   def clear_account_images!
-    blocked_domain_accounts.find_each do |account|
+    blocked_domain_accounts.reorder(nil).find_each do |account|
       account.avatar.destroy if account.avatar.exists?
       account.header.destroy if account.header.exists?
       account.save
@@ -58,7 +58,7 @@ class BlockDomainService < BaseService
   end
 
   def clear_account_attachments!
-    media_from_blocked_domain.find_each do |attachment|
+    media_from_blocked_domain.reorder(nil).find_each do |attachment|
       @affected_status_ids << attachment.status_id if attachment.status_id.present?
 
       attachment.file.destroy if attachment.file.exists?
@@ -76,7 +76,7 @@ class BlockDomainService < BaseService
   end
 
   def blocked_domain_accounts
-    Account.where(domain: blocked_domain)
+    Account.by_domain_and_subdomains(blocked_domain)
   end
 
   def media_from_blocked_domain
@@ -84,6 +84,6 @@ class BlockDomainService < BaseService
   end
 
   def emojis_from_blocked_domains
-    CustomEmoji.where(domain: blocked_domain)
+    CustomEmoji.by_domain_and_subdomains(blocked_domain)
   end
 end

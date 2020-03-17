@@ -3,6 +3,13 @@
   %head
     %meta{ charset: 'utf-8' }/
     %meta{ name: 'viewport', content: 'width=device-width, initial-scale=1' }/
+
+    - if cdn_host?
+      %link{ rel: 'dns-prefetch', href: cdn_host }/
+
+    - if storage_host?
+      %link{ rel: 'dns-prefetch', href: storage_host }/
+
     %link{ rel: 'icon', href: favicon_path, type: 'image/x-icon' }/
     %link{ rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' }/
     %link{ rel: 'mask-icon', href: '/mask-icon.svg', color: '#2B90D9' }/
@@ -21,11 +28,14 @@
     = javascript_pack_tag "locale_#{I18n.locale}", integrity: true, crossorigin: 'anonymous'
     = csrf_meta_tags
 
+    - if Setting.custom_css.present?
+      = stylesheet_link_tag custom_css_path, media: 'all'
+
     = yield :header_tags
 
-  - body_classes ||= @body_classes || ''
-  - body_classes += ' system-font' if current_account&.user&.setting_system_font_ui
-  - body_classes += current_account&.user&.setting_reduce_motion ? ' reduce-motion' : ' no-reduce-motion'
-
-  %body{ class: add_rtl_body_class(body_classes) }
+  %body{ class: body_classes }
     = content_for?(:content) ? yield(:content) : yield
+
+    %div{ style: 'display: none'}
+      = render file: Rails.root.join('app', 'javascript', 'images', 'logo_transparent.svg')
+      = render file: Rails.root.join('app', 'javascript', 'images', 'logo_full.svg')

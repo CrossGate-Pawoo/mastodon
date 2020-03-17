@@ -2,6 +2,7 @@
 
 class ActivityPub::DistributionWorker
   include Sidekiq::Worker
+  include Payloadable
 
   sidekiq_options queue: 'push'
 
@@ -12,8 +13,10 @@ class ActivityPub::DistributionWorker
     return if skip_distribution?
 
     ActivityPub::DeliveryWorker.push_bulk(inboxes) do |inbox_url|
-      [signed_payload, @account.id, inbox_url]
+      [payload, @account.id, inbox_url]
     end
+
+    relay! if relayable?
   rescue ActiveRecord::RecordNotFound
     true
   end
@@ -21,22 +24,31 @@ class ActivityPub::DistributionWorker
   private
 
   def skip_distribution?
-    @status.direct_visibility? || TimeLimit.from_status(@status).present?
+    @status.direct_visibility? || @status.limited_visibility? || TimeLimit.from_status(@status).present?
+  end
+
+  def relayable?
+    @status.public_visibility?
   end
 
   def inboxes
-    @inboxes ||= @account.followers.inboxes
-  end
-
-  def signed_payload
-    @signed_payload ||= Oj.dump(ActivityPub::LinkedDataSignature.new(payload).sign!(@account))
+    # Deliver the status to all followers.
+    # If the status is a reply to another local status, also forward it to that
+    # status' authors' followers.
+    @inboxes ||= if @status.reply? && @status.thread.account.local? && @status.distributable?
+                   @account.followers.or(@status.thread.account.followers).inboxes
+                 else
+                   @account.followers.inboxes
+                 end
   end
 
   def payload
-    @payload ||= ActiveModelSerializers::SerializableResource.new(
-      @status,
-      serializer: ActivityPub::ActivitySerializer,
-      adapter: ActivityPub::Adapter
-    ).as_json
+    @payload ||= Oj.dump(serialize_payload(@status, ActivityPub::ActivitySerializer, signer: @account))
+  end
+
+  def relay!
+    ActivityPub::DeliveryWorker.push_bulk(Relay.enabled.pluck(:inbox_url)) do |inbox_url|
+      [payload, @account.id, inbox_url]
+    end
   end
 end

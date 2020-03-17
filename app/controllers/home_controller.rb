@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class HomeController < ApplicationController
-  include Pawoo::HomeControllerConcern
+  include Pawoo::HomeControllerConcern # TODO: 消せそう？
 
   before_action :authenticate_user!
   before_action :set_referrer_policy_header
@@ -38,7 +38,7 @@ class HomeController < ApplicationController
     end
 
     matches = request.path.match(%r{\A/web/timelines/tag/(?<tag>.+)\z})
-    redirect_to(matches ? tag_path(CGI.unescape(matches[:tag])) : about_path)
+    redirect_to(matches ? tag_path(CGI.unescape(matches[:tag])) : default_redirect_path)
   end
 
   def set_initial_state_json
@@ -53,7 +53,7 @@ class HomeController < ApplicationController
       push_subscription: current_account.user.web_push_subscription(current_session),
       current_account: current_account,
       token: current_session.token,
-      admin: Account.find_local(Setting.site_contact_username),
+      admin: Account.find_local(Setting.site_contact_username.strip.gsub(/\A@/, '')),
       pawoo: {
         last_settings_updated: setting&.updated_at&.to_i,
         title: Setting.site_title,
@@ -65,7 +65,7 @@ class HomeController < ApplicationController
     if request.path.start_with?('/web')
       new_user_session_path
     elsif single_user_mode?
-      short_account_path(Account.first)
+      short_account_path(Account.local.without_suspended.first)
     else
       about_path
     end

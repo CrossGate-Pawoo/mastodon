@@ -15,16 +15,15 @@ class StreamEntriesController < ApplicationController
   def show
     respond_to do |format|
       format.html do
-        redirect_to short_account_status_url(params[:account_username], @stream_entry.activity) if @type == 'status'
+        expires_in 5.minutes, public: true unless @stream_entry.hidden?
+
+        redirect_to short_account_status_url(params[:account_username], @stream_entry.activity)
       end
 
       format.atom do
         return not_found if TimeLimit.from_status(@stream_entry.status)
 
-        unless @stream_entry.hidden?
-          skip_session!
-          expires_in 3.minutes, public: true
-        end
+        expires_in 3.minutes, public: true unless @stream_entry.hidden?
 
         render xml: OStatus::AtomSerializer.render(OStatus::AtomSerializer.new.entry(@stream_entry, true))
       end
@@ -52,7 +51,7 @@ class StreamEntriesController < ApplicationController
 
   def set_stream_entry
     @stream_entry = @account.stream_entries.where(activity_type: 'Status').find(params[:id])
-    @type         = @stream_entry.activity_type.downcase
+    @type         = 'status'
 
     raise ActiveRecord::RecordNotFound if @stream_entry.activity.nil?
     authorize @stream_entry.activity, :show? if @stream_entry.hidden?

@@ -9,35 +9,6 @@ module Admin::ActionLogsHelper
     end
   end
 
-  def linkable_log_target(record)
-    case record.class.name
-    when 'Account'
-      link_to record.acct, admin_account_path(record.id)
-    when 'User'
-      link_to record.account.acct, admin_account_path(record.account_id)
-    when 'CustomEmoji'
-      record.shortcode
-    when 'Report'
-      link_to "##{record.id}", admin_report_path(record)
-    when 'DomainBlock', 'EmailDomainBlock'
-      link_to record.domain, "https://#{record.domain}"
-    when 'Status'
-      link_to record.account.acct, TagManager.instance.url_for(record)
-    end
-  end
-
-  def log_target_from_history(type, attributes)
-    case type
-    when 'CustomEmoji'
-      attributes['shortcode']
-    when 'DomainBlock', 'EmailDomainBlock'
-      link_to attributes['domain'], "https://#{attributes['domain']}"
-    when 'Status'
-      tmp_status = Status.new(attributes)
-      link_to tmp_status.account&.acct || "##{tmp_status.account_id}", TagManager.instance.url_for(tmp_status)
-    end
-  end
-
   def relevant_log_changes(log)
     if log.target_type == 'CustomEmoji' && [:enable, :disable, :destroy].include?(log.action)
       log.recorded_changes.slice('domain')
@@ -77,6 +48,8 @@ module Admin::ActionLogsHelper
       'envelope'
     when 'Status'
       'pencil'
+    when 'AccountWarning'
+      'warning'
     end
   end
 
@@ -88,7 +61,7 @@ module Admin::ActionLogsHelper
       opposite_verbs?(log) ? 'negative' : 'positive'
     when :update, :reset_password, :disable_2fa, :memorialize, :change_email
       'neutral'
-    when :demote, :silence, :disable, :suspend, :remove_avatar, :reopen
+    when :demote, :silence, :disable, :suspend, :remove_avatar, :remove_header, :reopen
       'negative'
     when :destroy
       opposite_verbs?(log) ? 'positive' : 'negative'
@@ -100,6 +73,42 @@ module Admin::ActionLogsHelper
   private
 
   def opposite_verbs?(log)
-    %w(DomainBlock EmailDomainBlock).include?(log.target_type)
+    %w(DomainBlock EmailDomainBlock AccountWarning).include?(log.target_type)
+  end
+
+  def linkable_log_target(record)
+    case record.class.name
+    when 'Account'
+      link_to record.acct, admin_account_path(record.id)
+    when 'User'
+      link_to record.account.acct, admin_account_path(record.account_id)
+    when 'CustomEmoji'
+      record.shortcode
+    when 'Report'
+      link_to "##{record.id}", admin_report_path(record)
+    when 'DomainBlock', 'EmailDomainBlock'
+      link_to record.domain, "https://#{record.domain}"
+    when 'Status'
+      link_to record.account.acct, TagManager.instance.url_for(record)
+    when 'AccountWarning'
+      link_to record.target_account.acct, admin_account_path(record.target_account_id)
+    end
+  end
+
+  def log_target_from_history(type, attributes)
+    case type
+    when 'CustomEmoji'
+      attributes['shortcode']
+    when 'DomainBlock', 'EmailDomainBlock'
+      link_to attributes['domain'], "https://#{attributes['domain']}"
+    when 'Status'
+      tmp_status = Status.new(attributes.except('reblogs_count', 'favourites_count'))
+
+      if tmp_status.account
+        link_to tmp_status.account&.acct || "##{tmp_status.account_id}", admin_account_path(tmp_status.account_id)
+      else
+        I18n.t('admin.action_logs.deleted_status')
+      end
+    end
   end
 end

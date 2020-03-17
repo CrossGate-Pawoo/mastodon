@@ -2,11 +2,13 @@
 
 class ResolveURLService < BaseService
   include JsonLdHelper
+  include Authorization
 
   attr_reader :url
 
-  def call(url)
+  def call(url, on_behalf_of: nil)
     @url = url
+    @on_behalf_of = on_behalf_of
 
     return process_local_url if local_url?
 
@@ -18,7 +20,7 @@ class ResolveURLService < BaseService
   def process_url
     if equals_or_includes_any?(type, %w(Application Group Organization Person Service))
       FetchRemoteAccountService.new.call(atom_url, body, protocol)
-    elsif equals_or_includes_any?(type, %w(Note Article Image Video))
+    elsif equals_or_includes_any?(type, %w(Note Article Image Video Page Question))
       FetchRemoteStatusService.new.call(atom_url, body, protocol)
     end
   end
@@ -84,6 +86,10 @@ class ResolveURLService < BaseService
 
   def check_local_status(status)
     return if status.nil?
-    status if status.public_visibility? || status.unlisted_visibility?
+    authorize_with @on_behalf_of, status, :show?
+    status
+  rescue Mastodon::NotPermittedError
+    # Do not disclose the existence of status the user is not authorized to see
+    nil
   end
 end

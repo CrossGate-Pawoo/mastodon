@@ -38,10 +38,11 @@ export function submitSearch() {
 
     PawooGA.event({ eventCategory: pawooGaCategory, eventAction: 'Submit' });
 
-    api(getState).get('/api/v1/search', {
+    api(getState).get('/api/v2/search', {
       params: {
         q: value,
         resolve: true,
+        limit: 5,
       },
     }).then(response => {
       if (response.data.accounts) {
@@ -52,7 +53,7 @@ export function submitSearch() {
         dispatch(importFetchedStatuses(response.data.statuses));
       }
 
-      dispatch(fetchSearchSuccess(response.data));
+      dispatch(fetchSearchSuccess(response.data, value));
       dispatch(fetchRelationships(response.data.accounts.map(item => item.id)));
     }).catch(error => {
       dispatch(fetchSearchFail(error));
@@ -66,10 +67,11 @@ export function fetchSearchRequest() {
   };
 };
 
-export function fetchSearchSuccess(results) {
+export function fetchSearchSuccess(results, searchTerm) {
   return {
     type: SEARCH_FETCH_SUCCESS,
     results,
+    searchTerm,
   };
 };
 

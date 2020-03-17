@@ -24,8 +24,6 @@ ja:
       user:
         send_paranoid_instructions: パスワード設定メールを送信しました
 
-  about:
-    contact_body_mastodon: Pawoo内からはこちら
   admin:
     accounts:
       oauth_authentications: pixivアカウント連携

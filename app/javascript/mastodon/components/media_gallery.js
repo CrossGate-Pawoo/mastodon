@@ -6,7 +6,8 @@ import IconButton from './icon_button';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { isIOS } from '../is_mobile';
 import classNames from 'classnames';
-import { autoPlayGif, displaySensitiveMedia } from '../initial_state';
+import { autoPlayGif, displayMedia } from '../initial_state';
+import { decode } from 'blurhash';
 
 const messages = defineMessages({
   toggle_visible: { id: 'media_gallery.toggle_visible', defaultMessage: 'Toggle visibility' },
@@ -20,6 +21,8 @@ class Item extends React.PureComponent {
     index: PropTypes.number.isRequired,
     size: PropTypes.number.isRequired,
     onClick: PropTypes.func.isRequired,
+    displayWidth: PropTypes.number,
+    visible: PropTypes.bool.isRequired,
     pawooMaxWidth: PropTypes.string,
   };
 
@@ -27,6 +30,10 @@ class Item extends React.PureComponent {
     standalone: false,
     index: 0,
     size: 1,
+  };
+
+  state = {
+    loaded: false,
   };
 
   handleMouseEnter = (e) => {
@@ -50,7 +57,11 @@ class Item extends React.PureComponent {
   handleClick = (e) => {
     const { index, onClick } = this.props;
 
-    if (e.button === 0) {
+    if (e.button === 0 && !(e.ctrlKey || e.metaKey)) {
+      if (this.hoverToPlay()) {
+        e.target.pause();
+        e.target.currentTime = 0;
+      }
       e.preventDefault();
       onClick(index);
     }
@@ -58,8 +69,40 @@ class Item extends React.PureComponent {
     e.stopPropagation();
   }
 
+  componentDidMount () {
+    if (this.props.attachment.get('blurhash')) {
+      this._decode();
+    }
+  }
+
+  componentDidUpdate (prevProps) {
+    if (prevProps.attachment.get('blurhash') !== this.props.attachment.get('blurhash') && this.props.attachment.get('blurhash')) {
+      this._decode();
+    }
+  }
+
+  _decode () {
+    const hash   = this.props.attachment.get('blurhash');
+    const pixels = decode(hash, 32, 32);
+
+    if (pixels) {
+      const ctx       = this.canvas.getContext('2d');
+      const imageData = new ImageData(pixels, 32, 32);
+
+      ctx.putImageData(imageData, 0, 0);
+    }
+  }
+
+  setCanvasRef = c => {
+    this.canvas = c;
+  }
+
+  handleImageLoad = () => {
+    this.setState({ loaded: true });
+  }
+
   render () {
-    const { attachment, index, size, standalone, pawooMaxWidth } = this.props;
+    const { attachment, index, size, standalone, displayWidth, visible, pawooMaxWidth } = this.props;
 
     let width  = 50;
     let height = 100;
@@ -112,16 +155,25 @@ class Item extends React.PureComponent {
 
     let thumbnail = '';
 
-    if (attachment.get('type') === 'image') {
+    if (attachment.get('type') === 'unknown') {
+      return (
+        <div className={classNames('media-gallery__item', { standalone })} key={attachment.get('id')} style={{ left: left, top: top, right: right, bottom: bottom, width: `${width}%`, height: `${height}%` }}>
+          <a className='media-gallery__item-thumbnail' href={attachment.get('remote_url')} target='_blank' style={{ cursor: 'pointer' }} title={attachment.get('description')}>
+            <canvas width={32} height={32} ref={this.setCanvasRef} className='media-gallery__preview' />
+          </a>
+        </div>
+      );
+    } else if (attachment.get('type') === 'image') {
       const previewUrl   = attachment.get('preview_url');
       const previewWidth = attachment.getIn(['meta', 'small', 'width']);
 
-      const originalUrl    = attachment.get('url');
-      const originalWidth  = attachment.getIn(['meta', 'original', 'width']);
+      const originalUrl   = attachment.get('url');
+      const originalWidth = attachment.getIn(['meta', 'original', 'width']);
 
       const hasSize = typeof originalWidth === 'number' && typeof previewWidth === 'number';
 
       const srcSet = hasSize ? `${originalUrl} ${originalWidth}w, ${previewUrl} ${previewWidth}w` : null;
+      const sizes  = hasSize && (displayWidth > 0) ? `${displayWidth * (width / 100)}px` : null;
 
       const focusX = attachment.getIn(['meta', 'focus', 'x']) || 0;
       const focusY = attachment.getIn(['meta', 'focus', 'y']) || 0.6;
@@ -138,9 +190,11 @@ class Item extends React.PureComponent {
           <img
             src={previewUrl}
             srcSet={srcSet}
+            sizes={sizes}
             alt={attachment.get('description')}
             title={attachment.get('description')}
             style={{ objectPosition: `${x}% ${y}%` }}
+            onLoad={this.handleImageLoad}
           />
         </a>
       );
@@ -152,6 +206,7 @@ class Item extends React.PureComponent {
           <video
             className='media-gallery__item-gifv-thumbnail'
             aria-label={attachment.get('description')}
+            title={attachment.get('description')}
             role='application'
             src={attachment.get('url')}
             onClick={this.handleClick}
@@ -169,23 +224,29 @@ class Item extends React.PureComponent {
 
     return (
       <div className={classNames('media-gallery__item', { standalone })} key={attachment.get('id')} style={{ left: left, top: top, right: right, bottom: bottom, width: `${width}%`, height: `${height}%`, maxWidth: pawooMaxWidth }}>
-        {thumbnail}
+        <canvas width={32} height={32} ref={this.setCanvasRef} className={classNames('media-gallery__preview', { 'media-gallery__preview--hidden': visible && this.state.loaded })} />
+        {visible && thumbnail}
       </div>
     );
   }
 
 }
 
-@injectIntl
-export default class MediaGallery extends React.PureComponent {
+export default @injectIntl
+class MediaGallery extends React.PureComponent {
 
   static propTypes = {
     sensitive: PropTypes.bool,
     standalone: PropTypes.bool,
     media: ImmutablePropTypes.list.isRequired,
     size: PropTypes.object,
+    height: PropTypes.number.isRequired,
     onOpenMedia: PropTypes.func.isRequired,
     intl: PropTypes.object.isRequired,
+    defaultWidth: PropTypes.number,
+    cacheWidth: PropTypes.func,
+    visible: PropTypes.bool,
+    onToggleVisibility: PropTypes.func,
     pawooOnClick: PropTypes.func,
     pawooScale: PropTypes.string.isRequired,
     pawooWide: PropTypes.bool,
@@ -197,17 +258,24 @@ export default class MediaGallery extends React.PureComponent {
   };
 
   state = {
-    visible: !this.props.sensitive || displaySensitiveMedia,
+    visible: this.props.visible !== undefined ? this.props.visible : (displayMedia !== 'hide_all' && !this.props.sensitive || displayMedia === 'show_all'),
+    width: this.props.defaultWidth,
   };
 
   componentWillReceiveProps (nextProps) {
-    if (!is(nextProps.media, this.props.media)) {
-      this.setState({ visible: !nextProps.sensitive });
+    if (!is(nextProps.media, this.props.media) && nextProps.visible === undefined) {
+      this.setState({ visible: displayMedia !== 'hide_all' && !nextProps.sensitive || displayMedia === 'show_all' });
+    } else if (!is(nextProps.visible, this.props.visible) && nextProps.visible !== undefined) {
+      this.setState({ visible: nextProps.visible });
     }
   }
 
   handleOpen = () => {
-    this.setState({ visible: !this.state.visible });
+    if (this.props.onToggleVisibility) {
+      this.props.onToggleVisibility();
+    } else {
+      this.setState({ visible: !this.state.visible });
+    }
   }
 
   handleClick = (index) => {
@@ -217,6 +285,8 @@ export default class MediaGallery extends React.PureComponent {
   handleRef = (node) => {
     if (node /*&& this.isStandaloneEligible()*/) {
       // offsetWidth triggers a layout, so only calculate when we need to
+      if (this.props.cacheWidth) this.props.cacheWidth(node.offsetWidth);
+
       this.setState({
         width: node.offsetWidth,
       });
@@ -229,11 +299,12 @@ export default class MediaGallery extends React.PureComponent {
   }
 
   render () {
-    const { media, intl, sensitive, pawooOnClick, pawooScale, pawooWide, pawooVertical } = this.props;
-    const { width, visible } = this.state;
+    const { media, intl, sensitive, defaultWidth, pawooOnClick, pawooScale, pawooWide, pawooVertical } = this.props;
+    const { visible } = this.state;
 
-    let pawooMaxWidth;
-    let children;
+    const width = this.state.width || defaultWidth;
+
+    let children, spoilerButton, pawooMaxWidth;
 
     const style = {};
 
@@ -254,43 +325,36 @@ export default class MediaGallery extends React.PureComponent {
       style.height = pawooWide && media.size < 3 ? `calc(${pawooScale}/2)` : pawooScale;
     }
 
-    if (!visible) {
-      let warning;
-
-      if (sensitive) {
-        warning = <FormattedMessage id='status.sensitive_warning' defaultMessage='Sensitive content' />;
-      } else {
-        warning = <FormattedMessage id='status.media_hidden' defaultMessage='Media hidden' />;
+    // for pawoo-gallery
+    if (!visible && pawooVertical) {
+      if (width) {
+        style.height = this.props.media.reduce((height, media) => height + width / media.getIn(['meta', 'small', 'aspect'], 1), (this.props.media.size - 1) * 5);
       }
+    }
 
-      // for pawoo-gallery
-      if (pawooVertical) {
-        if (width) {
-          style.height = this.props.media.reduce((height, media) => height + width / media.getIn(['meta', 'small', 'aspect'], 1), (this.props.media.size - 1) * 5);
-        }
-      }
+    const size = media.take(4).size;
 
-      children = (
-        <button type='button' className='media-spoiler' onClick={this.handleOpen} style={style} ref={this.handleRef}>
-          <span className='media-spoiler__warning'>{warning}</span>
-          <span className='media-spoiler__trigger'><FormattedMessage id='status.sensitive_toggle' defaultMessage='Click to view' /></span>
+    if (this.isStandaloneEligible()) {
+      children = <Item standalone onClick={this.handleClick} attachment={media.get(0)} pawooMaxWidth={pawooMaxWidth} visible={visible} />;
+    } else {
+      children = media.take(4).map((attachment, i) => <Item key={attachment.get('id')} onClick={this.handleClick} attachment={attachment} index={i} size={pawooVertical ? 1 : size} pawooMaxWidth={pawooMaxWidth} visible={visible} />);
+    }
+
+    if (visible) {
+      spoilerButton = <IconButton title={intl.formatMessage(messages.toggle_visible)} icon='eye-slash' overlay onClick={this.handleOpen} />;
+    } else {
+      spoilerButton = (
+        <button type='button' onClick={this.handleOpen} className='spoiler-button__overlay'>
+          <span className='spoiler-button__overlay__label'>{sensitive ? <FormattedMessage id='status.sensitive_warning' defaultMessage='Sensitive content' /> : <FormattedMessage id='status.media_hidden' defaultMessage='Media hidden' />}</span>
         </button>
       );
-    } else {
-      const size = media.take(4).size;
-
-      if (this.isStandaloneEligible()) {
-        children = <Item standalone onClick={this.handleClick} attachment={media.get(0)} pawooMaxWidth={pawooMaxWidth} />;
-      } else {
-        children = media.take(4).map((attachment, i) => <Item key={attachment.get('id')} onClick={this.handleClick} attachment={attachment} index={i} size={pawooVertical ? 1 : size} pawooMaxWidth={pawooMaxWidth} />);
-      }
     }
 
     return (
       <div className='media-gallery' style={style} ref={this.handleRef}>
         {pawooOnClick && visible && <div aria-hidden='true' className='pawoo-extension-media-gallery__background' onClick={pawooOnClick} />}
-        <div className={classNames('spoiler-button', { 'spoiler-button--visible': visible })}>
-          <IconButton title={intl.formatMessage(messages.toggle_visible)} icon={visible ? 'eye' : 'eye-slash'} overlay onClick={this.handleOpen} />
+        <div className={classNames('spoiler-button', { 'spoiler-button--minified': visible })}>
+          {spoilerButton}
         </div>
 
         {children}

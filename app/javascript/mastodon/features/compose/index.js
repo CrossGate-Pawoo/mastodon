@@ -13,11 +13,13 @@ import Motion from '../ui/util/optional_motion';
 import spring from 'react-motion/lib/spring';
 import SearchResultsContainer from './containers/search_results_container';
 import { changeComposing } from '../../actions/compose';
+import elephantUIPlane from '../../../images/elephant_ui_plane.svg';
+import { mascot } from '../../initial_state';
+import Icon from 'mastodon/components/icon';
 import { setPage as pawooSetPage } from '../../../pawoo/actions/page';
 import Announcements from '../../../pawoo/components/announcements';
 import PawooWebTagLink from '../../../pawoo/components/web_tag_link';
 import TrendTagsContainer from '../../../pawoo/containers/trend_tags_container';
-import elephantUIPlane from '../../../pawoo/images/pawoo-ui.png';
 
 const messages = defineMessages({
   start: { id: 'getting_started.heading', defaultMessage: 'Getting started' },
@@ -27,18 +29,18 @@ const messages = defineMessages({
   community: { id: 'navigation_bar.community_timeline', defaultMessage: 'Local timeline' },
   media: { id: 'pawoo.column.media', defaultMessage: 'Media timeline' },
   help: { id: 'pawoo.navigation_bar.help', defaultMessage: 'Help' },
+  compose: { id: 'navigation_bar.compose', defaultMessage: 'Compose new toot' },
 });
 
 const mapStateToProps = (state, ownProps) => ({
   columns: state.getIn(['settings', 'columns']),
   showSearch: ownProps.multiColumn ? state.getIn(['search', 'submitted']) && !state.getIn(['search', 'hidden']) : ownProps.isSearchPage,
-  pawooHasUnreadNotifications: state.getIn(['notifications', 'unread']) > 0,
   pawooMultiColumn: state.getIn(['settings', 'pawoo', 'multiColumn']),
 });
 
-@connect(mapStateToProps)
+export default @connect(mapStateToProps)
 @injectIntl
-export default class Compose extends React.PureComponent {
+class Compose extends React.PureComponent {
 
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
@@ -47,7 +49,6 @@ export default class Compose extends React.PureComponent {
     showSearch: PropTypes.bool,
     isSearchPage: PropTypes.bool,
     intl: PropTypes.object.isRequired,
-    pawooHasUnreadNotifications: PropTypes.bool,
     pawooMultiColumn: PropTypes.bool,
   };
 
@@ -102,54 +103,49 @@ export default class Compose extends React.PureComponent {
     let header = '';
 
     if (multiColumn) {
-      const { columns, pawooHasUnreadNotifications } = this.props;
+      const { columns } = this.props;
       header = (
         <nav className='drawer__header'>
-          <Link to='/getting-started' className='drawer__tab' onClick={this.pawooHandleClick} title={intl.formatMessage(messages.start)} aria-label={intl.formatMessage(messages.start)}><i role='img' className='fa fa-fw fa-asterisk' /></Link>
+          <Link to='/getting-started' className='drawer__tab' onClick={this.pawooHandleClick} title={intl.formatMessage(messages.start)} aria-label={intl.formatMessage(messages.start)}><Icon id='bars' fixedWidth /></Link>
           {!columns.some(column => column.get('id') === 'HOME') && (
-            <Link to='/timelines/home' className='drawer__tab' onClick={this.pawooHandleClick} title={intl.formatMessage(messages.home_timeline)} aria-label={intl.formatMessage(messages.home_timeline)}><i role='img' className='fa fa-fw fa-home' /></Link>
+            <Link to='/timelines/home' className='drawer__tab' onClick={this.pawooHandleClick} title={intl.formatMessage(messages.home_timeline)} aria-label={intl.formatMessage(messages.home_timeline)}><Icon id='home' fixedWidth /></Link>
           )}
           {!columns.some(column => column.get('id') === 'NOTIFICATIONS') && (
-            <Link to='/notifications' className={classNames('drawer__tab', { 'pawoo-extension-drawer__tab--unread': pawooHasUnreadNotifications })} onClick={this.pawooHandleClick} title={intl.formatMessage(messages.notifications)} aria-label={intl.formatMessage(messages.notifications)}><i role='img' className='fa fa-fw fa-bell' /></Link>
+            <Link to='/notifications' className='drawer__tab' onClick={this.pawooHandleClick} title={intl.formatMessage(messages.notifications)} aria-label={intl.formatMessage(messages.notifications)}><Icon id='bell' fixedWidth /></Link>
           )}
           {!columns.some(column => column.get('id') === 'COMMUNITY') && (
-            <Link to='/timelines/public/local' className='drawer__tab' onClick={this.pawooHandleClick} title={intl.formatMessage(messages.community)} aria-label={intl.formatMessage(messages.community)}><i role='img' className='fa fa-fw fa-users' /></Link>
+            <Link to='/timelines/public/local' className='drawer__tab' onClick={this.pawooHandleClick} title={intl.formatMessage(messages.community)} aria-label={intl.formatMessage(messages.community)}><Icon id='users' fixedWidth /></Link>
           )}
           {!columns.some(column => column.get('id') === 'MEDIA') && columns.some(column => ['HOME', 'NOTIFICATIONS', 'COMMUNITY'].includes(column.get('id'))) && (
-            <Link to='/timelines/public/media' className='drawer__tab' onClick={this.pawooHandleClick} title={intl.formatMessage(messages.media)} aria-label={intl.formatMessage(messages.media)}><i role='img' className='fa fa-fw fa-image' /></Link>
+            <Link to='/timelines/public/media' className='drawer__tab' onClick={this.pawooHandleClick} title={intl.formatMessage(messages.media)} aria-label={intl.formatMessage(messages.media)}><Icon id='fa-image' fixedWidth /></Link>
           )}
-          <Link to='/suggested_accounts' className='drawer__tab' onClick={this.pawooHandleClick} title={intl.formatMessage(messages.suggested_accounts)} aria-label={intl.formatMessage(messages.suggested_accounts)}><i role='img' className='fa fa-fw fa-user-plus' /></Link>
-          <a href='https://russelhelp.zendesk.com' target='_blank' rel='noopener' className='drawer__tab' title={intl.formatMessage(messages.help)} aria-label={intl.formatMessage(messages.help)}><i role='img' className='fa fa-fw fa-question-circle' /></a>
+          <Link to='/suggested_accounts' className='drawer__tab' onClick={this.pawooHandleClick} title={intl.formatMessage(messages.suggested_accounts)} aria-label={intl.formatMessage(messages.suggested_accounts)}><Icon id='fa-user-plus' fixedWidth /></Link>
+          <a href='https://russelhelp.zendesk.com' target='_blank' rel='noopener' className='drawer__tab' title={intl.formatMessage(messages.help)} aria-label={intl.formatMessage(messages.help)}><Icon id='fa-question-circle' fixedWidth /></a>
         </nav>
       );
     }
 
     return (
-      <div className='drawer'>
+      <div className='drawer' role='region' aria-label={intl.formatMessage(messages.compose)}>
         {header}
 
         {(multiColumn || isSearchPage) && <SearchContainer /> }
 
         <div className='drawer__pager'>
-          <div className='drawer__inner' onFocus={this.onFocus}>
+          {!isSearchPage && <div className='drawer__inner' onFocus={this.onFocus}>
             <NavigationContainer onClose={this.onBlur} />
+
             <ComposeFormContainer pawooOnSubmit={this.pawooHandleSubmit} />
 
-            {(!multiColumn || this.props.pawooMultiColumn) && (
-              <React.Fragment>
-                <div style={{ marginBottom: '10px' }}><Announcements /></div>
-                <div className='drawer__block'>
-                  <TrendTagsContainer Tag={PawooWebTagLink} />
-                </div>
-              </React.Fragment>
-            )}
+            <div style={{ marginBottom: '10px' }}><Announcements /></div>
+            <div className='drawer__block'>
+              <TrendTagsContainer Tag={PawooWebTagLink} />
+            </div>
 
-            {multiColumn && (
-              <div className='pawoo-extension-drawer__inner__mastodon drawer__inner__mastodon'>
-                <img alt='' draggable='false' ref={this.pawooSetRef} src={elephantUIPlane} />
-              </div>
-            )}
-          </div>
+            <div className='drawer__inner__mastodon'>
+              <img alt='' draggable='false' ref={this.pawooSetRef} src={mascot || elephantUIPlane} />
+            </div>
+          </div>}
 
           <Motion defaultStyle={{ x: isSearchPage ? 0 : -100 }} style={{ x: spring(showSearch || isSearchPage ? 0 : -100, { stiffness: 210, damping: 20 }) }}>
             {({ x }) => (

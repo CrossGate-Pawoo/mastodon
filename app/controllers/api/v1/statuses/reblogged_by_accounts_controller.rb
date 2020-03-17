@@ -3,7 +3,7 @@
 class Api::V1::Statuses::RebloggedByAccountsController < Api::BaseController
   include Authorization
 
-  before_action :authorize_if_got_token
+  before_action -> { authorize_if_got_token! :read, :'read:accounts' }
   before_action :set_status
   after_action :insert_pagination_headers
 
@@ -21,11 +21,11 @@ class Api::V1::Statuses::RebloggedByAccountsController < Api::BaseController
   end
 
   def default_accounts
-    Account.includes(:statuses).references(:statuses)
+    Account.includes(:statuses, :account_stat).references(:statuses)
   end
 
   def paginated_statuses
-    Status.where(reblog_of_id: @status.id).paginate_by_max_id(
+    Status.where(reblog_of_id: @status.id).where(visibility: [:public, :unlisted]).paginate_by_max_id(
       limit_param(DEFAULT_ACCOUNTS_LIMIT),
       params[:max_id],
       params[:since_id]
@@ -65,11 +65,6 @@ class Api::V1::Statuses::RebloggedByAccountsController < Api::BaseController
     authorize @status, :show?
   rescue Mastodon::NotPermittedError
     not_found
-  end
-
-  def authorize_if_got_token
-    request_token = Doorkeeper::OAuth::Token.from_request(request, *Doorkeeper.configuration.access_token_methods)
-    doorkeeper_authorize! :read if request_token
   end
 
   def pagination_params(core_params)

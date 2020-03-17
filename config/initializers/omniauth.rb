@@ -3,7 +3,7 @@ Rails.application.config.middleware.use OmniAuth::Builder do
 end
 
 Devise.setup do |config|
-  # Devise omniauth strategies
+  # Devise omniauth strategies
   options = {}
   options[:redirect_at_sign_in] = ENV['OAUTH_REDIRECT_AT_SIGN_IN'] == 'true'
 
@@ -14,7 +14,7 @@ Devise.setup do |config|
     cas_options[:host] = ENV['CAS_HOST'] if ENV['CAS_HOST']
     cas_options[:port] = ENV['CAS_PORT'] if ENV['CAS_PORT']
     cas_options[:ssl] = ENV['CAS_SSL'] == 'true' if ENV['CAS_SSL']
-    cas_options[:validate_url] = ENV['CAS_VALIDATE_URL'] if ENV['CAS_VALIDATE_URL']
+    cas_options[:service_validate_url] = ENV['CAS_VALIDATE_URL'] if ENV['CAS_VALIDATE_URL']
     cas_options[:callback_url] = ENV['CAS_CALLBACK_URL'] if ENV['CAS_CALLBACK_URL']
     cas_options[:logout_url] = ENV['CAS_LOGOUT_URL'] if ENV['CAS_LOGOUT_URL']
     cas_options[:login_url] = ENV['CAS_LOGIN_URL'] if ENV['CAS_LOGIN_URL']
@@ -38,7 +38,7 @@ Devise.setup do |config|
     saml_options = options
     saml_options[:assertion_consumer_service_url] = ENV['SAML_ACS_URL'] if ENV['SAML_ACS_URL']
     saml_options[:issuer] = ENV['SAML_ISSUER'] if ENV['SAML_ISSUER']
-    saml_options[:idp_sso_target_url] = ENV['SAML_IDP_SSO_TARGET_URL']  if ENV['SAML_IDP_SSO_TARGET_URL']
+    saml_options[:idp_sso_target_url] = ENV['SAML_IDP_SSO_TARGET_URL'] if ENV['SAML_IDP_SSO_TARGET_URL']
     saml_options[:idp_sso_target_url_runtime_params] = ENV['SAML_IDP_SSO_TARGET_PARAMS'] if ENV['SAML_IDP_SSO_TARGET_PARAMS'] # FIXME: Should be parsable Hash
     saml_options[:idp_cert] = ENV['SAML_IDP_CERT'] if ENV['SAML_IDP_CERT']
     saml_options[:idp_cert_fingerprint] = ENV['SAML_IDP_CERT_FINGERPRINT'] if ENV['SAML_IDP_CERT_FINGERPRINT']
@@ -62,5 +62,4 @@ Devise.setup do |config|
     saml_options[:uid_attribute] = ENV['SAML_UID_ATTRIBUTE'] if ENV['SAML_UID_ATTRIBUTE']
     config.omniauth :saml, saml_options
   end
-
 end

@@ -1,0 +1,47 @@
+- content_for :page_title do
+  Mastodon (マストドン) hosted by Russell
+
+- content_for :header_tags do
+  %link{ rel: 'canonical', href: about_url }/
+  %script#initial-state{ type: 'application/json' }!= json_escape(@initial_state_json)
+  = javascript_pack_tag 'about', integrity: true, crossorigin: 'anonymous'
+  = javascript_pack_tag 'public', integrity: true, crossorigin: 'anonymous'
+  = render partial: 'shared/og'
+
+.about-cols
+  %section.main
+    %h1= image_tag asset_pack_path('pawoo/about/header.png'), alt: 'Pawoo', width: 535
+
+    .about-col-body
+      .about-col-body-spacer.top
+      .start-pawoo
+        = link_to t('auth.login'), new_user_session_path, class: 'button button-primary'
+        = link_to t('auth.register'), new_user_registration_path, class: 'button button-primary'
+
+      .about-col-body-spacer
+
+      %p.hide_on_short_display
+        ラッセルが運営するマストドンインスタンス「Pawoo」は、文章や画像を投稿して楽しむSNSです。
+        「創作活動や自由なコミュニケーションを楽しめる場」として、どなたにも幅広く使っていただけます。
+
+      .about-col-body-spacer.bottom
+
+  - if Setting.timeline_preview
+    %section.timeline#pawoo-community-timeline{ data: { props: Oj.dump(default_props) } }
+
+.info
+  %ul.no-list
+    %li
+      = link_to 'http://www.russel.co.jp/' do
+        = image_tag asset_pack_path('pawoo/logo_russell.png'), alt: 'Russell', height: '27'
+    %li
+      = link_to 'https://joinmastodon.org/' do
+        = image_tag asset_pack_path('logo_full.svg'), alt: 'Mastodon', class: 'mastodon', height: '24'
+  %ul.no-list
+    %li
+      = link_to t('about.source_code'), @instance_presenter.source_url
+      = " (#{@instance_presenter.version_number})"
+    %li
+      = link_to t('about.about_this'), about_more_path
+
+#modal-container

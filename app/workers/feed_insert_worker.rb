@@ -9,9 +9,9 @@ class FeedInsertWorker
 
     case @type
     when :home
-      @followers = Account.where(id: ids)
+      @followers = Account.where(id: ids).preload(:user)
     when :list
-      @lists     = List.where(id: ids).preload(:account)
+      @lists     = List.where(id: ids).preload(account: :user)
       @followers = @lists.map(&:account)
     end
 

@@ -34,7 +34,6 @@ RSpec.describe ActivityPub::Activity::Move do
     subject { described_class.new(json, old_account) }
 
     before do
-      stub_jsonld_contexts! # 新しいバージョンでは必要ないらしい
       subject.perform
     end
 

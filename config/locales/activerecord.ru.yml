@@ -1,12 +1,16 @@
 ---
 ru:
   activerecord:
+    attributes:
+      poll:
+        expires_at: Крайний срок
+        options: Варианты
     errors:
       models:
         account:
           attributes:
             username:
-              invalid: только буквы, цифры и символ подеркивания
+              invalid: только буквы, цифры и символ подчёркивания
         status:
           attributes:
             reblog:

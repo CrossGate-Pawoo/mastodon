@@ -4,9 +4,13 @@ class FollowingAccountsController < ApplicationController
   include AccountControllerConcern
   include Pawoo::FollowingAccountsControllerConcern
 
+  before_action :set_cache_headers
+
   def index
     respond_to do |format|
       format.html do
+        mark_cacheable! unless user_signed_in?
+
         next if @account.user_hides_network?
 
         follows
@@ -15,6 +19,8 @@ class FollowingAccountsController < ApplicationController
 
       format.json do
         raise Mastodon::NotPermittedError if params[:page].present? && @account.user_hides_network?
+
+        expires_in 3.minutes, public: true if params[:page].blank?
 
         render json: collection_presenter,
                serializer: ActivityPub::CollectionSerializer,

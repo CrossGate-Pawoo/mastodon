@@ -6,9 +6,8 @@ import PropTypes from 'prop-types';
 import StatusListContainer from '../ui/containers/status_list_container';
 import Column from '../../components/column';
 import { expandCommunityTimeline } from '../../actions/timelines';
-import { addColumn, removeColumn, moveColumn, changeColumnParams } from '../../actions/columns';
+import { addColumn, removeColumn, moveColumn } from '../../actions/columns';
 import ColumnSettingsContainer from './containers/column_settings_container';
-// import SectionHeadline from './components/section_headline';
 import { connectCommunityStream } from '../../actions/streaming';
 import ColumnHeader from '../../../pawoo/components/animated_timeline_column_header';
 
@@ -16,13 +15,24 @@ const messages = defineMessages({
   title: { id: 'column.community', defaultMessage: 'Local timeline' },
 });
 
-const mapStateToProps = (state, { onlyMedia }) => ({
-  hasUnread: state.getIn(['timelines', `community${onlyMedia ? ':media' : ''}`, 'unread']) > 0,
-});
+const mapStateToProps = (state, { onlyMedia, columnId }) => {
+  const uuid = columnId;
+  const columns = state.getIn(['settings', 'columns']);
+  const index = columns.findIndex(c => c.get('uuid') === uuid);
 
-@connect(mapStateToProps)
+  return {
+    hasUnread: state.getIn(['timelines', `community${onlyMedia ? ':media' : ''}`, 'unread']) > 0,
+    onlyMedia: (columnId && index >= 0) ? columns.get(index).getIn(['params', 'other', 'onlyMedia']) : state.getIn(['settings', 'community', 'other', 'onlyMedia']),
+  };
+};
+
+export default @connect(mapStateToProps)
 @injectIntl
-export default class CommunityTimeline extends React.PureComponent {
+class CommunityTimeline extends React.PureComponent {
+
+  static contextTypes = {
+    router: PropTypes.object,
+  };
 
   static defaultProps = {
     onlyMedia: false,
@@ -30,6 +40,7 @@ export default class CommunityTimeline extends React.PureComponent {
 
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
+    shouldUpdateScroll: PropTypes.func,
     columnId: PropTypes.string,
     intl: PropTypes.object.isRequired,
     hasUnread: PropTypes.bool,
@@ -37,8 +48,6 @@ export default class CommunityTimeline extends React.PureComponent {
     onlyMedia: PropTypes.bool,
     pawoo: ImmutablePropTypes.map.isRequired,
   };
-
-  pawooListener = null;
 
   handlePin = () => {
     const { columnId, dispatch, onlyMedia } = this.props;
@@ -93,31 +102,12 @@ export default class CommunityTimeline extends React.PureComponent {
     dispatch(expandCommunityTimeline({ maxId, onlyMedia }));
   }
 
-  handleHeadlineLinkClick = e => {
-    const { columnId, dispatch } = this.props;
-    const onlyMedia = /\/media$/.test(e.currentTarget.href);
-
-    dispatch(changeColumnParams(columnId, { other: { onlyMedia } }));
-  }
-
   render () {
-    const { intl, hasUnread, columnId, multiColumn, onlyMedia, pawoo } = this.props;
+    const { intl, shouldUpdateScroll, hasUnread, columnId, multiColumn, onlyMedia, pawoo } = this.props;
     const pinned = !!columnId;
 
-    // pending
-    //
-    // const headline = (
-    //   <SectionHeadline
-    //     timelineId='community'
-    //     to='/timelines/public/local'
-    //     pinned={pinned}
-    //     onlyMedia={onlyMedia}
-    //     onClick={this.handleHeadlineLinkClick}
-    //   />
-    // );
-
     return (
-      <Column ref={this.setRef}>
+      <Column ref={this.setRef} label={intl.formatMessage(messages.title)}>
         <ColumnHeader
           icon='users'
           active={hasUnread}
@@ -131,15 +121,16 @@ export default class CommunityTimeline extends React.PureComponent {
           pawooUrl='/timelines/public/local'
           timelineId={`community${onlyMedia ? ':media' : ''}`}
         >
-          <ColumnSettingsContainer />
+          <ColumnSettingsContainer columnId={columnId} />
         </ColumnHeader>
 
         <StatusListContainer
-          // prepend={headline}
+          trackScroll={!pinned}
           scrollKey={`community_timeline-${columnId}`}
           timelineId={`community${onlyMedia ? ':media' : ''}`}
           onLoadMore={this.handleLoadMore}
           emptyMessage={<FormattedMessage id='empty_column.community' defaultMessage='The local timeline is empty. Write something publicly to get the ball rolling!' />}
+          shouldUpdateScroll={shouldUpdateScroll}
         />
       </Column>
     );

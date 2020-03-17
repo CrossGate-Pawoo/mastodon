@@ -7,13 +7,14 @@ import DisplayName from '../../../components/display_name';
 import { defineMessages, injectIntl } from 'react-intl';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 import { isRtl } from '../../../rtl';
+import AttachmentList from 'mastodon/components/attachment_list';
 
 const messages = defineMessages({
   cancel: { id: 'reply_indicator.cancel', defaultMessage: 'Cancel' },
 });
 
-@injectIntl
-export default class ReplyIndicator extends ImmutablePureComponent {
+export default @injectIntl
+class ReplyIndicator extends ImmutablePureComponent {
 
   static contextTypes = {
     router: PropTypes.object,
@@ -31,7 +32,7 @@ export default class ReplyIndicator extends ImmutablePureComponent {
   }
 
   handleAccountClick = (e) => {
-    if (e.button === 0) {
+    if (e.button === 0 && !(e.ctrlKey || e.metaKey)) {
       e.preventDefault();
       this.context.pawooPushHistory(`/accounts/${this.props.status.getIn(['account', 'id'])}`, true);
     }
@@ -61,6 +62,13 @@ export default class ReplyIndicator extends ImmutablePureComponent {
         </div>
 
         <div className='reply-indicator__content' style={style} dangerouslySetInnerHTML={content} />
+
+        {status.get('media_attachments').size > 0 && (
+          <AttachmentList
+            compact
+            media={status.get('media_attachments')}
+          />
+        )}
       </div>
     );
   }

@@ -1,0 +1,17 @@
+---
+el:
+  activerecord:
+    attributes:
+      poll:
+        expires_at: Προθεσμία
+        options: Επιλογές
+    errors:
+      models:
+        account:
+          attributes:
+            username:
+              invalid: μόνο γράμματα, αριθμοί και κάτω παύλες
+        status:
+          attributes:
+            reblog:
+              taken: της κατάστασης ήδη υπάρχει

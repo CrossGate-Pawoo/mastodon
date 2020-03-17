@@ -1,15 +1,14 @@
 # frozen_string_literal: true
 
 class UnfollowService < BaseService
+  include Payloadable
+
   # Unfollow and notify the remote user
   # @param [Account] source_account Where to unfollow from
   # @param [Account] target_account Which to unfollow
-  # @param [Hash] options
-  # @option [Boolean] :skip_unmerge
-  def call(source_account, target_account, options = {})
+  def call(source_account, target_account)
     @source_account = source_account
     @target_account = target_account
-    @options        = options
 
     unfollow! || undo_follow_request!
   end
@@ -22,10 +21,9 @@ class UnfollowService < BaseService
     return unless follow
 
     follow.destroy!
-
     create_notification(follow) unless @target_account.local?
-    UnmergeWorker.perform_async(@target_account.id, @source_account.id) unless @options[:skip_unmerge]
-
+    create_reject_notification(follow) if @target_account.local? && !@source_account.local?
+    UnmergeWorker.perform_async(@target_account.id, @source_account.id)
     follow
   end
 
@@ -35,9 +33,7 @@ class UnfollowService < BaseService
     return unless follow_request
 
     follow_request.destroy!
-
     create_notification(follow_request) unless @target_account.local?
-
     follow_request
   end
 
@@ -49,12 +45,18 @@ class UnfollowService < BaseService
     end
   end
 
+  def create_reject_notification(follow)
+    # Rejecting an already-existing follow request
+    return unless follow.account.activitypub?
+    ActivityPub::DeliveryWorker.perform_async(build_reject_json(follow), follow.target_account_id, follow.account.inbox_url)
+  end
+
   def build_json(follow)
-    Oj.dump(ActivityPub::LinkedDataSignature.new(ActiveModelSerializers::SerializableResource.new(
-      follow,
-      serializer: ActivityPub::UndoFollowSerializer,
-      adapter: ActivityPub::Adapter
-    ).as_json).sign!(follow.account))
+    Oj.dump(serialize_payload(follow, ActivityPub::UndoFollowSerializer))
+  end
+
+  def build_reject_json(follow)
+    Oj.dump(serialize_payload(follow, ActivityPub::RejectFollowSerializer))
   end
 
   def build_xml(follow)

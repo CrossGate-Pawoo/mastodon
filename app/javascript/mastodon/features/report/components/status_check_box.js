@@ -35,7 +35,9 @@ export default class StatusCheckBox extends React.PureComponent {
             {Component => (
               <Component
                 preview={video.get('preview_url')}
+                blurhash={video.get('blurhash')}
                 src={video.get('url')}
+                alt={video.get('description')}
                 width={239}
                 height={110}
                 inline

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class RejectFollowService < BaseService
+  include Payloadable
+
   def call(source_account, target_account)
     follow_request = FollowRequest.find_by!(account: source_account, target_account: target_account)
     follow_request.reject!
@@ -19,11 +21,7 @@ class RejectFollowService < BaseService
   end
 
   def build_json(follow_request)
-    Oj.dump(ActivityPub::LinkedDataSignature.new(ActiveModelSerializers::SerializableResource.new(
-      follow_request,
-      serializer: ActivityPub::RejectFollowSerializer,
-      adapter: ActivityPub::Adapter
-    ).as_json).sign!(follow_request.target_account))
+    Oj.dump(serialize_payload(follow_request, ActivityPub::RejectFollowSerializer))
   end
 
   def build_xml(follow_request)

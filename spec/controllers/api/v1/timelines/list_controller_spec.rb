@@ -13,13 +13,13 @@ describe Api::V1::Timelines::ListController do
   end
 
   context 'with a user context' do
-    let(:token) { Fabricate(:accessible_access_token, resource_owner_id: user.id, scopes: 'read') }
+    let(:token) { Fabricate(:accessible_access_token, resource_owner_id: user.id, scopes: 'read:lists') }
 
     describe 'GET #show' do
       before do
         follow = Fabricate(:follow, account: user.account)
         list.accounts << follow.target_account
-        PostStatusService.new.call(follow.target_account, 'New status for user home timeline.')
+        PostStatusService.new.call(follow.target_account, text: 'New status for user home timeline.')
       end
 
       it 'returns http success' do
