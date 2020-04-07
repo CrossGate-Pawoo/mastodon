@@ -175,6 +175,34 @@ RSpec.describe Status, type: :model do
 
       expect(subject.reblogs_count).to eq 2
     end
+
+    it 'is decremented when reblog is removed' do
+      reblog = Fabricate(:status, account: bob, reblog: subject)
+      expect(subject.reblogs_count).to eq 1
+      reblog.destroy
+      expect(subject.reblogs_count).to eq 0
+    end
+
+    it 'does not fail when original is deleted before reblog' do
+      reblog = Fabricate(:status, account: bob, reblog: subject)
+      expect(subject.reblogs_count).to eq 1
+      expect { subject.destroy }.to_not raise_error
+      expect(Status.find_by(id: reblog.id)).to be_nil
+    end
+  end
+
+  xdescribe '#replies_count' do
+    it 'is the number of replies' do
+      reply = Fabricate(:status, account: bob, thread: subject)
+      expect(subject.replies_count).to eq 1
+    end
+
+    it 'is decremented when reply is removed' do
+      reply = Fabricate(:status, account: bob, thread: subject)
+      expect(subject.replies_count).to eq 1
+      reply.destroy
+      expect(subject.replies_count).to eq 0
+    end
   end
 
   describe '#favourites_count' do
@@ -183,6 +211,13 @@ RSpec.describe Status, type: :model do
       Fabricate(:favourite, account: alice, status: subject)
 
       expect(subject.favourites_count).to eq 2
+    end
+
+    it 'is decremented when favourite is removed' do
+      favourite = Fabricate(:favourite, account: bob, status: subject)
+      expect(subject.favourites_count).to eq 1
+      favourite.destroy
+      expect(subject.favourites_count).to eq 0
     end
   end
 
