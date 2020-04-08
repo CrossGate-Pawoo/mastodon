@@ -62,6 +62,7 @@ class Status < ApplicationRecord
   has_one :notification, as: :activity, dependent: :destroy
   has_one :status_pin, dependent: :destroy
   has_one :stream_entry, as: :activity, inverse_of: :status
+  has_one :status_stat, inverse_of: :status
 
   validates :uri, uniqueness: true, presence: true, unless: :local?
   validates :text, presence: true, unless: -> { with_media? || reblog? }
@@ -177,6 +178,49 @@ class Status < ApplicationRecord
   def emojis
     @emojis ||= CustomEmoji.from_text([spoiler_text, text].join(' '), account.domain)
   end
+
+  def mark_for_mass_destruction!
+    @marked_for_mass_destruction = true
+  end
+
+  def marked_for_mass_destruction?
+    @marked_for_mass_destruction
+  end
+
+  def replies_count
+    status_stat&.replies_count || 0
+  end
+
+  # def reblogs_count
+  #   status_stat&.reblogs_count || 0
+  # end
+
+  # def favourites_count
+  #   status_stat&.favourites_count || 0
+  # end
+
+  def increment_count!(key)
+    if key.to_s == 'replies_count'
+      update_status_stat!(key => public_send(key) + 1)
+    else
+      pawoo_copy_count!(key)
+    end
+  end
+
+  def decrement_count!(key)
+    if key.to_s == 'replies_count'
+      update_status_stat!(key => [public_send(key) - 1, 0].max)
+    else
+      pawoo_copy_count!(key)
+    end
+  end
+
+  def pawoo_copy_count!(key)
+    update_status_stat!(key => public_send(key))
+  end
+
+  after_create_commit  :increment_counter_caches
+  after_destroy_commit :decrement_counter_caches
 
   after_create_commit :store_uri, if: :local?
   after_create_commit :update_statistics, if: :local?
@@ -349,8 +393,15 @@ class Status < ApplicationRecord
 
   private
 
+  def update_status_stat!(attrs)
+    return if marked_for_destruction? || destroyed?
+
+    record = status_stat || build_status_stat
+    record.update(attrs)
+  end
+
   def store_uri
-    update_attribute(:uri, ActivityPub::TagManager.instance.uri_for(self)) if uri.nil?
+    update_column(:uri, ActivityPub::TagManager.instance.uri_for(self)) if uri.nil?
   end
 
   def prepare_contents
@@ -398,5 +449,21 @@ class Status < ApplicationRecord
   def update_statistics
     return unless public_visibility? || unlisted_visibility?
     ActivityTracker.increment('activity:statuses:local')
+  end
+
+  def increment_counter_caches
+    return if direct_visibility?
+
+    # account&.increment_count!(:statuses_count)
+    reblog&.increment_count!(:reblogs_count) if reblog?
+    thread&.increment_count!(:replies_count) if in_reply_to_id.present? && (public_visibility? || unlisted_visibility?)
+  end
+
+  def decrement_counter_caches
+    return if direct_visibility? || marked_for_mass_destruction?
+
+    # account&.decrement_count!(:statuses_count)
+    reblog&.decrement_count!(:reblogs_count) if reblog?
+    thread&.decrement_count!(:replies_count) if in_reply_to_id.present? && (public_visibility? || unlisted_visibility?)
   end
 end
