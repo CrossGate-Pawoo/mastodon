@@ -122,6 +122,12 @@ export default class HomeTimeline extends React.PureComponent {
           timelineId='home'
           emptyMessage={<FormattedMessage id='empty_column.home' defaultMessage='Your home timeline is empty! Visit {public} or use search to get started and meet other users.' values={{ public: <Link to='/suggested_accounts'><FormattedMessage id='pawoo.empty_column.home.suggested_accounts' defaultMessage='the active accounts' /></Link> }} />}
         />
+
+        <div style='width:100%;'>
+          <a href='https://senki1999.com/furuyoni_digital/'>
+            <img alt='sakura' src='/packs/pawoo/about/sakura-870beb48797da402bf26aeeb51168b8c.png'>
+          </a>
+        </div>
       </Column>
     );
   }
