@@ -33,6 +33,17 @@ ActiveRecord::Schema.define(version: 2020_03_03_171819) do
     t.index ["target_account_id"], name: "index_account_moderation_notes_on_target_account_id"
   end
 
+  create_table "account_stats", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.bigint "statuses_count", default: 0, null: false
+    t.bigint "following_count", default: 0, null: false
+    t.bigint "followers_count", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "last_status_at"
+    t.index ["account_id"], name: "index_account_stats_on_account_id", unique: true
+  end
+
   create_table "accounts", force: :cascade do |t|
     t.string "username", default: "", null: false
     t.string "domain"
@@ -665,6 +676,7 @@ ActiveRecord::Schema.define(version: 2020_03_03_171819) do
   add_foreign_key "account_domain_blocks", "accounts", name: "fk_206c6029bd", on_delete: :cascade
   add_foreign_key "account_moderation_notes", "accounts"
   add_foreign_key "account_moderation_notes", "accounts", column: "target_account_id"
+  add_foreign_key "account_stats", "accounts", on_delete: :cascade
   add_foreign_key "accounts", "accounts", column: "moved_to_account_id", on_delete: :nullify
   add_foreign_key "admin_action_logs", "accounts", on_delete: :cascade
   add_foreign_key "backups", "users", on_delete: :nullify

@@ -34,10 +34,22 @@ class Follow < ApplicationRecord
   end
 
   before_validation :set_uri, only: :create
+  after_create :increment_cache_counters
+  after_destroy :decrement_cache_counters
 
   private
 
   def set_uri
     self.uri = ActivityPub::TagManager.instance.generate_uri_for(self) if uri.nil?
+  end
+
+  def increment_cache_counters
+    account&.account_stat&.increment_count!(:following_count)
+    target_account&.account_stat&.increment_count!(:followers_count)
+  end
+
+  def decrement_cache_counters
+    account&.account_stat&.decrement_count!(:following_count)
+    target_account&.account_stat&.decrement_count!(:followers_count)
   end
 end

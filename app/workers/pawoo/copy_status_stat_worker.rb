@@ -3,7 +3,7 @@
 class Pawoo::CopyStatusStatWorker
   include Sidekiq::Worker
 
-  sidekiq_options queue: 'push', unique: :until_executed
+  sidekiq_options queue: 'pull', unique: :until_executed
 
   def perform(max_status_id)
     base_scope = Status.unscoped
