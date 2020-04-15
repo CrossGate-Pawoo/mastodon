@@ -141,6 +141,12 @@ export default class CommunityTimeline extends React.PureComponent {
           onLoadMore={this.handleLoadMore}
           emptyMessage={<FormattedMessage id='empty_column.community' defaultMessage='The local timeline is empty. Write something publicly to get the ball rolling!' />}
         />
+
+        <div className='pawoo-kyoa-home'>
+          <a href='https://senki1999.com/furuyoni_digital/'>
+            <img alt='sakura' src='/packs/pawoo/about/sakura-870beb48797da402bf26aeeb51168b8c.png' />
+          </a>
+        </div>
       </Column>
     );
   }

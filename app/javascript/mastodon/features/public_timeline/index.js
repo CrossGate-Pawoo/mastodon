@@ -139,12 +139,6 @@ export default class PublicTimeline extends React.PureComponent {
           scrollKey={`public_timeline-${columnId}`}
           emptyMessage={<FormattedMessage id='empty_column.public' defaultMessage='There is nothing here! Write something publicly, or manually follow users from other instances to fill it up' />}
         />
-
-        <div className='pawoo-kyoa-home'>
-          <a href='https://senki1999.com/furuyoni_digital/'>
-            <img alt='sakura' src='/packs/pawoo/about/sakura-870beb48797da402bf26aeeb51168b8c.png' />
-          </a>
-        </div>
       </Column>
     );
   }
