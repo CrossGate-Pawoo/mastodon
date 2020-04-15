@@ -53,4 +53,51 @@ RSpec.describe Account, type: :model do
       end
     end
   end
+
+  describe '#statuses_count' do
+    subject { Fabricate(:account) }
+
+    it 'update statuses_count' do
+      subject.statuses_count = 100
+      subject.save
+      expect(subject.statuses_count).to eq 100
+      expect(subject.account_stat.statuses_count).to eq 100
+    end
+
+    it 'counts statuses' do
+      Fabricate(:status, account: subject)
+      Fabricate(:status, account: subject)
+      expect(subject.statuses_count).to eq 2
+      expect(subject.account_stat.statuses_count).to eq 2
+    end
+
+    it 'is copy and increment' do
+      subject.update(statuses_count: 2)
+
+      expect(subject.statuses_count).to eq 2
+      Fabricate(:status, account: subject)
+
+      expect(subject.statuses_count).to eq 3
+      expect(subject.account_stat.statuses_count).to eq 3
+    end
+
+    it 'is decremented when status is removed' do
+      status = Fabricate(:status, account: subject)
+      expect(subject.statuses_count).to eq 1
+      expect(subject.account_stat.statuses_count).to eq 1
+      status.destroy
+      expect(subject.statuses_count).to eq 0
+      expect(subject.account_stat.statuses_count).to eq 0
+    end
+
+    it 'is copy and decremented when status is removed' do
+      status = Fabricate(:status, account: subject)
+      subject.update(statuses_count: 2)
+
+      expect(subject.statuses_count).to eq 2
+      status.destroy
+      expect(subject.statuses_count).to eq 1
+      expect(subject.account_stat.statuses_count).to eq 1
+    end
+  end
 end
