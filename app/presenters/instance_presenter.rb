@@ -16,16 +16,16 @@ class InstancePresenter
     Account.find_local(Setting.site_contact_username)
   end
 
-  def user_count
-    Rails.cache.fetch('user_count', race_condition_ttl: 1.minute) { User.confirmed.count }
+  def user_count(pawoo_fetch_force: false)
+    Rails.cache.fetch('user_count', race_condition_ttl: 1.minute, expires_in: 1.day, force: pawoo_fetch_force) { User.confirmed.count }
   end
 
-  def status_count
-    Rails.cache.fetch('local_status_count', race_condition_ttl: 1.minute) { Account.local.sum(:statuses_count) }
+  def status_count(pawoo_fetch_force: false)
+    Rails.cache.fetch('local_status_count', race_condition_ttl: 1.minute, expires_in: 1.day, force: pawoo_fetch_force) { Account.local.sum(:statuses_count) }
   end
 
-  def domain_count
-    Rails.cache.fetch('distinct_domain_count', race_condition_ttl: 1.minute) { Account.distinct.count(:domain) }
+  def domain_count(pawoo_fetch_force: false)
+    Rails.cache.fetch('distinct_domain_count', race_condition_ttl: 1.minute, expires_in: 1.day, force: pawoo_fetch_force) { Account.distinct.count(:domain) }
   end
 
   def version_number
