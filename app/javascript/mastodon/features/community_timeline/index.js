@@ -11,6 +11,7 @@ import ColumnSettingsContainer from './containers/column_settings_container';
 // import SectionHeadline from './components/section_headline';
 import { connectCommunityStream } from '../../actions/streaming';
 import ColumnHeader from '../../../pawoo/components/animated_timeline_column_header';
+import sakura from '../../../pawoo/images/about/sakura2.png';
 
 const messages = defineMessages({
   title: { id: 'column.community', defaultMessage: 'Local timeline' },
@@ -144,7 +145,7 @@ export default class CommunityTimeline extends React.PureComponent {
 
         <div className='pawoo-kyoa-home'>
           <a href='https://senki1999.com/furuyoni_digital/'>
-            <img alt='sakura' src='/packs/pawoo/about/sakura2.png' />
+            <img alt='sakura' src={sakura} />
           </a>
         </div>
       </Column>
