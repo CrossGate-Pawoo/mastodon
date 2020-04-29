@@ -10,6 +10,7 @@ import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import ColumnSettingsContainer from './containers/column_settings_container';
 import ColumnHeader from '../../../pawoo/components/animated_timeline_column_header';
 import Link from '../../../pawoo/components/wrapped_link';
+import sakura from '../../images/about/sakura2.png';
 
 const messages = defineMessages({
   title: { id: 'column.home', defaultMessage: 'Home' },
@@ -125,7 +126,7 @@ export default class HomeTimeline extends React.PureComponent {
 
         <div className='pawoo-kyoa-home'>
           <a href='https://senki1999.com/furuyoni_digital/'>
-            <img alt='sakura' src='/packs/pawoo/about/sakura2.png' />
+            <img alt='sakura' src='{icon}' />
           </a>
         </div>
       </Column>
