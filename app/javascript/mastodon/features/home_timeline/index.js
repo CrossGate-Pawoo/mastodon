@@ -126,7 +126,7 @@ export default class HomeTimeline extends React.PureComponent {
 
         <div className='pawoo-kyoa-home'>
           <a href='https://senki1999.com/furuyoni_digital/'>
-            <img alt='sakura' src='{sakura}' />
+            <img alt='sakura' src={sakura} />
           </a>
         </div>
       </Column>
