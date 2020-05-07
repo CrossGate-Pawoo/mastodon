@@ -31,4 +31,3 @@ update_configs:
     # Enable. Only lockfile updates (ignore updates that require Gemfile changes)
     version_requirement_updates: "auto"
 
-
