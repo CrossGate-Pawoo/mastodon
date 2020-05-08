@@ -22,10 +22,10 @@ const buttonStyle = {
   fontSize: '16px',
 };
 
-@connect()
+export default @connect()
 @injectIntl
 @withRouter
-export default class SuggestedAccountsColumn extends React.PureComponent {
+class SuggestedAccountsColumn extends React.PureComponent {
 
   static propTypes = {
     dispatch: PropTypes.func.isRequired,

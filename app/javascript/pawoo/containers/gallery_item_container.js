@@ -79,9 +79,9 @@ const mapDispatchToProps = (dispatch) => ({
   },
 });
 
-@injectIntl
+export default @injectIntl
 @connect(makeMapStateToProps, mapDispatchToProps)
-export default class GalleryItem extends ImmutablePureComponent {
+class GalleryItem extends ImmutablePureComponent {
 
   static propTypes = {
     intl: PropTypes.object.isRequired,

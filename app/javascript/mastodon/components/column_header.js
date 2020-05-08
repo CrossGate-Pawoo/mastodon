@@ -1,6 +1,5 @@
 import React from 'react';
 import ImmutablePropTypes from 'react-immutable-proptypes';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
@@ -148,19 +147,6 @@ class ColumnHeader extends React.PureComponent {
       );
     }
 
-    let pawooMaximizeButton;
-
-    if (pinned && pawooUrl && pawoo && !pawoo.get('multiColumn')) {
-      pawooMaximizeButton = (
-        <Link
-          className='column-header__button'
-          onClick={pawoo.get('onCollapse')}
-          style={{ margin: 'auto' }}
-          to={pawooUrl}
-        ><i aria-label={formatMessage(messages.pawooMaximize)} className='fa fa-window-maximize' /></Link>
-      );
-    }
-
     const collapsedContent = [
       extraContent,
     ];
@@ -190,7 +176,6 @@ class ColumnHeader extends React.PureComponent {
 
           <div className='column-header__buttons'>
             {hasTitle && backButton}
-            {pawooMaximizeButton}
             {extraButton}
             {collapseButton}
           </div>

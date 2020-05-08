@@ -50,9 +50,9 @@ const makeMapStateToProps = () => {
   return mapStateToProps;
 };
 
-@injectIntl
+export default @injectIntl
 @connect(makeMapStateToProps)
-export default class ReportModal extends ImmutablePureComponent {
+class ReportModal extends ImmutablePureComponent {
 
   static propTypes = {
     isSubmitting: PropTypes.bool,

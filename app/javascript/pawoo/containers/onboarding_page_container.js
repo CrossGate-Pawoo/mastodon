@@ -11,8 +11,8 @@ const mapStateToProps = state => ({
   domain: state.getIn(['meta', 'domain']),
 });
 
-@connect(mapStateToProps)
-export default class OnboardingPage extends React.PureComponent {
+export default @connect(mapStateToProps)
+class OnboardingPage extends React.PureComponent {
 
   static propTypes = {
     acct: PropTypes.string.isRequired,

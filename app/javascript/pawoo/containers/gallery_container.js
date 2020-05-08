@@ -17,8 +17,8 @@ const mapStateToProps = (state, props) => ({
   isLoading: state.getIn(['pawoo', 'galleries', props.tag, 'isLoading'], true),
 });
 
-@connect(mapStateToProps)
-export default class Gallery extends React.PureComponent {
+export default @connect(mapStateToProps)
+class Gallery extends React.PureComponent {
 
   static propTypes = {
     dispatch: PropTypes.func.isRequired,

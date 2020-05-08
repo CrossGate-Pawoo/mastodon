@@ -58,8 +58,8 @@ const mapDispatchToProps = (dispatch, props) => ({
   popColumnHistory: () => dispatch(popColumnHistory(props.column)),
 });
 
-@connect(mapStateToProps, mapDispatchToProps)
-export default class ColumnContainerWithHistory extends ImmutablePureComponent {
+export default @connect(mapStateToProps, mapDispatchToProps)
+class ColumnContainerWithHistory extends ImmutablePureComponent {
 
   static contextTypes = {
     router: PropTypes.object,

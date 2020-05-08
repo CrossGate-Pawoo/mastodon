@@ -23,8 +23,8 @@ const mapDispatchToProps = (dispatch, { id }) => ({
 
 });
 
-@connect(mapStateToProps, mapDispatchToProps)
-export default class StatusCheckBox extends React.PureComponent {
+export default @connect(mapStateToProps, mapDispatchToProps)
+class StatusCheckBox extends React.PureComponent {
 
   static propTypes = {
     status: ImmutablePropTypes.map.isRequired,

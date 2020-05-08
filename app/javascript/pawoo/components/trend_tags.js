@@ -8,8 +8,8 @@ const messages = defineMessages({
   title: { id: 'pawoo.trend_tags.title', defaultMessage: 'Suggested tag' },
 });
 
-@injectIntl
-export default class TrendTagsSection extends React.PureComponent {
+export default @injectIntl
+class TrendTagsSection extends React.PureComponent {
 
   static propTypes = {
     Tag: PropTypes.func.isRequired,

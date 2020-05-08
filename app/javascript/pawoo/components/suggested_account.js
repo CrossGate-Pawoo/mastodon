@@ -20,8 +20,8 @@ const messages = defineMessages({
   unmute: { id: 'account.unmute', defaultMessage: 'Unmute @{name}' },
 });
 
-@injectIntl
-export default class SuggestedAccount extends React.PureComponent {
+export default @injectIntl
+class SuggestedAccount extends React.PureComponent {
 
   static propTypes = {
     account: ImmutablePropTypes.map.isRequired,

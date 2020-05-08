@@ -19,8 +19,8 @@ const makeMapStateToProps = () => {
   return mapStateToProps;
 };
 
-@connect(makeMapStateToProps)
-export default class FollowersYouFollowColumn extends ImmutablePureComponent {
+export default @connect(makeMapStateToProps)
+class FollowersYouFollowColumn extends ImmutablePureComponent {
 
   static propTypes = {
     account: ImmutablePropTypes.map.isRequired,

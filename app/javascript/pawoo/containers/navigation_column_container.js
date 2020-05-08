@@ -141,8 +141,8 @@ class TrendTagsSubcolumn extends ImmutablePureComponent {
 
 }
 
-@connect(mapStateToProps)
-export default class NavigationColumn extends ImmutablePureComponent {
+export default @connect(mapStateToProps)
+class NavigationColumn extends ImmutablePureComponent {
 
   static propTypes = {
     columns: ImmutablePropTypes.list.isRequired,

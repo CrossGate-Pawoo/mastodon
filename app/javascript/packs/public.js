@@ -31,7 +31,7 @@ function main() {
   const React = require('react');
   const ReactDOM = require('react-dom');
   const Rellax = require('rellax');
-  const createHistory = require('history').createBrowserHistory;
+  const createHistory = require('history').createBrowserHistory; // eslint-disable-line import/no-extraneous-dependencies
 
   const scrollToDetailedStatus = () => {
     const history = createHistory();

@@ -381,7 +381,7 @@ class Video extends React.PureComponent {
     const volumeHandleLoc = (muted) ? this.volHandleOffset(0) : this.volHandleOffset(volume);
     const playerStyle = {};
 
-    let { width, height } = this.props;
+    let { width, height } = this.props; // eslint-disable-line no-unused-vars
 
     if (inline && containerWidth) {
       width  = containerWidth;

@@ -1,4 +1,3 @@
-import classNames from 'classnames';
 import React from 'react';
 import ComposeFormContainer from './containers/compose_form_container';
 import NavigationContainer from './containers/navigation_container';

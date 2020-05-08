@@ -108,8 +108,8 @@ class TimeLimitDropdownMenu extends React.PureComponent {
 
 }
 
-@injectIntl
-export default class TimeLimitDropdown extends React.PureComponent {
+export default @injectIntl
+class TimeLimitDropdown extends React.PureComponent {
 
   static propTypes = {
     isUserTouching: PropTypes.func,

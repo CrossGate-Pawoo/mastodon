@@ -17,8 +17,8 @@ const mapStateToProps = (state) => ({
   isLoading: state.getIn(['pawoo', 'suggested_accounts', 'isLoading'], true),
 });
 
-@connect(mapStateToProps)
-export default class SuggestedAccounts extends React.PureComponent {
+export default @connect(mapStateToProps)
+class SuggestedAccounts extends React.PureComponent {
 
   static propTypes = {
     dispatch: PropTypes.func.isRequired,

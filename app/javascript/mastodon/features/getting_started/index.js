@@ -14,8 +14,6 @@ import NavigationBar from '../compose/components/navigation_bar';
 import Icon from 'mastodon/components/icon';
 import LinkFooter from 'mastodon/features/ui/components/link_footer';
 
-import Toggle from 'react-toggle';
-import { changeSetting } from '../../actions/settings';
 import PawooGettingStartedOnOnboardingPage from '../../../pawoo/components/getting_started_on_onboarding_page';
 
 const messages = defineMessages({
@@ -51,7 +49,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   fetchFollowRequests: () => dispatch(fetchFollowRequests()),
-  pawooToggleMultiColumn: checked => dispatch(changeSetting(['pawoo', 'multiColumn'], checked)),
 });
 
 const badgeDisplay = (number, limit) => {
@@ -83,7 +80,6 @@ class GettingStarted extends ImmutablePureComponent {
     unreadFollowRequests: PropTypes.number,
     unreadNotifications: PropTypes.number,
     pawooPage: PropTypes.string,
-    pawooToggleMultiColumn: PropTypes.func.isRequired,
   };
 
   componentDidMount () {
@@ -97,11 +93,6 @@ class GettingStarted extends ImmutablePureComponent {
     if (myAccount.get('locked')) {
       fetchFollowRequests();
     }
-  }
-
-  // TODO: 設定ページに移行して削除
-  pawooHandleColumnToggle = ({ target }) => {
-    this.props.pawooToggleMultiColumn(target.checked);
   }
 
   render () {
