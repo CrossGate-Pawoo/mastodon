@@ -2,13 +2,13 @@ class CopyStatusStats < ActiveRecord::Migration[5.2]
   disable_ddl_transaction!
 
   def up
-    safety_assured do
-      if supports_upsert?
-        up_fast
-      else
-        up_slow
-      end
-    end
+    # safety_assured do
+    #   if supports_upsert?
+    #     up_fast
+    #   else
+    #     up_slow
+    #   end
+    # end
   end
 
   def down

@@ -59,3 +59,6 @@
   pawoo_report_summation_scheduler:
     cron: '10 1 * * * Asia/Tokyo'
     class: Pawoo::Scheduler::ReportSummationScheduler
+  pawoo_cache_count_scheduler:
+    cron: '*/15 * * * * Asia/Tokyo'
+    class: Pawoo::Scheduler::CacheCountScheduler
