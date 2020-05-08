@@ -1,7 +1,6 @@
 const { join } = require('path');
 const { settings } = require('../configuration');
 
-// TODO: ちゃんと動いているか確認
 module.exports = {
   test: new RegExp(`(${settings.static_assets_extensions.join('|')})$`, 'i'),
   use: [

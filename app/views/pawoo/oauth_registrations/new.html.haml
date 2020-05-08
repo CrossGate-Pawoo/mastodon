@@ -6,7 +6,7 @@
     .logo-container
       %h1
         = link_to root_path do
-          = image_tag asset_pack_path('pawoo/service_logo.png'), alt: 'Pawoo'
+          = image_tag asset_pack_path('media/pawoo/images/service_logo.png'), alt: 'Pawoo'
 
     = simple_form_for(@oauth_registration, url: user_oauth_registration_path, method: 'POST') do |f|
       = render 'shared/error_messages', object: f.object

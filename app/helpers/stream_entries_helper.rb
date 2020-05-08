@@ -35,11 +35,11 @@ module StreamEntriesHelper
   end
 
   def svg_logo
-    image_tag asset_pack_path('pawoo/logo_elephant.png'), alt: 'Pawoo'
+    image_tag asset_pack_path('media/pawoo/images/logo_elephant.png'), alt: 'Pawoo'
   end
 
   def svg_logo_full
-    image_tag asset_pack_path('pawoo/service_logo.png'), alt: 'Pawoo'
+    image_tag asset_pack_path('media/pawoo/images/service_logo.png'), alt: 'Pawoo'
   end
 
   def account_badge(account, all: false)
