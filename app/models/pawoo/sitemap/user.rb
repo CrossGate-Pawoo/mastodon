@@ -6,7 +6,7 @@ class Pawoo::Sitemap::User < Pawoo::Sitemap
   ALLOW_STATUS_COUNT    = 5
 
   def self.page_count
-    (User.maximum(:id) / SITEMAPINDEX_SIZE) + 1
+    (::User.maximum(:id) / SITEMAPINDEX_SIZE) + 1
   end
 
   def query
