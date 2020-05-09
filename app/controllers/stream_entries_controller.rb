@@ -21,7 +21,7 @@ class StreamEntriesController < ApplicationController
       end
 
       format.atom do
-        return not_found if TimeLimit.from_status(@stream_entry.status)
+        return not_found if Pawoo::TimeLimit.from_status(@stream_entry.status)
 
         expires_in 3.minutes, public: true unless @stream_entry.hidden?
 

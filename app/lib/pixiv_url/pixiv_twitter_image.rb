@@ -34,14 +34,14 @@ module PixivUrl
         end
         return if html.nil?
 
-        image_url = fetch_from_oembed(html) || attempt_opengraph(html, html_charset)
+        image_url = fetch_from_oembed(url, html) || attempt_opengraph(html, html_charset)
         return if image_url.blank? || !PixivUrl.valid_pixiv_image_url?(image_url)
 
         image_url
       end
 
-      def fetch_from_oembed(html)
-        embed = FetchOEmbedService.new.call(nil, html: html)
+      def fetch_from_oembed(url, html)
+        embed = FetchOEmbedService.new.call(url, html: html)
         return if embed.nil? || embed[:type] != 'photo'
 
         embed[:url]

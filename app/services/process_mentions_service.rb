@@ -45,7 +45,7 @@ class ProcessMentionsService < BaseService
   end
 
   def create_notification(mention)
-    time_limit = TimeLimit.from_status(@status)
+    time_limit = Pawoo::TimeLimit.from_status(@status)
 
     mentioned_account = mention.account
 

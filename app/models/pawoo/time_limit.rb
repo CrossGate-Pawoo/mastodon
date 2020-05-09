@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-class TimeLimit
-  TIME_LIMIT_RE = /^exp(?<value>\d+)(?<unit>[mhd])$/
-  VALID_DURATION = (1.minute..7.days)
+class Pawoo::TimeLimit
+  TIME_LIMIT_RE = /^exp(?<value>\d+)(?<unit>[mhd])$/.freeze
+  VALID_DURATION = (1.minute..7.days).freeze
 
   def self.from_tags(tags)
     return unless tags

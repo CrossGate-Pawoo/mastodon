@@ -13,7 +13,7 @@ class ActivityPub::ReplyDistributionWorker
     @status  = Status.find(status_id)
     @account = @status.thread&.account
 
-    return unless @account.present? && @status.distributable? && TimeLimit.from_status(@status).nil?
+    return unless @account.present? && @status.distributable? && Pawoo::TimeLimit.from_status(@status).nil?
 
     ActivityPub::DeliveryWorker.push_bulk(inboxes) do |inbox_url|
       [payload, @status.account_id, inbox_url]

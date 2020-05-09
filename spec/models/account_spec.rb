@@ -496,7 +496,6 @@ RSpec.describe Account, type: :model do
 
     it 'does not count direct statuses' do
       Fabricate(:status, account: subject, visibility: :direct)
-      pending # TODO: 2.9.4アップデート時に戻す
       expect(subject.statuses_count).to eq 0
     end
 

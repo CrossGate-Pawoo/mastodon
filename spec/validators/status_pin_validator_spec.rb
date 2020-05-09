@@ -5,6 +5,7 @@ require 'rails_helper'
 RSpec.describe StatusPinValidator, type: :validator do
   describe '#validate' do
     before do
+      allow(Pawoo::TimeLimit).to receive(:from_status).and_return(nil)
       subject.validate(pin)
     end
 

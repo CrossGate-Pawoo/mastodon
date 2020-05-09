@@ -95,7 +95,7 @@ class PostStatusService < BaseService
     ActivityPub::DistributionWorker.perform_async(@status.id)
     PollExpirationNotifyWorker.perform_at(@status.poll.expires_at, @status.poll.id) if @status.poll
 
-    time_limit = TimeLimit.from_status(@status)
+    time_limit = Pawoo::TimeLimit.from_status(@status)
     RemovalWorker.perform_in(time_limit.to_duration, @status.id) if time_limit
   end
 
