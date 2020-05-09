@@ -23,7 +23,7 @@ SimpleNavigation::Configuration.run do |navigation|
       s.item :password, safe_join([fa_icon('lock fw'), t('settings.account_settings')]), edit_user_registration_url, highlights_on: %r{/auth/edit|/settings/delete}
       s.item :two_factor_authentication, safe_join([fa_icon('mobile fw'), t('settings.two_factor_authentication')]), settings_two_factor_authentication_url, highlights_on: %r{/settings/two_factor_authentication}
       s.item :authorized_apps, safe_join([fa_icon('list fw'), t('settings.authorized_apps')]), oauth_authorized_applications_url
-      a.item :oauth_authentications, safe_join([fa_icon('list fw'), t('settings.oauth_authentications')]), settings_oauth_authentications_url
+      s.item :oauth_authentications, safe_join([fa_icon('list fw'), t('settings.oauth_authentications')]), settings_oauth_authentications_url
     end
 
     n.item :data, safe_join([fa_icon('cloud-download fw'), t('settings.import_and_export')]), settings_export_url do |s|

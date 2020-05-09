@@ -31,7 +31,7 @@ describe Api::V1::Timelines::PublicController, type: :controller do
 
         get :show, params: { media: true, max_id: statuses[1] }
 
-        expect(response.headers['Link'].find_link(['rel', 'prev']).href).to eq api_v1_timelines_public_url(since_id: statuses[0].id, media: true)
+        expect(response.headers['Link'].find_link(['rel', 'prev']).href).to eq api_v1_timelines_public_url(min_id: statuses[0].id, media: true)
       end
     end
   end

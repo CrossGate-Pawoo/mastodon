@@ -13,8 +13,8 @@ RSpec.describe Api::V1::ReportsController, type: :controller do
   end
 
   describe 'POST #create' do
-    let!(:status1) { Fabricate(:status) }
-    let!(:status2) { Fabricate(:status) }
+    let!(:status1) { Fabricate(:status, account: user.account) }
+    let!(:status2) { Fabricate(:status, account: user.account) }
     let(:status_ids) { [status1.id, status2.id] }
     let(:pawoo_report_type) { nil }
 

@@ -3,6 +3,7 @@
 class StatusesController < ApplicationController
   include SignatureAuthentication
   include Authorization
+  include Pawoo::StatusesControllerConcern
 
   ANCESTORS_LIMIT         = 40
   DESCENDANTS_LIMIT       = 60

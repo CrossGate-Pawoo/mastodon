@@ -30,6 +30,9 @@
           = f.label :note
           = f.input :note, as: :text, placeholder: t('simple_form.labels.defaults.note'), hint: t('simple_form.hints.defaults.note', count: 160 - f.object.note.size).html_safe, input_html: { class: 'account_note', rows: 8 }
 
+          .fields-group
+            = f.input :agreement, as: :boolean, wrapper: :with_label, label: t('auth.checkbox_agreement_html', rules_path: about_more_path, terms_path: terms_path), disabled: closed_registrations?
+
       .pawoo-oauth-registration__actions.actions
         = f.button :button, t('auth.register'), type: :submit
       %p.hint.subtle-hint=t('auth.agreement_html', rules_path: about_more_path, terms_path: terms_path)

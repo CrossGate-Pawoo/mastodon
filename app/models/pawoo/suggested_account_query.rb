@@ -1,4 +1,4 @@
-class SuggestedAccountQuery
+class Pawoo::SuggestedAccountQuery
   attr_reader :excluded_ids, :seed, :limit, :page_number
 
   def initialize
@@ -135,6 +135,6 @@ class SuggestedAccountQuery
   end
 
   def default_scoped
-    Account.local.where(suspended: false, silenced: false)
+    Account.local.where(suspended_at: nil, silenced_at: nil)
   end
 end

@@ -112,7 +112,7 @@ RSpec.describe AccountsController, type: :controller do
 
       context 'with anonymous visitor' do
         context 'without since_id nor max_id' do
-          let(:expected_statuses) { [status4, status3, status2, status1] }
+          let(:expected_statuses) { [status7, status6, status5, status4, status3, status2, status1] }
           let(:expected_pinned_statuses) { [status7, status5, status6] }
 
           include_examples 'responsed statuses'

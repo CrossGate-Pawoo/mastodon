@@ -36,7 +36,7 @@ class Pawoo::Api::V1::SuggestedAccountsController < Api::BaseController
     muted_and_blocked = account.excluded_from_timeline_account_ids
     oauth_authentication = account.oauth_authentications.find_by(provider: 'pixiv')
 
-    SuggestedAccountQuery.new
+    Pawoo::SuggestedAccountQuery.new
       .exclude_ids([account.id] + following + muted_and_blocked)
       .with_pixiv_follows(oauth_authentication, limit: 6)
       .with_tradic(account, limit: 6)

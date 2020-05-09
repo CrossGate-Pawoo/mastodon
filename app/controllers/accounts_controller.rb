@@ -19,26 +19,22 @@ class AccountsController < ApplicationController
 
         if current_account && @account.blocking?(current_account)
           @statuses = []
-          @statuses_collection = []
           return
         end
 
-        # TODO: 本家準拠にする
-        @pinned_statuses     = cache_collection(pawoo_statuses_from_pinned_status, Status) if show_pinned_statuses?
-        @statuses            = pawoo_id_pagination? ? filtered_status_page(params) : pawoo_filtered_status_page(params, PAGE_SIZE)
-        @statuses_collection = cache_collection(@statuses, Status)
+        @pinned_statuses = cache_collection(@account.pinned_statuses, Status) if show_pinned_statuses?
+        @statuses        = pawoo_pagination? ? pawoo_filtered_status_page(params, PAGE_SIZE) : filtered_status_page(params)
+        @statuses        = cache_collection(@statuses, Status)
 
         unless @statuses.empty?
-          if pawoo_id_pagination?
+          if pawoo_pagination?
+            @older_url = pawoo_next_url if @statuses.last.id > filtered_statuses.last.id
+            @newer_url = pawoo_prev_url if @statuses.first.id < filtered_statuses.first.id
+          else
             @older_url = older_url if @statuses.last.id > filtered_statuses.last.id
             @newer_url = newer_url if @statuses.first.id < filtered_statuses.first.id
-          else
-            @older_url = pawoo_next_url unless @statuses.last_page?
-            @newer_url = pawoo_prev_url unless @statuses.first_page?
           end
         end
-
-        render 'pawoo/extensions/accounts/show'
       end
 
       format.atom do
@@ -66,7 +62,7 @@ class AccountsController < ApplicationController
   private
 
   def show_pinned_statuses?
-    [replies_requested?, media_requested?, tag_requested?, params[:max_id].present?, params[:min_id].present?].none?
+    [replies_requested?, media_requested?, tag_requested?, params[:max_id].present?, params[:min_id].present?, params[:page].present?].none?
   end
 
   def filtered_statuses
