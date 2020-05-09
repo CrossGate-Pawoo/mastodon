@@ -121,6 +121,7 @@ class MediaAttachment < ApplicationRecord
   remotable_attachment :file, VIDEO_LIMIT
 
   include Attachmentable
+  include Pawoo::MediaAttachmentExtension
 
   validates :account, presence: true
   validates :description, length: { maximum: 420 }, if: :local?

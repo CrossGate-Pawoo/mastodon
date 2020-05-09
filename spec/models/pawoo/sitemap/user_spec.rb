@@ -5,7 +5,7 @@ RSpec.describe Pawoo::Sitemap::User do
     stub_const 'Pawoo::Sitemap::SITEMAPINDEX_SIZE', 1
   end
 
-  let!(:account) { Fabricate(:account, user: Fabricate(:user),followers_count: 10, statuses_count: 5) }
+  let!(:account) { Fabricate(:account, user: Fabricate(:user), followers_count: 10, statuses_count: 5) }
   let(:page) { account.user.id }
 
   describe '.prepare' do

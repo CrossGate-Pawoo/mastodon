@@ -29,7 +29,7 @@ class Pawoo::AccountMediaAttachmentIdsQuery
 
   # 2週間以内で人気のメディア
   def latest_popular_media_attachments
-    base_query.where('media_attachments.status_id > ?', Mastodon::Snowflake.id_at(2.weeks.ago)).reorder(Status.arel_table[:favourites_count].desc)
+    base_query.joins(status: :status_stat).where('media_attachments.status_id > ?', Mastodon::Snowflake.id_at(2.weeks.ago)).reorder(StatusStat.arel_table[:favourites_count].desc)
   end
 
   # 最新のメディア

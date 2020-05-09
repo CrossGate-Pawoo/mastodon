@@ -423,7 +423,7 @@ class Account < ApplicationRecord
           account_id IN (SELECT * FROM first_degree)
           AND target_account_id NOT IN (SELECT * FROM first_degree)
           AND target_account_id NOT IN (:excluded_account_ids)
-          AND accounts.suspended = false
+          AND accounts.suspended_at IS NULL
         GROUP BY target_account_id, accounts.id
         HAVING EXISTS (
           SELECT created_at
