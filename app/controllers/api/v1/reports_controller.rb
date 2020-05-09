@@ -11,7 +11,7 @@ class Api::V1::ReportsController < Api::BaseController
       current_account,
       reported_account,
       status_ids: reported_status_ids,
-      pawoo_report_type: report_params[:pawoo_report_type].presence || 'other',
+      pawoo_report_type: report_params[:pawoo_report_type],
       comment: report_params[:comment],
       forward: report_params[:forward]
     )

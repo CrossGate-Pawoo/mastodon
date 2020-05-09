@@ -3,18 +3,6 @@ require 'rails_helper'
 RSpec.describe PostStatusService, type: :service do
   subject { PostStatusService.new }
 
-  it 'processes mentions' do
-    mention_service = double(:process_mentions_service)
-    allow(mention_service).to receive(:call)
-    allow(ProcessMentionsService).to receive(:new).and_return(mention_service)
-    account = Fabricate(:account)
-
-    status = subject.call(account, "test status update")
-
-    expect(ProcessMentionsService).to have_received(:new)
-    expect(mention_service).to have_received(:call).with(status)
-  end
-
   it 'creates a new status' do
     account = Fabricate(:account)
     text = "test status update"

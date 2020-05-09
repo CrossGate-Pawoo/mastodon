@@ -30,7 +30,7 @@ class ReportService < BaseService
       comment: @comment,
       uri: @options[:uri],
       action_taken: true,
-      pawoo_report_type: @options[:pawoo_report_type],
+      pawoo_report_type: @options[:pawoo_report_type].presence || 'other',
       pawoo_report_targets: pawoo_report_targets
     )
   end
@@ -77,7 +77,7 @@ class ReportService < BaseService
       end
     end
 
-    status_ids = Status.joins(:account).where(id: @status_ids).merge(Account.where(suspended: false)).pluck(:id)
+    status_ids = Status.joins(:account).where(id: @status_ids).merge(Account.where(suspended_at: nil)).pluck(:id)
     resolved_target_ids = Pawoo::ReportTarget.where(state: :resolved, target_type: 'Status', target_id: status_ids).distinct(:target_id).pluck(:target_id)
     status_ids -= resolved_target_ids
 

@@ -28,7 +28,7 @@ class Pawoo::RefreshPopularAccountService
 
   def load_active_accounts
     exclude_account_usernames = (Setting.bootstrap_timeline_accounts || '').split(',').map { |str| str.strip.gsub(/\A@/, '') }
-    base_account_query = Account.local.where.not(username: exclude_account_usernames).where(suspended: false, silenced: false)
+    base_account_query = Account.local.where.not(username: exclude_account_usernames).where(suspended_at: nil, silenced_at: nil)
 
     min_status_id = Mastodon::Snowflake.id_at(ACTIVE_ACCOUNT_DURATION.ago)
     active_account_ids = Status.group(:account_id).local.without_reblogs

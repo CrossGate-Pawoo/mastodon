@@ -12,11 +12,17 @@ RSpec.describe TrendTagService do
         tags: [tag],
         visibility: 'public',
         created_at: time,
-        favourites_count: described_class::FAVOURITES_COUNT_MIN,
-        reblogs_count: described_class::REBLOGS_COUNT_MIN
       }.merge(new_attributes)
 
-      Fabricate.times(times, :status, attributes)
+      stat_attributes = {
+        favourites_count: described_class::FAVOURITES_COUNT_MIN,
+        reblogs_count: described_class::REBLOGS_COUNT_MIN,
+        replies_count: 0,
+      }
+
+      Fabricate.times(times, :status, attributes).each do |status|
+        Fabricate(:status_stat, status: status, **stat_attributes)
+      end
     end
 
     def tag_score_histories

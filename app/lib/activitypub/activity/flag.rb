@@ -15,8 +15,7 @@ class ActivityPub::Activity::Flag < ActivityPub::Activity
         target_account,
         status_ids: target_statuses.nil? ? [] : target_statuses.map(&:id),
         comment: @json['content'] || '',
-        uri: report_uri,
-        pawoo_report_type: 'other'
+        uri: report_uri
       )
     end
   end

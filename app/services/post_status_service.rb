@@ -62,7 +62,7 @@ class PostStatusService < BaseService
 
     ApplicationRecord.transaction do
       @status = @account.statuses.create!(status_attributes)
-      attach_pixiv_cards(status)
+      attach_pixiv_cards(@status)
     end
 
     process_hashtags_service.call(@status)

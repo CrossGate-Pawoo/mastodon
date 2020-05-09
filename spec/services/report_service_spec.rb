@@ -13,12 +13,12 @@ RSpec.describe ReportService, type: :service do
     end
 
     it 'sends ActivityPub payload when forward is true' do
-      subject.call(source_account, remote_account, forward: true, pawoo_report_type: 'other')
+      subject.call(source_account, remote_account, forward: true)
       expect(a_request(:post, 'http://example.com/inbox')).to have_been_made
     end
 
     it 'does not send anything when forward is false' do
-      subject.call(source_account, remote_account, forward: false, pawoo_report_type: 'other')
+      subject.call(source_account, remote_account, forward: false)
       expect(a_request(:post, 'http://example.com/inbox')).to_not have_been_made
     end
 
