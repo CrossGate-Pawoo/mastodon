@@ -11,13 +11,8 @@
 #
 
 class StatusPin < ApplicationRecord
-  include Paginable
-  include Pawoo::StatusPinExtension
-
   belongs_to :account
   belongs_to :status
 
   validates_with StatusPinValidator
-
-  scope :recent, -> { reorder('status_pins.created_at DESC') }
 end

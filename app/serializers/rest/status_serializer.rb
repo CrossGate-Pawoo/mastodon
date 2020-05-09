@@ -9,7 +9,7 @@ class REST::StatusSerializer < ActiveModel::Serializer
   attribute :favourited, if: :current_user?
   attribute :reblogged, if: :current_user?
   attribute :muted, if: :current_user?
-  attribute :pinned, if: :pinnable?
+  attribute :pinned, if: :pawoo_pinnable?
 
   attribute :content, unless: :source_requested?
   attribute :text, if: :source_requested?
@@ -94,11 +94,19 @@ class REST::StatusSerializer < ActiveModel::Serializer
   end
 
   def pinned
+    if instance_options && instance_options[:pawoo_pins_map]
+      return instance_options[:pawoo_pins_map][object.id] || false
+    end
+
     if instance_options && instance_options[:relationships]
       instance_options[:relationships].pins_map[object.id] || false
     else
       current_user.account.pinned?(object)
     end
+  end
+
+  def pawoo_pinnable?
+    (instance_options && instance_options[:pawoo_pins_map]) || pinnable?
   end
 
   def pinnable?
