@@ -17,6 +17,7 @@ describe Pawoo::Api::V1::Accounts::PinnedStatusesController do
     it 'returns http success' do
       get :index, params: { account_id: user.account.id }
       expect(response).to have_http_status(:success)
+      expect(JSON.parse(response.body)[0]['pinned']).to be true
     end
   end
 end

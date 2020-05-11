@@ -94,9 +94,8 @@ class REST::StatusSerializer < ActiveModel::Serializer
   end
 
   def pinned
-    if instance_options && instance_options[:pawoo_pins_map]
-      return instance_options[:pawoo_pins_map][object.id] || false
-    end
+    # Pawoo::Api::V1::Accounts::PinnedStatusesControllerからserializeする場合はPawooアプリの互換維持するためにpinnedをtrueに設定する
+    return true if instance_options && instance_options[:pawoo_from_pinned_statuses]
 
     if instance_options && instance_options[:relationships]
       instance_options[:relationships].pins_map[object.id] || false
@@ -106,7 +105,7 @@ class REST::StatusSerializer < ActiveModel::Serializer
   end
 
   def pawoo_pinnable?
-    (instance_options && instance_options[:pawoo_pins_map]) || pinnable?
+    (instance_options && instance_options[:pawoo_from_pinned_statuses]) || pinnable?
   end
 
   def pinnable?
