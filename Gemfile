@@ -42,7 +42,7 @@ gem 'omniauth-cas', '~> 1.1'
 gem 'omniauth-saml', '~> 1.10'
 gem 'omniauth', '~> 1.2'
 
-gem 'doorkeeper', '~> 5.0'
+gem 'doorkeeper', '~> 5.3'
 gem 'fast_blank', '~> 1.0'
 gem 'fastimage'
 gem 'goldfinger', '~> 2.1'
