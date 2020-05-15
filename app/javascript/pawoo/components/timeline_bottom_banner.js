@@ -1,6 +1,6 @@
 import React from 'react';
 import ImmutablePureComponent from 'react-immutable-pure-component';
-import sakura from '../../images/about/sakura2.png';
+import sakura from '../../pawoo/images/about/sakura2.png';
 
 export default class TimelineBottomBanner extends ImmutablePureComponent {
 
