@@ -11,6 +11,7 @@ import ColumnSettingsContainer from './containers/column_settings_container';
 import ColumnHeader from '../../../pawoo/components/animated_timeline_column_header';
 import Link from '../../../pawoo/components/wrapped_link';
 import sakura from '../../../pawoo/images/about/sakura2.png';
+import TimelineBottomBanner from '../../../pawoo/components/timeline_bottom_banner';
 
 const messages = defineMessages({
   title: { id: 'column.home', defaultMessage: 'Home' },
@@ -123,6 +124,8 @@ export default class HomeTimeline extends React.PureComponent {
           timelineId='home'
           emptyMessage={<FormattedMessage id='empty_column.home' defaultMessage='Your home timeline is empty! Visit {public} or use search to get started and meet other users.' values={{ public: <Link to='/suggested_accounts'><FormattedMessage id='pawoo.empty_column.home.suggested_accounts' defaultMessage='the active accounts' /></Link> }} />}
         />
+
+        <TimelineBottomBanner />
 
         <div className='pawoo-kyoa-home'>
           <a href='https://senki1999.com/furuyoni_digital/'>
