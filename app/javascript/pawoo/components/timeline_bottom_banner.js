@@ -6,11 +6,11 @@ export default class TimelineBottomBanner extends ImmutablePureComponent {
 
   render () {
     return (
-        <div className='pawoo-kyoa-home'>
-          <a href='https://senki1999.com/furuyoni_digital/'>
-            <img alt='sakura' src={sakura} />
-          </a>
-        </div>
+      <div className='pawoo-kyoa-home'>
+        <a href='https://senki1999.com/furuyoni_digital/'>
+          <img alt='sakura' src={sakura} />
+        </a>
+      </div>
     );
   }
 
