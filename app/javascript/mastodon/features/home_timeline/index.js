@@ -10,7 +10,7 @@ import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import ColumnSettingsContainer from './containers/column_settings_container';
 import ColumnHeader from '../../../pawoo/components/animated_timeline_column_header';
 import Link from '../../../pawoo/components/wrapped_link';
-import TimelineBottomBanner from '../../../pawoo/components/timeline_bottom_banner';
+import PawooTimelineBottomBanner from '../../../pawoo/components/timeline_bottom_banner';
 
 const messages = defineMessages({
   title: { id: 'column.home', defaultMessage: 'Home' },
@@ -124,7 +124,7 @@ export default class HomeTimeline extends React.PureComponent {
           emptyMessage={<FormattedMessage id='empty_column.home' defaultMessage='Your home timeline is empty! Visit {public} or use search to get started and meet other users.' values={{ public: <Link to='/suggested_accounts'><FormattedMessage id='pawoo.empty_column.home.suggested_accounts' defaultMessage='the active accounts' /></Link> }} />}
         />
 
-        <TimelineBottomBanner />
+        <PawooTimelineBottomBanner />
       </Column>
     );
   }
