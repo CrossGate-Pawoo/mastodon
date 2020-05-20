@@ -10,6 +10,7 @@ import { addColumn, removeColumn, moveColumn } from '../../actions/columns';
 import ColumnSettingsContainer from './containers/column_settings_container';
 import { connectCommunityStream } from '../../actions/streaming';
 import ColumnHeader from '../../../pawoo/components/animated_timeline_column_header';
+import PawooTimelineBottomBanner from '../../../pawoo/components/timeline_bottom_banner';
 
 const messages = defineMessages({
   title: { id: 'column.community', defaultMessage: 'Local timeline' },
@@ -132,6 +133,8 @@ class CommunityTimeline extends React.PureComponent {
           emptyMessage={<FormattedMessage id='empty_column.community' defaultMessage='The local timeline is empty. Write something publicly to get the ball rolling!' />}
           shouldUpdateScroll={shouldUpdateScroll}
         />
+
+        <PawooTimelineBottomBanner />
       </Column>
     );
   }
