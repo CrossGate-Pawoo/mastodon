@@ -1,6 +1,7 @@
-#mastodon {
-  background: darken($ui-base-color, 7%);
-}
+// TODO: 消せそうなら消す
+// #mastodon {
+//   background: darken($ui-base-color, 7%);
+// }
 
 .column {
   flex: 1 0 330px;
@@ -40,12 +41,6 @@
   overflow: auto;
   margin: -20px -20px 20px;
   padding: 20px 20px 0;
-}
-
-.pawoo-extension-drawer__tab--unread,
-.pawoo-extension-tabs-bar__link--unread {
-  border-bottom: 2px solid $gold-star;
-  color: $gold-star;
 }
 
 .pawoo-extension-media-gallery__background {

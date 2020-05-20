@@ -2,6 +2,11 @@ body {
   font-family: 'mastodon-font-sans-serif', 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'メイリオ', Meiryo sans-serif, sans-serif;
 }
 
+.pawoo-wide {
+  max-width: 1024px;
+  width: 100%;
+}
+
 .separate {
   display: flex;
   align-items: center;
