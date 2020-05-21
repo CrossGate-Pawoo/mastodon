@@ -1,8 +1,3 @@
-// TODO: 消せそうなら消す
-// #mastodon {
-//   background: darken($ui-base-color, 7%);
-// }
-
 .column {
   flex: 1 0 330px;
 }
@@ -92,3 +87,23 @@
     transform: scale(0.5);
   }
 }
+
+.drawer__inner__mastodon {
+  background: none; // 象の上のギザギザ無効
+}
+
+.account__header {
+  .account__header__oauth-authentications a {
+    margin-top: 0;
+    margin-bottom: 10px;
+  }
+}
+
+.video-player {
+  video {
+    // Pawoo extension 表示が崩れるのを防ぐ
+    width: 100%;
+    height: 100%;
+  }
+}
+

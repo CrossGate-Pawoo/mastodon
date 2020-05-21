@@ -116,10 +116,10 @@ class Compose extends React.PureComponent {
             <Link to='/timelines/public/local' className='drawer__tab' onClick={this.pawooHandleClick} title={intl.formatMessage(messages.community)} aria-label={intl.formatMessage(messages.community)}><Icon id='users' fixedWidth /></Link>
           )}
           {!columns.some(column => column.get('id') === 'MEDIA') && columns.some(column => ['HOME', 'NOTIFICATIONS', 'COMMUNITY'].includes(column.get('id'))) && (
-            <Link to='/timelines/public/media' className='drawer__tab' onClick={this.pawooHandleClick} title={intl.formatMessage(messages.media)} aria-label={intl.formatMessage(messages.media)}><Icon id='fa-image' fixedWidth /></Link>
+            <Link to='/timelines/public/media' className='drawer__tab' onClick={this.pawooHandleClick} title={intl.formatMessage(messages.media)} aria-label={intl.formatMessage(messages.media)}><Icon id='image' fixedWidth /></Link>
           )}
-          <Link to='/suggested_accounts' className='drawer__tab' onClick={this.pawooHandleClick} title={intl.formatMessage(messages.suggested_accounts)} aria-label={intl.formatMessage(messages.suggested_accounts)}><Icon id='fa-user-plus' fixedWidth /></Link>
-          <a href='https://russelhelp.zendesk.com' target='_blank' rel='noopener' className='drawer__tab' title={intl.formatMessage(messages.help)} aria-label={intl.formatMessage(messages.help)}><Icon id='fa-question-circle' fixedWidth /></a>
+          <Link to='/suggested_accounts' className='drawer__tab' onClick={this.pawooHandleClick} title={intl.formatMessage(messages.suggested_accounts)} aria-label={intl.formatMessage(messages.suggested_accounts)}><Icon id='user-plus' fixedWidth /></Link>
+          <a href='https://russelhelp.zendesk.com' target='_blank' rel='noopener' className='drawer__tab' title={intl.formatMessage(messages.help)} aria-label={intl.formatMessage(messages.help)}><Icon id='question-circle' fixedWidth /></a>
         </nav>
       );
     }
@@ -136,8 +136,10 @@ class Compose extends React.PureComponent {
 
             <ComposeFormContainer pawooOnSubmit={this.pawooHandleSubmit} />
 
-            <div style={{ marginBottom: '10px' }}><Announcements /></div>
-            <div className='drawer__block'>
+            <div className='pawoo-drawer-block'>
+              <Announcements />
+            </div>
+            <div className='pawoo-drawer-block'>
               <TrendTagsContainer Tag={PawooWebTagLink} />
             </div>
 

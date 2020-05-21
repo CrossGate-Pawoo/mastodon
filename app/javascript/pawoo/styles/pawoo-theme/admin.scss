@@ -1,15 +1,3 @@
-.admin-wrapper {
-  @media screen and (max-width: 600px) {
-    .content-wrapper {
-      height: 100%; // スマホの場合予約投稿が見えなくなるのを防ぐ
-    }
-  }
-}
-
-.log-entry .log-entry__extras .activity-stream {
-  margin-bottom: 10px;
-}
-
 .pawoo_report_target {
   .activity-stream {
     width: 490px;

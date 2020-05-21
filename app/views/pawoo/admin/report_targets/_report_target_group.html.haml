@@ -37,7 +37,7 @@
     - if report_target_group.status
       .report_target_info
         .activity-stream.activity-stream-headless
-          .entry= render 'stream_entries/simple_status', status: report_target_group.status
+          .entry= render 'stream_entries/simple_status', status: report_target_group.status, autoplay: false
   %td.report_target_actions
     - target_group_key = "#{report_target_group.target_type}_#{report_target_group.target_id}"
     = hidden_field_tag "report_target_groups[#{target_group_key}][target_type]", report_target_group.target_type

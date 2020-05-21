@@ -160,14 +160,12 @@ class GettingStarted extends ImmutablePureComponent {
       height += 48;
     }
 
-    if (!multiColumn) {
-      navItems.push(
-        <ColumnSubheading key={i++} text={intl.formatMessage(messages.settings_subheading)} />,
-        <ColumnLink key={i++} icon='gears' text={intl.formatMessage(messages.preferences)} href='/settings/preferences' />,
-      );
+    navItems.push(
+      <ColumnSubheading key={i++} text={intl.formatMessage(messages.settings_subheading)} />,
+      <ColumnLink key={i++} icon='gears' text={intl.formatMessage(messages.preferences)} href='/settings/preferences' />,
+    );
 
-      height += 34 + 48;
-    }
+    height += 34 + 48;
 
     navItems.push(
       <ColumnLink key={i++} icon='question-circle' text={intl.formatMessage(messages.help)} href='https://russelhelp.zendesk.com' rel='noopener nore' target='_blank' />

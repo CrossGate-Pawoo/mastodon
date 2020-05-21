@@ -34,6 +34,7 @@
               - if oauth_authentication.provider == 'pixiv'
                 = link_to "https://www.pixiv.net/member.php?id=#{oauth_authentication.uid}", rel: 'me noopener', target: '_blank' do
                   .oauth-authentication.pixiv
+        .public-account-header__tabs__tabs__buttons
           = account_action_button(account)
 
     .public-account-header__extra

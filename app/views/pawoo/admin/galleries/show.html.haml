@@ -41,5 +41,5 @@
       %tr.pawoo-gallery_blacklisted_statuses
         %td
           .activity-stream.activity-stream-headless
-            .entry= render 'stream_entries/simple_status', status: gallery_blacklisted_status.status
+            .entry= render 'stream_entries/simple_status', status: gallery_blacklisted_status.status, autoplay: false
         %td= link_to 'ブラックリストから削除', admin_pawoo_gallery_blacklist_path(@gallery, gallery_blacklisted_status), method: :delete, data: { confirm: '削除してよろしいですか？' }

@@ -42,10 +42,10 @@
   .actions
     = f.button :button, @invite.present? ? t('auth.register') : sign_up_message, type: :submit
 
-  .separate
-    %span= t('auth.or')
+  .simple_form.alternative-login
+    %h4= t('auth.or_log_in_with')
 
-  .omniauth
-    = render 'oauth/authorizations/pixiv_auth', auth_type: 'signup'
+    .actions
+      = render 'oauth/authorizations/pixiv_auth', auth_type: 'signup'
 
 .form-footer= render 'auth/shared/links'

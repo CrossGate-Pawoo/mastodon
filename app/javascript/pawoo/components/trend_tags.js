@@ -45,7 +45,7 @@ class TrendTagsSection extends React.PureComponent {
 
     const { intl, scrollable, Tag, tags, insertTagCompose } = this.props;
     return (
-      <div className='trend-tags'>
+      <div className='pawoo-trend-tags'>
         <div className='pawoo-subcolumn__header'>
           <i className='fa fa-line-chart pawoo-subcolumn__header__icon' aria-hidden='true' />
           <div className='pawoo-subcolumn__header__name'>

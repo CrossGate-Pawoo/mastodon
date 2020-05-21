@@ -82,7 +82,10 @@
     %script#maintenance_images{ type: 'application/json' }!= json_escape(MaintenanceImage.mappings.to_json)
 
     .container
-      = render 'accounts/service_logo'
+      .logo-container
+        %h1
+          = link_to root_path do
+            = svg_logo_full
 
       .dialog
         = link_to root_path do

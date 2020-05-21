@@ -1,36 +1,9 @@
-.pawoo-extension-two-columns {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  margin: 40px auto 0;
+.logo-container .pawoo-service-logo {
+  width: 150px;
+}
 
-  > * {
-    margin: 0 10px;
-    width: 100%;
-  }
-
-  > :not(.pawoo-extension-account__strip):first-child {
-    max-width: 700px;
-    min-width: 0;
-    margin-bottom: auto;
-  }
-
-  > .pawoo-extension-account__strip {
-    max-width: 280px;
-    flex: 1;
-  }
-
-  @media screen and (max-width: 1024px) {
-    flex-direction: column-reverse;
-    align-items: center;
-    margin: 0;
-
-    > * {
-      margin: 0;
-    }
-
-    > .pawoo-extension-account__strip {
-      max-width: 700px;
-    }
-  }
+.brand .pawoo-service-logo {
+  height: 28px;
+  display: block;
+  margin-top: -6px;
 }

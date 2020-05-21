@@ -40,7 +40,7 @@ ja:
     user_count_after:
       other: 人
     user_count_before: ユーザー数
-    what_is_mastodon: "＼ マストドン（Mastodon）とは？ ／"
+    what_is_mastodon: Mastodon とは？
   accounts:
     choices_html: "%{name} によるおすすめ:"
     follow: フォロー

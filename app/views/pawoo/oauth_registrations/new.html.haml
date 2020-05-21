@@ -6,7 +6,7 @@
     .logo-container
       %h1
         = link_to root_path do
-          = image_tag asset_pack_path('media/pawoo/images/service_logo.png'), alt: 'Pawoo'
+          = svg_logo_full
 
     = simple_form_for(@oauth_registration, url: user_oauth_registration_path, method: 'POST') do |f|
       = render 'shared/error_messages', object: f.object
@@ -35,5 +35,4 @@
 
       .pawoo-oauth-registration__actions.actions
         = f.button :button, t('auth.register'), type: :submit
-      %p.hint.subtle-hint=t('auth.agreement_html', rules_path: about_more_path, terms_path: terms_path)
     .form-footer= render 'auth/shared/links'

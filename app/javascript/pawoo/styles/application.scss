@@ -1,15 +1,10 @@
-// @import 'extensions/mastodon/accounts.scss';
-// @import 'extensions/mastodon/components.scss';
-// @import 'extensions/mastodon/containers.scss';
-// @import 'extensions/mastodon/stream_entries.scss';
+@import 'extensions/mastodon/components';
+@import 'extensions/mastodon/containers';
+@import 'extensions/mastodon/modal';
+@import 'extensions/mastodon/stream_entries';
 
-// @import 'pawoo-theme/about';
-// @import 'pawoo-theme/accounts';
-// @import 'pawoo-theme/admin';
-// @import 'pawoo-theme/basics';
-// @import 'pawoo-theme/components';
-// @import 'pawoo-theme/forms';
-// @import 'pawoo-theme/landing_strip';
-// @import 'pawoo-theme/modal';
-// @import 'pawoo-theme/oauth_authentications';
-// @import 'pawoo-theme/oauth_registration.scss';
+@import 'pawoo-theme/about';
+@import 'pawoo-theme/accounts';
+@import 'pawoo-theme/admin';
+@import 'pawoo-theme/components';
+@import 'pawoo-theme/oauth';

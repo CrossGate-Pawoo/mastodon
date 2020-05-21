@@ -173,7 +173,7 @@ class GalleryItem extends ImmutablePureComponent {
               </Permalink>
             </div>
 
-            <a href={status.get('url')} className='status__time' target='_blank' rel='noopener'>
+            <a href={status.get('url')} className='status__relative-time' target='_blank' rel='noopener'>
               <RelativeTimestamp timestamp={status.get('created_at')} />
             </a>
           </div>

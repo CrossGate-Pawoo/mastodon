@@ -13,7 +13,6 @@ import UploadButtonContainer from '../containers/upload_button_container';
 import { defineMessages, injectIntl } from 'react-intl';
 import SpoilerButtonContainer from '../containers/spoiler_button_container';
 import PrivacyDropdownContainer from '../containers/privacy_dropdown_container';
-import SensitiveGuideContainer from '../containers/sensitive_guide_container';
 import EmojiPickerDropdown from '../containers/emoji_picker_dropdown_container';
 import TimeLimitDropdownContainer from '../containers/time_limit_dropdown_container';
 import PollFormContainer from '../containers/poll_form_container';
@@ -293,8 +292,6 @@ class ComposeForm extends ImmutablePureComponent {
         <div className='compose-form__publish'>
           <div className='compose-form__publish-button-wrapper'><Button text={publishText} onClick={this.handleSubmit} disabled={disabledButton} block /></div>
         </div>
-
-        <SensitiveGuideContainer />
       </div>
     );
   }

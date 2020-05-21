@@ -15,5 +15,5 @@
     - target = action_log.target || action_log.pawoo_recorded_target
     - if target.is_a? Status
       .activity-stream.activity-stream-headless
-        .entry= render 'stream_entries/simple_status', status: target
+        .entry= render 'stream_entries/simple_status', status: target, autoplay: false
     = log_extra_attributes relevant_log_changes(action_log)

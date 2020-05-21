@@ -7,8 +7,6 @@
 
   %script{ type: 'application/ld+json' }!= json_escape(Oj.dump(pawoo_schema))
 
-= render 'accounts/service_logo'
-
 = render 'accounts/header', account: @account
 
 - if @account.user_hides_network?
