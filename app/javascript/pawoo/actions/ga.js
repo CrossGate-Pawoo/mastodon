@@ -23,7 +23,6 @@ const option = (() => {
   return {};
 })();
 
-//ga('create', 'UA-1830249-136', option);
 ga('create', 'UA-167099377-1', option);
 if (enableDebug) {
   ga('set', 'sendHitTask', null);
