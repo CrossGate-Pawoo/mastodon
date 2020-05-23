@@ -4,7 +4,8 @@ class AddForeignKeyIndices < ActiveRecord::Migration[5.2]
   disable_ddl_transaction!
 
   def change
-    add_index :follows, :target_account_id, algorithm: :concurrently
+    # already exist [:target_account_id, :id] (SEE: db/migrate/20180109204141_add_index_on_follow_account_id_id.rb)
+    # add_index :follows, :target_account_id, algorithm: :concurrently
     add_index :blocks, :target_account_id, algorithm: :concurrently
     add_index :mutes, :target_account_id, algorithm: :concurrently
     add_index :notifications, :from_account_id, algorithm: :concurrently
