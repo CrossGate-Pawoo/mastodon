@@ -8,17 +8,37 @@ import ReactSwipeableViews from 'react-swipeable-views';
 import TabsBar, { links, getIndex, getLink } from './tabs_bar';
 import { Link } from 'react-router-dom';
 
+import BundleContainer from '../containers/bundle_container';
 import ColumnLoading from './column_loading';
 import DrawerLoading from './drawer_loading';
 import BundleColumnError from './bundle_column_error';
+import { Compose, Notifications, HomeTimeline, CommunityTimeline, PublicTimeline, HashtagTimeline, DirectTimeline, FavouritedStatuses, ListTimeline } from '../../ui/util/async-components';
 import Icon from 'mastodon/components/icon';
 import ComposePanel from './compose_panel';
 import NavigationPanel from './navigation_panel';
 
 import detectPassiveEvents from 'detect-passive-events';
 import { scrollRight } from '../../../scroll';
+
+import { MediaTimeline, SuggestionTags, OnboardingPageContainer, SuggestedAccountsPage } from 'pawoo/util/async-components';
 import PawooSingleColumnOnboardingContainer from 'pawoo/containers/single_column_onboarding_container';
-import ColumnContainerWithHistory from 'pawoo/containers/column_container_with_history';
+
+const componentMap = {
+  'COMPOSE': Compose,
+  'HOME': HomeTimeline,
+  'NOTIFICATIONS': Notifications,
+  'PUBLIC': PublicTimeline,
+  'COMMUNITY': CommunityTimeline,
+  'HASHTAG': HashtagTimeline,
+  'DIRECT': DirectTimeline,
+  'FAVOURITES': FavouritedStatuses,
+  'LIST': ListTimeline,
+
+  'MEDIA': MediaTimeline,
+  'SUGGESTION_TAGS': SuggestionTags,
+  'PAWOO_ONBOARDING': OnboardingPageContainer,
+  'PAWOO_SUGGESTED_ACCOUNTS': SuggestedAccountsPage,
+};
 
 const messages = defineMessages({
   publish: { id: 'compose_form.publish', defaultMessage: 'Toot' },
@@ -45,30 +65,6 @@ class ColumnsArea extends ImmutablePureComponent {
   state = {
     shouldAnimate: false,
   };
-
-  static childContextTypes = {
-    pawooIsColumnWithHistory: PropTypes.bool,
-    pawooColumnLocationKey: PropTypes.string,
-    pawooPushHistory: PropTypes.func,
-    pawooPopHistory: PropTypes.func,
-  };
-
-  getChildContext() {
-    return ({
-      pawooIsColumnWithHistory: false,
-      pawooPushHistory: (path) => {
-        this.context.router.history.push(path);
-      },
-      pawooPopHistory: () => {
-        if (window.history && window.history.length === 1) {
-          this.context.router.history.push('/');
-        } else {
-          this.context.router.history.goBack();
-        }
-      },
-      pawooColumnLocationKey: this.context.router.route.location.key,
-    });
-  }
 
   componentWillReceiveProps() {
     this.setState({ shouldAnimate: false });
@@ -220,9 +216,16 @@ class ColumnsArea extends ImmutablePureComponent {
 
     return (
       <div className={`columns-area ${ isModalOpen ? 'unscrollable' : '' }`} ref={this.setRef}>
-        {columns.map(column => (
-          <ColumnContainerWithHistory key={column.get('uuid')} column={column} />
-        ))}
+        {columns.map(column => {
+          const params = column.get('params', null) === null ? null : column.get('params').toJS();
+          const other  = params && params.other ? params.other : {};
+
+          return (
+            <BundleContainer key={column.get('uuid')} fetchComponent={componentMap[column.get('id')]} loading={this.renderLoading(column.get('id'))} error={this.renderError}>
+              {SpecificComponent => <SpecificComponent columnId={column.get('uuid')} params={params} multiColumn {...other} />}
+            </BundleContainer>
+          );
+        })}
 
         <div style={{ display: 'flex', flex: pawooPage === 'DEFAULT' ? '1 330px' : null }}>
           {React.Children.map(children, child => React.cloneElement(child, { multiColumn: true }))}

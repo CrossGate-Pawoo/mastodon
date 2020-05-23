@@ -7,11 +7,14 @@ export default class ColumnBackButton extends React.PureComponent {
 
   static contextTypes = {
     router: PropTypes.object,
-    pawooPopHistory: PropTypes.func,
   };
 
   handleClick = () => {
-    this.context.pawooPopHistory();
+    if (window.history && window.history.length === 1) {
+      this.context.router.history.push('/');
+    } else {
+      this.context.router.history.goBack();
+    }
   }
 
   render () {

@@ -23,7 +23,7 @@ const messages = defineMessages({
   cancel_reblog_private: { id: 'status.cancel_reblog_private', defaultMessage: 'Unboost' },
   cannot_reblog: { id: 'status.cannot_reblog', defaultMessage: 'This post cannot be boosted' },
   favourite: { id: 'status.favourite', defaultMessage: 'Favourite' },
-  open: { id: 'pawoo.status.open_in_another_column', defaultMessage: 'Expand in another column' },
+  open: { id: 'status.open', defaultMessage: 'Expand this status' },
   report: { id: 'status.report', defaultMessage: 'Report @{name}' },
   muteConversation: { id: 'status.mute_conversation', defaultMessage: 'Mute conversation' },
   unmuteConversation: { id: 'status.unmute_conversation', defaultMessage: 'Unmute conversation' },
@@ -50,7 +50,6 @@ class StatusActionBar extends ImmutablePureComponent {
 
   static contextTypes = {
     router: PropTypes.object,
-    pawooPushHistory: PropTypes.func,
   };
 
   static propTypes = {
@@ -144,7 +143,7 @@ class StatusActionBar extends ImmutablePureComponent {
   }
 
   handleOpen = () => {
-    this.context.pawooPushHistory(`/statuses/${this.props.status.get('id')}`, true);
+    this.context.router.history.push(`/statuses/${this.props.status.get('id')}`);
   }
 
   handleEmbed = () => {

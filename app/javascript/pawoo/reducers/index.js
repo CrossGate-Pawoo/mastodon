@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux-immutable';
-import column_histories from './column_histories';
 import column_media from './column_media';
 import page from './page';
 import reports from './reports';
@@ -10,7 +9,6 @@ import followers_you_follow from './followers_you_follow';
 import galleries from './galleries';
 
 const reducers = {
-  column_histories,
   column_media,
   page,
   reports,

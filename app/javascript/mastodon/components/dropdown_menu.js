@@ -14,7 +14,6 @@ class DropdownMenu extends React.PureComponent {
 
   static contextTypes = {
     router: PropTypes.object,
-    pawooPushHistory: PropTypes.func,
   };
 
   static propTypes = {
@@ -131,7 +130,7 @@ class DropdownMenu extends React.PureComponent {
       action(e);
     } else if (to) {
       e.preventDefault();
-      this.context.pawooPushHistory(to);
+      this.context.router.history.push(to);
     }
   }
 
@@ -260,7 +259,7 @@ export default class Dropdown extends React.PureComponent {
       action();
     } else if (to) {
       e.preventDefault();
-      this.context.pawooPushHistory(to);
+      this.context.router.history.push(to);
     }
   }
 

@@ -326,10 +326,6 @@
         "id": "status.favourite"
       },
       {
-        "defaultMessage": "Expand in another column",
-        "id": "pawoo.status.open_in_another_column"
-      },
-      {
         "defaultMessage": "Report @{name}",
         "id": "status.report"
       },

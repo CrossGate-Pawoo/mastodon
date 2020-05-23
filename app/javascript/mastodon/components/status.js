@@ -57,7 +57,6 @@ class Status extends ImmutablePureComponent {
 
   static contextTypes = {
     router: PropTypes.object,
-    pawooPushHistory: PropTypes.func, // TODO: 消す
   };
 
   static propTypes = {
@@ -196,9 +195,7 @@ class Status extends ImmutablePureComponent {
     if (this.context.router && e.button === 0 && !(e.ctrlKey || e.metaKey)) {
       const id = e.currentTarget.getAttribute('data-id');
       e.preventDefault();
-
-      const path = `/accounts/${id}`;
-      this.context.pawooPushHistory(path);
+      this.context.router.history.push(`/accounts/${id}`);
     }
   }
 
@@ -206,11 +203,11 @@ class Status extends ImmutablePureComponent {
     this.props.onToggleHidden(this._properStatus());
   };
 
-  renderLoadingMediaGallery = () => {
+  renderLoadingMediaGallery () {
     return <div className='media_gallery' style={{ height: 132 }} />;
   }
 
-  renderLoadingVideoPlayer = () => {
+  renderLoadingVideoPlayer () {
     return <div className='media-spoiler-video' style={{ height: 132 }} />;
   }
 
@@ -237,13 +234,11 @@ class Status extends ImmutablePureComponent {
   }
 
   handleHotkeyOpen = () => {
-    const statusId = this._properStatus().get('id');
-
-    this.context.pawooPushHistory(`/statuses/${statusId}`);
+    this.context.router.history.push(`/statuses/${this._properStatus().get('id')}`);
   }
 
   handleHotkeyOpenProfile = () => {
-    this.context.pawooPushHistory(`/accounts/${this._properStatus().getIn(['account', 'id'])}`);
+    this.context.router.history.push(`/accounts/${this._properStatus().getIn(['account', 'id'])}`);
   }
 
   handleHotkeyMoveUp = e => {

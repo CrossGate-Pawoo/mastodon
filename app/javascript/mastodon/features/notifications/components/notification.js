@@ -22,7 +22,6 @@ class Notification extends ImmutablePureComponent {
 
   static contextTypes = {
     router: PropTypes.object,
-    pawooPushHistory: PropTypes.func,
   };
 
   static propTypes = {
@@ -56,7 +55,7 @@ class Notification extends ImmutablePureComponent {
     const { notification } = this.props;
 
     if (notification.get('status')) {
-      this.context.pawooPushHistory(`/statuses/${notification.get('status')}`);
+      this.context.router.history.push(`/statuses/${notification.get('status')}`);
     } else {
       this.handleOpenProfile();
     }
@@ -64,7 +63,7 @@ class Notification extends ImmutablePureComponent {
 
   handleOpenProfile = () => {
     const { notification } = this.props;
-    this.context.pawooPushHistory(`/accounts/${notification.getIn(['account', 'id'])}`);
+    this.context.router.history.push(`/accounts/${notification.getIn(['account', 'id'])}`);
   }
 
   handleMention = e => {

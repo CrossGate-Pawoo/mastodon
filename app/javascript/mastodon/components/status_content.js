@@ -15,7 +15,6 @@ export default class StatusContent extends React.PureComponent {
 
   static contextTypes = {
     router: PropTypes.object,
-    pawooPushHistory: PropTypes.func,
   };
 
   static propTypes = {
@@ -56,6 +55,7 @@ export default class StatusContent extends React.PureComponent {
       } else if (link.textContent[0] === '#' || (link.previousSibling && link.previousSibling.textContent && link.previousSibling.textContent[link.previousSibling.textContent.length - 1] === '#')) {
         link.addEventListener('click', this.onHashtagClick.bind(this, link.text), false);
       } else if (media) {
+        // 投稿画像のリンクが長いので昔のように省略する(古いクライアントからはURL付きで送られてくることがある)
         link.innerHTML = '<i class="fa fa-fw fa-photo"></i>';
       } else {
         link.setAttribute('title', link.href);
@@ -110,7 +110,7 @@ export default class StatusContent extends React.PureComponent {
   onMentionClick = (mention, e) => {
     if (this.context.router && e.button === 0 && !(e.ctrlKey || e.metaKey)) {
       e.preventDefault();
-      this.context.pawooPushHistory(`/accounts/${mention.get('id')}`);
+      this.context.router.history.push(`/accounts/${mention.get('id')}`);
     }
   }
 
@@ -119,7 +119,7 @@ export default class StatusContent extends React.PureComponent {
 
     if (this.context.router && e.button === 0 && !(e.ctrlKey || e.metaKey)) {
       e.preventDefault();
-      this.context.pawooPushHistory(`/timelines/tag/${hashtag}`, true);
+      this.context.router.history.push(`/timelines/tag/${hashtag}`, true);
     }
   }
 

@@ -18,7 +18,6 @@ class ReplyIndicator extends ImmutablePureComponent {
 
   static contextTypes = {
     router: PropTypes.object,
-    pawooPushHistory: PropTypes.func,
   };
 
   static propTypes = {
@@ -34,7 +33,7 @@ class ReplyIndicator extends ImmutablePureComponent {
   handleAccountClick = (e) => {
     if (e.button === 0 && !(e.ctrlKey || e.metaKey)) {
       e.preventDefault();
-      this.context.pawooPushHistory(`/accounts/${this.props.status.getIn(['account', 'id'])}`, true);
+      this.context.router.history.push(`/accounts/${this.props.status.getIn(['account', 'id'])}`);
     }
   }
 
