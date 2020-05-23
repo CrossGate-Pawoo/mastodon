@@ -50,7 +50,6 @@ class ColumnStateStorage {
 const mapStateToProps = (state, props) => ({
   columnHistory: state.getIn(['pawoo', 'column_histories', props.column.get('uuid')], Immutable.Stack([props.column])),
   enableColumnHistory: state.getIn(['pawoo', 'page']) === 'DEFAULT',
-  multiColumn: state.getIn(['settings', 'pawoo', 'multiColumn']),
 });
 
 const mapDispatchToProps = (dispatch, props) => ({
@@ -71,7 +70,6 @@ class ColumnContainerWithHistory extends ImmutablePureComponent {
     pushColumnHistory: PropTypes.func.isRequired,
     popColumnHistory: PropTypes.func.isRequired,
     enableColumnHistory: PropTypes.bool.isRequired,
-    multiColumn: PropTypes.bool,
   };
 
   static childContextTypes = {
@@ -189,21 +187,12 @@ class ColumnContainerWithHistory extends ImmutablePureComponent {
     this.scrollBehavior.unregisterElement(key);
   };
 
-  getPawooProps = () => {
-    return Immutable.Map({
-      collapsed: false,
-      multiColumn: this.props.multiColumn,
-      onCollapse: null,
-      onExpand: null,
-    });
-  };
-
   getScrollContext = () => {
     return this.props.columnHistory.first().get('uuid');
   };
 
   renderLoading = columnId => () => {
-    return columnId === 'COMPOSE' ? <DrawerLoading /> : <ColumnLoading pawoo={this.getPawooProps()} />;
+    return columnId === 'COMPOSE' ? <DrawerLoading /> : <ColumnLoading />;
   };
 
   renderError = (props) => {
@@ -221,7 +210,7 @@ class ColumnContainerWithHistory extends ImmutablePureComponent {
         fetchComponent={columnComponentMap[topColumn.get('id')].component}
         loading={this.renderLoading(column.get('id'))} error={this.renderError}
       >
-        {SpecificComponent => <SpecificComponent columnId={column.get('uuid')} params={params} multiColumn pawoo={this.getPawooProps()} {...other} />}
+        {SpecificComponent => <SpecificComponent columnId={column.get('uuid')} params={params} multiColumn {...other} />}
       </BundleContainer>
     );
   }

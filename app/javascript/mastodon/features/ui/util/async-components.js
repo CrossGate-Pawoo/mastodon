@@ -90,18 +90,6 @@ export function FavouritedStatuses () {
   return import(/* webpackChunkName: "features/favourited_statuses" */'../../favourited_statuses');
 }
 
-export function MediaTimeline () {
-  return import(/* webpackChunkName: "features/media_timeline" */'../../media_timeline');
-}
-
-export function SuggestionTags () {
-  return import(/* webpackChunkName: "features/suggestion_tags" */'../../suggestion_tags');
-}
-
-export function AccountMediaTimeline () {
-  return import(/* webpackChunkName: "features/account_media_timeline" */'../../account_media_timeline');
-}
-
 export function Blocks () {
   return import(/* webpackChunkName: "features/blocks" */'../../blocks');
 }
@@ -119,7 +107,7 @@ export function MuteModal () {
 }
 
 export function ReportModal () {
-  return import(/* webpackChunkName: "modals/report_modal" */'../../../../pawoo/containers/report_modal_container');
+  return import(/* webpackChunkName: "modals/report_modal" */'../components/report_modal');
 }
 
 export function MediaGallery () {

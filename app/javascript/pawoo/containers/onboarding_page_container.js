@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import SuggestedAccountsContainer from '../containers/suggested_accounts_container';
 import { setPage } from '../../pawoo/actions/page';
-import { me, default as initialState } from '../../mastodon/initial_state';
+import { me, title } from 'mastodon/initial_state';
 
 const mapStateToProps = state => ({
   acct: state.getIn(['accounts', me, 'acct']),
@@ -31,7 +31,7 @@ class OnboardingPage extends React.PureComponent {
           <FormattedMessage
             id='pawoo.onboarding.heading'
             defaultMessage='Welcome to {site}!'
-            values={{ site: initialState.pawoo.title }}
+            values={{ site: title }}
           />
         </h1>
         <p>
@@ -46,7 +46,7 @@ class OnboardingPage extends React.PureComponent {
             id='pawoo.onboarding.description'
             defaultMessage='{site} is connected with other servers called Mastodon instances to be part of a larger social network. This handle will be used by those on such instances. Simply {acct} may be used by others on {site}.'
             values={{
-              site: initialState.pawoo.title,
+              site: title,
               acct: <code>@{this.props.acct}</code>,
             }}
           />

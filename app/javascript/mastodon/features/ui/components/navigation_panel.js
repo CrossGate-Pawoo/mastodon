@@ -13,8 +13,10 @@ const NavigationPanel = () => (
     <NavLink className='column-link column-link--transparent' to='/notifications' data-preview-title-id='column.notifications' data-preview-icon='bell' ><NotificationsCounterIcon className='column-link__icon' /><FormattedMessage id='tabs_bar.notifications' defaultMessage='Notifications' /></NavLink>
     <FollowRequestsNavLink />
     <NavLink className='column-link column-link--transparent' to='/timelines/public/local' data-preview-title-id='column.community' data-preview-icon='users' ><Icon className='column-link__icon' id='users' fixedWidth /><FormattedMessage id='tabs_bar.local_timeline' defaultMessage='Local' /></NavLink>
+    <NavLink className='column-link column-link--transparent' to='/timelines/public/media' data-preview-title-id='pawoo.column.media' data-preview-icon='image' ><Icon className='column-link__icon' id='image' fixedWidth /><FormattedMessage id='pawoo.tabs_bar.media_timeline' defaultMessage='Media' /></NavLink>
     <NavLink className='column-link column-link--transparent' exact to='/timelines/public' data-preview-title-id='column.public' data-preview-icon='globe' ><Icon className='column-link__icon' id='globe' fixedWidth /><FormattedMessage id='tabs_bar.federated_timeline' defaultMessage='Federated' /></NavLink>
     <NavLink className='column-link column-link--transparent' to='/timelines/direct'><Icon className='column-link__icon' id='envelope' fixedWidth /><FormattedMessage id='navigation_bar.direct' defaultMessage='Direct messages' /></NavLink>
+    <NavLink className='column-link column-link--transparent' to='/suggested_accounts'><Icon className='column-link__icon' id='user-plus' fixedWidth /><FormattedMessage id='pawoo.column.suggested_accounts' defaultMessage='Active Users' /></NavLink>
     <NavLink className='column-link column-link--transparent' to='/favourites'><Icon className='column-link__icon' id='star' fixedWidth /><FormattedMessage id='navigation_bar.favourites' defaultMessage='Favourites' /></NavLink>
     <NavLink className='column-link column-link--transparent' to='/lists'><Icon className='column-link__icon' id='list-ul' fixedWidth /><FormattedMessage id='navigation_bar.lists' defaultMessage='Lists' /></NavLink>
 
@@ -23,6 +25,7 @@ const NavigationPanel = () => (
     <hr />
 
     <a className='column-link column-link--transparent' href='/settings/preferences'><Icon className='column-link__icon' id='cog' fixedWidth /><FormattedMessage id='navigation_bar.preferences' defaultMessage='Preferences' /></a>
+    <a className='column-link column-link--transparent' href='https://russelhelp.zendesk.com' rel='noopener noreferrer' target='_blank'><Icon className='column-link__icon' id='question-circle' fixedWidth /><FormattedMessage id='pawoo.navigation_bar.help' defaultMessage='Help' /></a>
     <a className='column-link column-link--transparent' href='/relationships'><Icon className='column-link__icon' id='users' fixedWidth /><FormattedMessage id='navigation_bar.follows_and_followers' defaultMessage='Follows and followers' /></a>
     {!!profile_directory && <a className='column-link column-link--transparent' href='/explore'><Icon className='column-link__icon' id='address-book-o' fixedWidth /><FormattedMessage id='navigation_bar.profile_directory' defaultMessage='Profile directory' /></a>}
   </div>

@@ -12,11 +12,12 @@ import ConfirmationModal from './confirmation_modal';
 import FocalPointModal from './focal_point_modal';
 import {
   MuteModal,
-  ReportModal,
   EmbedModal,
   ListEditor,
   ListAdder,
 } from '../../../features/ui/util/async-components';
+
+import { ReportModal } from 'pawoo/util/async-components';
 
 const MODAL_COMPONENTS = {
   'MEDIA': () => Promise.resolve({ default: MediaModal }),

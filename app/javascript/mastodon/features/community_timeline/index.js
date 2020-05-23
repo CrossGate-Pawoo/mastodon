@@ -1,16 +1,15 @@
 import React from 'react';
-import ImmutablePropTypes from 'react-immutable-proptypes';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
 import StatusListContainer from '../ui/containers/status_list_container';
 import Column from '../../components/column';
+import ColumnHeader from '../../components/column_header';
 import { expandCommunityTimeline } from '../../actions/timelines';
 import { addColumn, removeColumn, moveColumn } from '../../actions/columns';
 import ColumnSettingsContainer from './containers/column_settings_container';
 import { connectCommunityStream } from '../../actions/streaming';
-import ColumnHeader from '../../../pawoo/components/animated_timeline_column_header';
-import PawooTimelineBottomBanner from '../../../pawoo/components/timeline_bottom_banner';
+import PawooTimelineBottomBanner from 'pawoo/components/timeline_bottom_banner';
 
 const messages = defineMessages({
   title: { id: 'column.community', defaultMessage: 'Local timeline' },
@@ -47,7 +46,6 @@ class CommunityTimeline extends React.PureComponent {
     hasUnread: PropTypes.bool,
     multiColumn: PropTypes.bool,
     onlyMedia: PropTypes.bool,
-    pawoo: ImmutablePropTypes.map.isRequired,
   };
 
   handlePin = () => {
@@ -104,7 +102,7 @@ class CommunityTimeline extends React.PureComponent {
   }
 
   render () {
-    const { intl, shouldUpdateScroll, hasUnread, columnId, multiColumn, onlyMedia, pawoo } = this.props;
+    const { intl, shouldUpdateScroll, hasUnread, columnId, multiColumn, onlyMedia } = this.props;
     const pinned = !!columnId;
 
     return (
@@ -118,9 +116,6 @@ class CommunityTimeline extends React.PureComponent {
           onClick={this.handleHeaderClick}
           pinned={pinned}
           multiColumn={multiColumn}
-          pawoo={pawoo}
-          pawooUrl='/timelines/public/local'
-          timelineId={`community${onlyMedia ? ':media' : ''}`}
         >
           <ColumnSettingsContainer columnId={columnId} />
         </ColumnHeader>

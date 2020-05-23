@@ -168,7 +168,7 @@ class GettingStarted extends ImmutablePureComponent {
     height += 34 + 48;
 
     navItems.push(
-      <ColumnLink key={i++} icon='question-circle' text={intl.formatMessage(messages.help)} href='https://russelhelp.zendesk.com' rel='noopener nore' target='_blank' />
+      <ColumnLink key={i++} icon='question-circle' text={intl.formatMessage(messages.help)} href='https://russelhelp.zendesk.com' rel='noopener noreferrer' target='_blank' />
     );
 
     height += 48;

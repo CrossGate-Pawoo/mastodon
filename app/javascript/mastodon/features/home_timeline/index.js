@@ -1,15 +1,14 @@
 import React from 'react';
-import ImmutablePropTypes from 'react-immutable-proptypes';
 import { connect } from 'react-redux';
 import { expandHomeTimeline } from '../../actions/timelines';
 import PropTypes from 'prop-types';
 import StatusListContainer from '../ui/containers/status_list_container';
 import Column from '../../components/column';
+import ColumnHeader from '../../components/column_header';
 import { addColumn, removeColumn, moveColumn } from '../../actions/columns';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import ColumnSettingsContainer from './containers/column_settings_container';
-import ColumnHeader from '../../../pawoo/components/animated_timeline_column_header';
-import Link from '../../../pawoo/components/wrapped_link';
+import { Link } from 'react-router-dom';
 import PawooTimelineBottomBanner from '../../../pawoo/components/timeline_bottom_banner';
 
 const messages = defineMessages({
@@ -33,7 +32,6 @@ class HomeTimeline extends React.PureComponent {
     isPartial: PropTypes.bool,
     columnId: PropTypes.string,
     multiColumn: PropTypes.bool,
-    pawoo: ImmutablePropTypes.map,
   };
 
   handlePin = () => {
@@ -97,7 +95,7 @@ class HomeTimeline extends React.PureComponent {
   }
 
   render () {
-    const { intl, shouldUpdateScroll, hasUnread, columnId, multiColumn, pawoo } = this.props;
+    const { intl, shouldUpdateScroll, hasUnread, columnId, multiColumn } = this.props;
     const pinned = !!columnId;
 
     return (
@@ -111,9 +109,6 @@ class HomeTimeline extends React.PureComponent {
           onClick={this.handleHeaderClick}
           pinned={pinned}
           multiColumn={multiColumn}
-          pawoo={pawoo}
-          pawooUrl='/timelines/home'
-          timelineId='home'
         >
           <ColumnSettingsContainer />
         </ColumnHeader>

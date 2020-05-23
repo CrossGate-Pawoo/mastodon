@@ -3,15 +3,15 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import Link from 'react-router-dom/Link';
-import { refreshSuggestionTags } from '../../../pawoo/actions/suggestion_tags';
+import { refreshSuggestionTags } from 'pawoo/actions/suggestion_tags';
 import { ScrollContainer } from 'react-router-scroll-4';
 import { defineMessages, injectIntl } from 'react-intl';
-import Column from '../../components/column';
-import ColumnHeader from '../../components/column_header';
-import ColumnBackButton from '../../components/column_back_button';
-import MissingIndicator from '../../components/missing_indicator';
-import { addColumn, removeColumn, moveColumn } from '../../actions/columns';
-import { insertTagCompose } from '../../../pawoo/actions/extensions/compose';
+import Column from 'mastodon/components/column';
+import ColumnHeader from 'mastodon/components/column_header';
+import ColumnBackButton from 'mastodon/components/column_back_button';
+import MissingIndicator from 'mastodon/components/missing_indicator';
+import { addColumn, removeColumn, moveColumn } from 'mastodon/actions/columns';
+import { insertTagCompose } from 'pawoo/actions/extensions/compose';
 
 
 const mapStateToProps = (state, props) => ({
@@ -32,7 +32,6 @@ class SuggestionTags extends React.PureComponent {
     columnId: PropTypes.string,
     multiColumn: PropTypes.bool,
     params: PropTypes.object.isRequired,
-    pawoo: ImmutablePropTypes.map.isRequired,
   };
 
   componentDidMount () {
@@ -93,7 +92,7 @@ class SuggestionTags extends React.PureComponent {
   }
 
   render () {
-    const { intl, columnId, multiColumn, params, tags, pawoo } = this.props;
+    const { intl, columnId, multiColumn, params, tags } = this.props;
     const pinned = !!columnId;
     const message = messages[params.type];
 
@@ -117,7 +116,6 @@ class SuggestionTags extends React.PureComponent {
           onClick={this.handleHeaderClick}
           pinned={pinned}
           multiColumn={multiColumn}
-          pawoo={pawoo}
         />
 
         <ScrollContainer scrollKey={`suggestion_tags-${columnId}`}>

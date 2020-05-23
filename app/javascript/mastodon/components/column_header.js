@@ -1,5 +1,4 @@
 import React from 'react';
-import ImmutablePropTypes from 'react-immutable-proptypes';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
@@ -10,7 +9,6 @@ const messages = defineMessages({
   hide: { id: 'column_header.hide_settings', defaultMessage: 'Hide settings' },
   moveLeft: { id: 'column_header.moveLeft_settings', defaultMessage: 'Move column to the left' },
   moveRight: { id: 'column_header.moveRight_settings', defaultMessage: 'Move column to the right' },
-  pawooMaximize: { id: 'pawoo.maximize', defaultMessage: 'Maximize' },
 });
 
 export default @injectIntl
@@ -18,7 +16,6 @@ class ColumnHeader extends React.PureComponent {
 
   static contextTypes = {
     router: PropTypes.object,
-    pawooPopHistory: PropTypes.func,
   };
 
   static propTypes = {
@@ -34,17 +31,12 @@ class ColumnHeader extends React.PureComponent {
     onPin: PropTypes.func,
     onMove: PropTypes.func,
     onClick: PropTypes.func,
-    pawoo: ImmutablePropTypes.map,
-    pawooIconRef: PropTypes.func,
-    pawooUrl: PropTypes.string,
   };
 
   state = {
     collapsed: true,
     animating: false,
   };
-
-  // TODO: pawooPopHistory、pawoo.get('collapsed')、pawoo.get('onCollapse')、pawooUrl、pawooIconRef、props.pawoo.get('onExpand')あたりを消す
 
   historyBack = () => {
     if (window.history && window.history.length === 1) {
@@ -57,14 +49,6 @@ class ColumnHeader extends React.PureComponent {
   handleToggleClick = (e) => {
     e.stopPropagation();
     this.setState({ collapsed: !this.state.collapsed, animating: true });
-
-    if (this.state.collapsed && this.props.pawoo) {
-      const onExpand = this.props.pawoo.get('onExpand');
-
-      if (onExpand) {
-        onExpand();
-      }
-    }
   }
 
   handleTitleClick = () => {
@@ -95,7 +79,7 @@ class ColumnHeader extends React.PureComponent {
   }
 
   render () {
-    const { title, icon, active, children, pinned, multiColumn, extraButton, showBackButton, intl: { formatMessage }, pawoo } = this.props;
+    const { title, icon, active, children, pinned, multiColumn, extraButton, showBackButton, intl: { formatMessage } } = this.props;
     const { collapsed, animating } = this.state;
 
     const wrapperClassName = classNames('column-header__wrapper', {
@@ -138,7 +122,7 @@ class ColumnHeader extends React.PureComponent {
       pinButton = <button key='pin-button' className='text-btn column-header__setting-btn' onClick={this.handlePin}><Icon id='plus' /> <FormattedMessage id='column_header.pin' defaultMessage='Pin' /></button>;
     }
 
-    if (!pinned && ((multiColumn && pawoo && pawoo.get('multiColumn')) || showBackButton)) {
+    if (!pinned && (multiColumn || showBackButton)) {
       backButton = (
         <button onClick={this.handleBackClick} className='column-header__back-button'>
           <Icon id='chevron-left' className='column-back-button__icon' fixedWidth />

@@ -45,14 +45,15 @@ import {
   PinnedStatuses,
   Lists,
   Search,
-  MediaTimeline,
 } from './util/async-components';
 import { me, forceSingleColumn } from '../../initial_state';
 import { previewState as previewMediaState } from './components/media_modal';
 import { previewState as previewVideoState } from './components/video_modal';
 import { resizeColumnMedia as pawooResizeColumnMedia } from '../../../pawoo/actions/column_media';
-import { changeLayoutAutomatically as pawooChangeLayoutAutomatically } from '../../../pawoo/actions/layout';
-import { SuggestedAccountsColumn } from '../../../pawoo/util/async-components';
+import {
+  MediaTimeline,
+  SuggestedAccountsColumn,
+} from '../../../pawoo/util/async-components';
 
 // Dummy import, to make sure that <Status /> ends up in the application bundle.
 // Without this it ends up in ~8 very commonly used bundles.
@@ -67,11 +68,6 @@ const mapStateToProps = state => ({
   hasComposingText: state.getIn(['compose', 'text']).trim().length !== 0,
   hasMediaAttachments: state.getIn(['compose', 'media_attachments']).size > 0,
   dropdownMenuIsOpen: state.getIn(['dropdown_menu', 'openId']) !== null,
-  pawooDefaultGettingStartedOnMultiColumn:
-    state.getIn(['settings', 'columns']).some(column => column.get('id') === 'HOME') ||
-      !state.getIn(['settings', 'onboarded']),
-  pawooMultiColumn: !state.getIn(['settings', 'pawoo', 'multiColumn']) ||
-    state.getIn(['pawoo', 'page']) !== 'DEFAULT',
 });
 
 const keyMap = {
@@ -111,7 +107,6 @@ class SwitchingColumnsArea extends React.PureComponent {
     children: PropTypes.node,
     location: PropTypes.object,
     onLayoutChange: PropTypes.func.isRequired,
-    pawooDefaultGettingStartedOnMultiColumn: PropTypes.bool,
   };
 
   state = {
@@ -220,8 +215,6 @@ class UI extends React.PureComponent {
     location: PropTypes.object,
     intl: PropTypes.object.isRequired,
     dropdownMenuIsOpen: PropTypes.bool,
-    pawooDefaultGettingStartedOnMultiColumn: PropTypes.bool,
-    pawooMultiColumn: PropTypes.bool,
   };
 
   state = {
@@ -336,10 +329,6 @@ class UI extends React.PureComponent {
     this.props.dispatch(expandHomeTimeline());
     this.props.dispatch(expandNotifications());
     this.props.dispatch(pawooResizeColumnMedia(isMobile(this.state.width)));
-
-    if (!isMobile(this.width)) {
-      this.props.dispatch(pawooChangeLayoutAutomatically());
-    }
 
     setTimeout(() => this.props.dispatch(fetchFilters()), 500);
   }
@@ -476,7 +465,7 @@ class UI extends React.PureComponent {
 
   render () {
     const { draggingOver } = this.state;
-    const { children, isComposing, location, dropdownMenuIsOpen, pawooMultiColumn, pawooDefaultGettingStartedOnMultiColumn } = this.props;
+    const { children, isComposing, location, dropdownMenuIsOpen } = this.props;
 
     const handlers = {
       help: this.handleHotkeyToggleHelp,
@@ -501,8 +490,8 @@ class UI extends React.PureComponent {
 
     return (
       <HotKeys keyMap={keyMap} handlers={handlers} ref={this.setHotkeysRef} attach={window} focused>
-        <div className={classNames('ui', { 'is-composing': isComposing, 'pawoo-extension-ui--multi-column': pawooMultiColumn })} ref={this.setRef} style={{ pointerEvents: dropdownMenuIsOpen ? 'none' : null }}>
-          <SwitchingColumnsArea location={location} onLayoutChange={this.handleLayoutChange} pawooDefaultGettingStartedOnMultiColumn={pawooDefaultGettingStartedOnMultiColumn}>
+        <div className={classNames('ui', 'pawoo-extension-ui--multi-column', { 'is-composing': isComposing })} ref={this.setRef} style={{ pointerEvents: dropdownMenuIsOpen ? 'none' : null }}>
+          <SwitchingColumnsArea location={location} onLayoutChange={this.handleLayoutChange}>
             {children}
           </SwitchingColumnsArea>
 

@@ -5,7 +5,6 @@ import { getColumns } from '../../../../pawoo/selectors';
 const mapStateToProps = state => ({
   columns: getColumns(state),
   isModalOpen: !!state.get('modal').modalType,
-  pawooMultiColumn: state.getIn(['settings', 'pawoo', 'multiColumn']),
   pawooPage: state.getIn(['pawoo', 'page']),
 });
 

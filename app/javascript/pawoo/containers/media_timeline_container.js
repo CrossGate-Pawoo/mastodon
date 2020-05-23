@@ -1,16 +1,14 @@
 import React from 'react';
-import ImmutablePropTypes from 'react-immutable-proptypes';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import StatusListContainer from '../ui/containers/status_list_container';
-import Column from '../../components/column';
-import { expandCommunityTimeline } from '../../actions/timelines';
-import { addColumn, removeColumn, moveColumn } from '../../actions/columns';
+import StatusListContainer from 'mastodon/features/ui/containers/status_list_container';
+import Column from 'mastodon/components/column';
+import { expandCommunityTimeline } from 'mastodon/actions/timelines';
+import { addColumn, removeColumn, moveColumn } from 'mastodon/actions/columns';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import ColumnSettingsContainer from './containers/column_settings_container';
-import { connectCommunityStream } from '../../actions/streaming';
-import ColumnHeader from '../../../pawoo/components/animated_timeline_column_header';
-import PawooTimelineBottomBanner from '../../../pawoo/components/timeline_bottom_banner';
+import { connectCommunityStream } from 'mastodon/actions/streaming';
+import ColumnHeader from 'mastodon/components/column_header';
+import PawooTimelineBottomBanner from 'pawoo/components/timeline_bottom_banner';
 
 const messages = defineMessages({
   title: { id: 'pawoo.column.media', defaultMessage: 'Media timeline' },
@@ -30,7 +28,6 @@ class MediaTimeline extends React.PureComponent {
     columnId: PropTypes.string,
     multiColumn: PropTypes.bool,
     hasUnread: PropTypes.bool,
-    pawoo: ImmutablePropTypes.map.isRequired,
   };
 
   handlePin = () => {
@@ -77,7 +74,7 @@ class MediaTimeline extends React.PureComponent {
   }
 
   render () {
-    const { intl, columnId, hasUnread, multiColumn, pawoo } = this.props;
+    const { intl, columnId, hasUnread, multiColumn } = this.props;
     const pinned = !!columnId;
 
     return (
@@ -91,12 +88,7 @@ class MediaTimeline extends React.PureComponent {
           onClick={this.handleHeaderClick}
           pinned={pinned}
           multiColumn={multiColumn}
-          pawoo={pawoo}
-          pawooUrl='/timelines/public/media'
-          timelineId='community:media'
-        >
-          <ColumnSettingsContainer />
-        </ColumnHeader>
+        />
 
         <StatusListContainer
           timelineId='community:media'

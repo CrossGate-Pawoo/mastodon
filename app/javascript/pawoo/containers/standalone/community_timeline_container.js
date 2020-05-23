@@ -9,7 +9,7 @@ import { injectIntl } from 'react-intl';
 import { connectCommunityStream } from '../../../mastodon/actions/streaming';
 import initialState from '../../../mastodon/initial_state';
 
-import ColumnHeader from '../../components/animated_timeline_column_header';
+import ColumnHeader from 'mastodon/components/column_header';
 import pawooLogo from '../../images/logo_elephant.png';
 
 const mapStateToProps = state => ({
@@ -60,7 +60,7 @@ class CommunityTimelineContainer extends React.PureComponent {
         <ColumnHeader
           title={(
             <div className='pawoo-extension-standalone-community'>
-              <img src={pawooLogo} />
+              <img src={pawooLogo} alt='pawoo' />
               \ {intl.formatNumber(initialState.pawoo.user_count)}人が、{intl.formatNumber(initialState.pawoo.status_count + this.props.pawooStatusCount)}回パウってます /
             </div>
           )}

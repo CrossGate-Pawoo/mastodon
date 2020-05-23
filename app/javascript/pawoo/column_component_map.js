@@ -9,11 +9,11 @@ import {
   FavouritedStatuses,
   ListTimeline,
   MediaTimeline,
-  SuggestionTags,
   Status,
   Reblogs,
   Favourites,
 } from '../mastodon/features/ui/util/async-components';
+import { SuggestionTags } from 'pawoo/util/async-components';
 import * as PawooComponents from './util/async-components';
 
 export default {

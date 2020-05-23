@@ -1,5 +1,4 @@
 import React from 'react';
-import ImmutablePropTypes from 'react-immutable-proptypes';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
@@ -46,7 +45,6 @@ class PublicTimeline extends React.PureComponent {
     multiColumn: PropTypes.bool,
     hasUnread: PropTypes.bool,
     onlyMedia: PropTypes.bool,
-    pawoo: ImmutablePropTypes.map.isRequired,
   };
 
   handlePin = () => {
@@ -103,7 +101,7 @@ class PublicTimeline extends React.PureComponent {
   }
 
   render () {
-    const { intl, shouldUpdateScroll, columnId, hasUnread, multiColumn, onlyMedia, pawoo } = this.props;
+    const { intl, shouldUpdateScroll, columnId, hasUnread, multiColumn, onlyMedia } = this.props;
     const pinned = !!columnId;
 
     return (
@@ -117,8 +115,6 @@ class PublicTimeline extends React.PureComponent {
           onClick={this.handleHeaderClick}
           pinned={pinned}
           multiColumn={multiColumn}
-          pawoo={pawoo}
-          pawooUrl='/timelines/public'
         >
           <ColumnSettingsContainer columnId={columnId} />
         </ColumnHeader>

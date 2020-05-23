@@ -58,7 +58,6 @@ class Notifications extends React.PureComponent {
     isUnread: PropTypes.bool,
     multiColumn: PropTypes.bool,
     hasMore: PropTypes.bool,
-    pawoo: ImmutablePropTypes.map.isRequired,
   };
 
   static defaultProps = {
@@ -137,7 +136,7 @@ class Notifications extends React.PureComponent {
   }
 
   render () {
-    const { intl, notifications, shouldUpdateScroll, isLoading, isUnread, columnId, multiColumn, hasMore, showFilterBar, pawoo } = this.props;
+    const { intl, notifications, shouldUpdateScroll, isLoading, isUnread, columnId, multiColumn, hasMore, showFilterBar } = this.props;
     const pinned = !!columnId;
     const emptyMessage = <FormattedMessage id='empty_column.notifications' defaultMessage="You don't have any notifications yet. Interact with others to start the conversation." />;
 
@@ -200,8 +199,6 @@ class Notifications extends React.PureComponent {
           onClick={this.handleHeaderClick}
           pinned={pinned}
           multiColumn={multiColumn}
-          pawoo={pawoo}
-          pawooUrl='/notifications'
         >
           <ColumnSettingsContainer />
         </ColumnHeader>

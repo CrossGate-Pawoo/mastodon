@@ -1,5 +1,4 @@
 import React from 'react';
-import ImmutablePropTypes from 'react-immutable-proptypes';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import StatusListContainer from '../ui/containers/status_list_container';
@@ -28,7 +27,6 @@ class HashtagTimeline extends React.PureComponent {
     shouldUpdateScroll: PropTypes.func,
     hasUnread: PropTypes.bool,
     multiColumn: PropTypes.bool,
-    pawoo: ImmutablePropTypes.map.isRequired,
   };
 
   handlePin = () => {
@@ -132,7 +130,7 @@ class HashtagTimeline extends React.PureComponent {
   }
 
   render () {
-    const { shouldUpdateScroll, hasUnread, columnId, multiColumn, pawoo } = this.props;
+    const { shouldUpdateScroll, hasUnread, columnId, multiColumn } = this.props;
     const { id } = this.props.params;
     const pinned = !!columnId;
 
@@ -148,8 +146,6 @@ class HashtagTimeline extends React.PureComponent {
           pinned={pinned}
           multiColumn={multiColumn}
           showBackButton
-          pawoo={pawoo}
-          pawooUrl={`/timelines/tag/${id}`}
         >
           {columnId && <ColumnSettingsContainer columnId={columnId} />}
         </ColumnHeader>

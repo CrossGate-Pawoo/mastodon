@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import ImmutablePropTypes from 'react-immutable-proptypes';
 import Column from '../../components/column';
 import ColumnHeader from '../../components/column_header';
 import { mountConversations, unmountConversations, expandConversations } from '../../actions/conversations';
@@ -25,7 +24,6 @@ class DirectTimeline extends React.PureComponent {
     intl: PropTypes.object.isRequired,
     hasUnread: PropTypes.bool,
     multiColumn: PropTypes.bool,
-    pawoo: ImmutablePropTypes.map.isRequired,
   };
 
   handlePin = () => {
@@ -73,7 +71,7 @@ class DirectTimeline extends React.PureComponent {
   }
 
   render () {
-    const { intl, hasUnread, columnId, multiColumn, shouldUpdateScroll, pawoo } = this.props;
+    const { intl, hasUnread, columnId, multiColumn, shouldUpdateScroll } = this.props;
     const pinned = !!columnId;
 
     return (
@@ -87,8 +85,6 @@ class DirectTimeline extends React.PureComponent {
           onClick={this.handleHeaderClick}
           pinned={pinned}
           multiColumn={multiColumn}
-          pawoo={pawoo}
-          pawooUrl='/timelines/direct'
         />
 
         <ConversationsListContainer

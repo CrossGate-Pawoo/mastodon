@@ -34,7 +34,6 @@ class Favourites extends ImmutablePureComponent {
     multiColumn: PropTypes.bool,
     hasMore: PropTypes.bool,
     isLoading: PropTypes.bool,
-    pawoo: ImmutablePropTypes.map.isRequired,
   };
 
   componentWillMount () {
@@ -69,7 +68,7 @@ class Favourites extends ImmutablePureComponent {
   }, 300, { leading: true })
 
   render () {
-    const { intl, shouldUpdateScroll, statusIds, columnId, multiColumn, hasMore, isLoading, pawoo } = this.props;
+    const { intl, shouldUpdateScroll, statusIds, columnId, multiColumn, hasMore, isLoading } = this.props;
     const pinned = !!columnId;
 
     const emptyMessage = <FormattedMessage id='empty_column.favourited_statuses' defaultMessage="You don't have any favourite toots yet. When you favourite one, it will show up here." />;
@@ -85,11 +84,10 @@ class Favourites extends ImmutablePureComponent {
           pinned={pinned}
           multiColumn={multiColumn}
           showBackButton
-          pawoo={pawoo}
-          pawooUrl='/favourites'
         />
 
         <StatusList
+          trackScroll={!pinned}
           statusIds={statusIds}
           scrollKey={`favourited_statuses-${columnId}`}
           hasMore={hasMore}

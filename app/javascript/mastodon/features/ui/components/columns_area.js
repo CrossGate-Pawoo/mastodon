@@ -18,7 +18,6 @@ import NavigationPanel from './navigation_panel';
 import detectPassiveEvents from 'detect-passive-events';
 import Immutable from 'immutable';
 import { scrollRight } from '../../../scroll';
-import PawooNavigationColumnContainer from '../../../../pawoo/containers/navigation_column_container';
 import PawooSingleColumnOnboardingContainer from '../../../../pawoo/containers/single_column_onboarding_container';
 import ColumnContainerWithHistory from '../../../../pawoo/containers/column_container_with_history';
 
@@ -43,7 +42,6 @@ class ColumnsArea extends ImmutablePureComponent {
     isModalOpen: PropTypes.bool.isRequired,
     singleColumn: PropTypes.bool,
     children: PropTypes.node,
-    pawooMultiColumn: PropTypes.bool,
     pawooPage: PropTypes.string,
   };
 
@@ -179,11 +177,10 @@ class ColumnsArea extends ImmutablePureComponent {
   }
 
   render () {
-    const { columns, children, singleColumn, isModalOpen, intl, pawooMultiColumn, pawooPage } = this.props;
+    const { columns, children, singleColumn, isModalOpen, intl, pawooPage } = this.props;
     const { shouldAnimate } = this.state;
 
-    const pawooCurrentlyMultiColumn = pawooMultiColumn || pawooPage !== 'DEFAULT';
-    const pawoo = Immutable.fromJS({ multiColumn: pawooCurrentlyMultiColumn });
+    const pawooNotDefaultPage = pawooPage !== 'DEFAULT';
 
     const columnIndex = getIndex(this.context.router.history.location.pathname);
 
@@ -228,7 +225,7 @@ class ColumnsArea extends ImmutablePureComponent {
 
     return (
       <div className={`columns-area ${ isModalOpen ? 'unscrollable' : '' }`} ref={this.setRef}>
-        {pawooCurrentlyMultiColumn ? columns.map(column => {
+        {pawooNotDefaultPage ? columns.map(column => {
           return (
             <ColumnContainerWithHistory key={column.get('uuid')} column={column} />
           );
@@ -237,10 +234,8 @@ class ColumnsArea extends ImmutablePureComponent {
         )}
 
         <div style={{ display: 'flex', flex: pawooPage === 'DEFAULT' ? '1 330px' : null }}>
-          {React.Children.map(children, child => React.cloneElement(child, { multiColumn: true, pawoo }))}
+          {React.Children.map(children, child => React.cloneElement(child, { multiColumn: true }))}
         </div>
-
-        {pawooCurrentlyMultiColumn || <PawooNavigationColumnContainer />}
       </div>
     );
   }

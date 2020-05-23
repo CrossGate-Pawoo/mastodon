@@ -34,7 +34,6 @@ const messages = defineMessages({
 const mapStateToProps = (state, ownProps) => ({
   columns: state.getIn(['settings', 'columns']),
   showSearch: ownProps.multiColumn ? state.getIn(['search', 'submitted']) && !state.getIn(['search', 'hidden']) : ownProps.isSearchPage,
-  pawooMultiColumn: state.getIn(['settings', 'pawoo', 'multiColumn']),
 });
 
 export default @connect(mapStateToProps)
@@ -48,7 +47,6 @@ class Compose extends React.PureComponent {
     showSearch: PropTypes.bool,
     isSearchPage: PropTypes.bool,
     intl: PropTypes.object.isRequired,
-    pawooMultiColumn: PropTypes.bool,
   };
 
   pawooRef = null;

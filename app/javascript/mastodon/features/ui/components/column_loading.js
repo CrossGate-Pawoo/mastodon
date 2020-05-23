@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 import Column from '../../../components/column';
 import ColumnHeader from '../../../components/column_header';
-import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 
 export default class ColumnLoading extends ImmutablePureComponent {
@@ -11,7 +10,6 @@ export default class ColumnLoading extends ImmutablePureComponent {
   static propTypes = {
     title: PropTypes.oneOfType([PropTypes.node, PropTypes.string]),
     icon: PropTypes.string,
-    pawoo: ImmutablePropTypes.map.isRequired,
   };
 
   static defaultProps = {
@@ -20,10 +18,10 @@ export default class ColumnLoading extends ImmutablePureComponent {
   };
 
   render() {
-    let { title, icon, pawoo } = this.props;
+    let { title, icon } = this.props;
     return (
       <Column>
-        <ColumnHeader icon={icon} title={title} multiColumn={false} focusable={false} pawoo={pawoo} />
+        <ColumnHeader icon={icon} title={title} multiColumn={false} focusable={false} />
         <div className='scrollable' />
       </Column>
     );
