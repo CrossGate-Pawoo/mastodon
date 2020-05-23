@@ -184,4 +184,3 @@ class RelativeTimestamp extends React.Component {
   }
 
 }
-

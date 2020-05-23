@@ -16,12 +16,9 @@ import ComposePanel from './compose_panel';
 import NavigationPanel from './navigation_panel';
 
 import detectPassiveEvents from 'detect-passive-events';
-import Immutable from 'immutable';
 import { scrollRight } from '../../../scroll';
 import PawooSingleColumnOnboardingContainer from '../../../../pawoo/containers/single_column_onboarding_container';
 import ColumnContainerWithHistory from '../../../../pawoo/containers/column_container_with_history';
-
-const pawooCompose = Immutable.fromJS({ id: 'COMPOSE' });
 
 const messages = defineMessages({
   publish: { id: 'compose_form.publish', defaultMessage: 'Toot' },
@@ -180,8 +177,6 @@ class ColumnsArea extends ImmutablePureComponent {
     const { columns, children, singleColumn, isModalOpen, intl, pawooPage } = this.props;
     const { shouldAnimate } = this.state;
 
-    const pawooNotDefaultPage = pawooPage !== 'DEFAULT';
-
     const columnIndex = getIndex(this.context.router.history.location.pathname);
 
     if (singleColumn) {
@@ -225,13 +220,9 @@ class ColumnsArea extends ImmutablePureComponent {
 
     return (
       <div className={`columns-area ${ isModalOpen ? 'unscrollable' : '' }`} ref={this.setRef}>
-        {pawooNotDefaultPage ? columns.map(column => {
-          return (
-            <ColumnContainerWithHistory key={column.get('uuid')} column={column} />
-          );
-        }) : (
-          <ColumnContainerWithHistory column={pawooCompose} />
-        )}
+        {columns.map(column => (
+          <ColumnContainerWithHistory key={column.get('uuid')} column={column} />
+        ))}
 
         <div style={{ display: 'flex', flex: pawooPage === 'DEFAULT' ? '1 330px' : null }}>
           {React.Children.map(children, child => React.cloneElement(child, { multiColumn: true }))}
