@@ -1,5 +1,5 @@
 import React from 'react';
-import sakura from '../../pawoo/images/about/sakura2.png';
+import sakura from 'pawoo/images/about/sakura2.png';
 
 export default function TimelineBottomBanner() {
   return (

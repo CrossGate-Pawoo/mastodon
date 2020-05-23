@@ -14,7 +14,7 @@ import NavigationBar from '../compose/components/navigation_bar';
 import Icon from 'mastodon/components/icon';
 import LinkFooter from 'mastodon/features/ui/components/link_footer';
 
-import PawooGettingStartedOnOnboardingPage from '../../../pawoo/components/getting_started_on_onboarding_page';
+import PawooGettingStartedOnOnboardingPage from 'pawoo/components/getting_started_on_onboarding_page';
 
 const messages = defineMessages({
   home_timeline: { id: 'tabs_bar.home', defaultMessage: 'Home' },

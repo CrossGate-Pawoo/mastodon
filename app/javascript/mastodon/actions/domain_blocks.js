@@ -1,5 +1,5 @@
 import api, { getLinks } from '../api';
-import PawooGA from '../../pawoo/actions/ga';
+import PawooGA from 'pawoo/actions/ga';
 
 const pawooGaCategory = 'DomainBlock';
 

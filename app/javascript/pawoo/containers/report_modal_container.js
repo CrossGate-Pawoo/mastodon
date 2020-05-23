@@ -10,13 +10,13 @@ import {
   submitReport,
   changeReportType,
 } from '../actions/reports';
-import { expandAccountTimeline } from '../../mastodon/actions/timelines';
+import { expandAccountTimeline } from 'mastodon/actions/timelines';
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
-import { makeGetAccount } from '../../mastodon/selectors';
+import { makeGetAccount } from 'mastodon/selectors';
 import StatusCheckBox from './report_check_box_container';
-import Button from '../../mastodon/components/button';
-import IconButton from '../../mastodon/components/icon_button';
+import Button from 'mastodon/components/button';
+import IconButton from 'mastodon/components/icon_button';
 
 const messages = defineMessages({
   close: { id: 'lightbox.close', defaultMessage: 'Close' },

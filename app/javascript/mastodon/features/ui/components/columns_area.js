@@ -17,8 +17,8 @@ import NavigationPanel from './navigation_panel';
 
 import detectPassiveEvents from 'detect-passive-events';
 import { scrollRight } from '../../../scroll';
-import PawooSingleColumnOnboardingContainer from '../../../../pawoo/containers/single_column_onboarding_container';
-import ColumnContainerWithHistory from '../../../../pawoo/containers/column_container_with_history';
+import PawooSingleColumnOnboardingContainer from 'pawoo/containers/single_column_onboarding_container';
+import ColumnContainerWithHistory from 'pawoo/containers/column_container_with_history';
 
 const messages = defineMessages({
   publish: { id: 'compose_form.publish', defaultMessage: 'Toot' },

@@ -3,7 +3,7 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import SuggestedAccountsContainer from '../containers/suggested_accounts_container';
-import { setPage } from '../../pawoo/actions/page';
+import { setPage } from 'pawoo/actions/page';
 import { me, title } from 'mastodon/initial_state';
 
 const mapStateToProps = state => ({

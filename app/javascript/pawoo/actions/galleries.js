@@ -1,5 +1,5 @@
-import api, { getLinks } from '../../mastodon/api';
-import { importFetchedStatuses } from '../../mastodon/actions/importer';
+import api, { getLinks } from 'mastodon/api';
+import { importFetchedStatuses } from 'mastodon/actions/importer';
 
 export const PAWOO_GALLERY_FETCH_REQUEST = 'PAWOO_GALLERY_FETCH_REQUEST';
 export const PAWOO_GALLERY_FETCH_SUCCESS = 'PAWOO_GALLERY_FETCH_SUCCESS';

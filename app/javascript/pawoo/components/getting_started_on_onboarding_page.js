@@ -1,5 +1,5 @@
 import React from 'react';
-import PawooUI from '../../pawoo/images/pawoo-ui.png';
+import PawooUI from 'pawoo/images/pawoo-ui.png';
 
 export default function GettingStartedOnOnboardingPage() {
   return (

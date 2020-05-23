@@ -1,9 +1,9 @@
 import Immutable from 'immutable';
 
-import { COLUMN_ADD, COLUMN_REMOVE } from '../../mastodon/actions/columns';
+import { COLUMN_ADD, COLUMN_REMOVE } from 'mastodon/actions/columns';
 import { COLUMN_HISTORY_PUSH, COLUMN_HISTORY_POP } from '../actions/column_histories';
-import { STORE_HYDRATE } from '../../mastodon/actions/store';
-// import { defaultColumns } from '../../mastodon/reducers/settings';
+import { STORE_HYDRATE } from 'mastodon/actions/store';
+// import { defaultColumns } from 'mastodon/reducers/settings';
 
 const initialState = Immutable.Map();
 

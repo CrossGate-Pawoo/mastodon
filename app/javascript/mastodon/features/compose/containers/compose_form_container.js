@@ -12,9 +12,9 @@ import {
 } from '../../../actions/compose';
 import {
   insertTagCompose,
-} from '../../../../pawoo/actions/extensions/compose';
-import { requestImageCache } from '../../../../pawoo/actions/pixiv_twitter_images';
-import PawooGA from '../../../../pawoo/actions/ga';
+} from 'pawoo/actions/extensions/compose';
+import { requestImageCache } from 'pawoo/actions/pixiv_twitter_images';
+import PawooGA from 'pawoo/actions/ga';
 
 const pawooGaCategory = 'Compose';
 

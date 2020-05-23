@@ -31,7 +31,7 @@ import conversations from './conversations';
 import suggestions from './suggestions';
 import polls from './polls';
 import identity_proofs from './identity_proofs';
-import pawoo from '../../pawoo/reducers';
+import pawoo from 'pawoo/reducers';
 
 const reducers = {
   dropdown_menu,

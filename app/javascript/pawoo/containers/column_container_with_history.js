@@ -7,10 +7,10 @@ import ImmutablePureComponent from 'react-immutable-pure-component';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import ScrollBehavior from 'scroll-behavior';
 
-import BundleContainer from '../../mastodon/features/ui/containers/bundle_container';
-import ColumnLoading from '../../mastodon/features/ui/components/column_loading';
-import DrawerLoading from '../../mastodon/features/ui/components/drawer_loading';
-import BundleColumnError from '../../mastodon/features/ui/components/bundle_column_error';
+import BundleContainer from 'mastodon/features/ui/containers/bundle_container';
+import ColumnLoading from 'mastodon/features/ui/components/column_loading';
+import DrawerLoading from 'mastodon/features/ui/components/drawer_loading';
+import BundleColumnError from 'mastodon/features/ui/components/bundle_column_error';
 import { pushColumnHistory, popColumnHistory } from '../actions/column_histories';
 import PawooGA from '../actions/ga';
 import columnComponentMap from '../column_component_map';

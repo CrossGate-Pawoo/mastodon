@@ -10,7 +10,7 @@ import { updateTimeline } from './timelines';
 import { showAlertForError } from './alerts';
 import { showAlert } from './alerts';
 import { defineMessages } from 'react-intl';
-import PawooGA from '../../pawoo/actions/ga';
+import PawooGA from 'pawoo/actions/ga';
 
 const pawooGaCategory = 'Compose';
 let cancelFetchComposeSuggestionsAccounts;

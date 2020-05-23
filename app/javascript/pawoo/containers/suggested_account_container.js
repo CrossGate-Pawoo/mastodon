@@ -2,14 +2,14 @@ import { connect } from 'react-redux';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { List as ImmutableList } from 'immutable';
 import { makeGetSuggestedAccount } from '../selectors';
-import { openModal } from '../../mastodon/actions/modal';
+import { openModal } from 'mastodon/actions/modal';
 import SuggestedAccount from '../components/suggested_account';
 import PawooGA from '../actions/ga';
 import {
   followAccount,
   unfollowAccount,
-} from '../../mastodon/actions/accounts';
-import { unfollowModal } from '../../mastodon/initial_state';
+} from 'mastodon/actions/accounts';
+import { unfollowModal } from 'mastodon/initial_state';
 
 const pawooGaCategory = 'SuggestedAccount';
 

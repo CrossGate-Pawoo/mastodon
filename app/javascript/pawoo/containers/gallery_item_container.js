@@ -5,24 +5,24 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 import Immutable from 'immutable';
 import { defineMessages, injectIntl } from 'react-intl';
-import { openModal } from '../../mastodon/actions/modal';
+import { openModal } from 'mastodon/actions/modal';
 import {
   reblog,
   favourite,
   unreblog,
   unfavourite,
-} from '../../mastodon/actions/interactions';
+} from 'mastodon/actions/interactions';
 import { blacklistGallery } from '../actions/galleries';
-import { makeGetStatus } from '../../mastodon/selectors';
-import Permalink from '../../mastodon/components/permalink';
-import Avatar from '../../mastodon/components/avatar';
-import RelativeTimestamp from '../../mastodon/components/relative_timestamp';
-import DisplayName from '../../mastodon/components/display_name';
-import StatusContent from '../../mastodon/components/status_content';
-import IconButton from '../../mastodon/components/icon_button';
-import MediaGallery from '../../mastodon/components/media_gallery';
-import Video from '../../mastodon/features/video';
-import { me, boostModal, isStaff } from '../../mastodon/initial_state';
+import { makeGetStatus } from 'mastodon/selectors';
+import Permalink from 'mastodon/components/permalink';
+import Avatar from 'mastodon/components/avatar';
+import RelativeTimestamp from 'mastodon/components/relative_timestamp';
+import DisplayName from 'mastodon/components/display_name';
+import StatusContent from 'mastodon/components/status_content';
+import IconButton from 'mastodon/components/icon_button';
+import MediaGallery from 'mastodon/components/media_gallery';
+import Video from 'mastodon/features/video';
+import { me, boostModal, isStaff } from 'mastodon/initial_state';
 
 const messages = defineMessages({
   reblog: { id: 'status.reblog', defaultMessage: 'Boost' },

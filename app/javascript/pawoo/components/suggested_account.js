@@ -1,12 +1,12 @@
 import React from 'react';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import PropTypes from 'prop-types';
-import Avatar from '../../mastodon/components/avatar';
-import DisplayName from '../../mastodon/components/display_name';
-import Permalink from '../../mastodon/components/permalink';
-import IconButton from '../../mastodon/components/icon_button';
+import Avatar from 'mastodon/components/avatar';
+import DisplayName from 'mastodon/components/display_name';
+import Permalink from 'mastodon/components/permalink';
+import IconButton from 'mastodon/components/icon_button';
 import { defineMessages, injectIntl } from 'react-intl';
-import { me } from '../../mastodon/initial_state';
+import { me } from 'mastodon/initial_state';
 import SuggestedAccountMedia from './suggested_account_media';
 import ga from '../actions/ga';
 

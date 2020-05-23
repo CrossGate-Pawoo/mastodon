@@ -1,6 +1,6 @@
 import api from '../api';
 import { importFetchedAccounts, importFetchedStatus } from './importer';
-import PawooGA from '../../pawoo/actions/ga';
+import PawooGA from 'pawoo/actions/ga';
 
 const pawooGaCategory = 'Interaction';
 

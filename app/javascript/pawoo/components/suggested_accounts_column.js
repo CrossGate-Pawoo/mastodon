@@ -4,10 +4,10 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import { setPage } from '../actions/page';
-import PawooUI from '../../pawoo/images/pawoo-ui.png';
-import Column from '../../mastodon/features/ui/components/column';
-import ColumnBackButton from '../../mastodon/components/column_back_button';
-import ColumnBackButtonSlim from '../../mastodon/components/column_back_button_slim';
+import PawooUI from 'pawoo/images/pawoo-ui.png';
+import Column from 'mastodon/features/ui/components/column';
+import ColumnBackButton from 'mastodon/components/column_back_button';
+import ColumnBackButtonSlim from 'mastodon/components/column_back_button_slim';
 import SuggestedAccountsContainer from '../containers/suggested_accounts_container';
 
 const messages = defineMessages({

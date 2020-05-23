@@ -1,5 +1,5 @@
-import api from '../../mastodon/api';
-import { importFetchedAccounts } from '../../mastodon/actions/importer';
+import api from 'mastodon/api';
+import { importFetchedAccounts } from 'mastodon/actions/importer';
 
 export const PAWOO_FOLLOWERS_YOU_FOLLOW_SUCCESS = 'PAWOO_FOLLOWERS_YOU_FOLLOW_SUCCESS';
 

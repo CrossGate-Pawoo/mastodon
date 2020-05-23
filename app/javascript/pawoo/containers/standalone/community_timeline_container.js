@@ -2,12 +2,12 @@ import { List as ImmutableList } from 'immutable';
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import StatusListContainer from '../../../mastodon/features/ui/containers/status_list_container';
-import { expandCommunityTimeline } from '../../../mastodon/actions/timelines';
-import Column from '../../../mastodon/components/column';
+import StatusListContainer from 'mastodon/features/ui/containers/status_list_container';
+import { expandCommunityTimeline } from 'mastodon/actions/timelines';
+import Column from 'mastodon/components/column';
 import { injectIntl } from 'react-intl';
-import { connectCommunityStream } from '../../../mastodon/actions/streaming';
-import initialState from '../../../mastodon/initial_state';
+import { connectCommunityStream } from 'mastodon/actions/streaming';
+import initialState from 'mastodon/initial_state';
 
 import ColumnHeader from 'mastodon/components/column_header';
 import pawooLogo from '../../images/logo_elephant.png';

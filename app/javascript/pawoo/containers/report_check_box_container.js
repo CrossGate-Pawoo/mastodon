@@ -5,9 +5,9 @@ import Toggle from 'react-toggle';
 import Immutable, { Set as ImmutableSet } from 'immutable';
 import { connect } from 'react-redux';
 import noop from 'lodash/noop';
-import StatusContent from '../../mastodon/components/status_content';
-import { MediaGallery, Video } from '../../mastodon/features/ui/util/async-components';
-import Bundle from '../../mastodon/features/ui/components/bundle';
+import StatusContent from 'mastodon/components/status_content';
+import { MediaGallery, Video } from 'mastodon/features/ui/util/async-components';
+import Bundle from 'mastodon/features/ui/components/bundle';
 import { toggleStatusReport } from '../actions/reports';
 
 const mapStateToProps = (state, { id }) => ({

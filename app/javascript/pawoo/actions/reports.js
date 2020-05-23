@@ -1,5 +1,5 @@
-import api from '../../mastodon/api';
-import { openModal, closeModal } from '../../mastodon/actions/modal';
+import api from 'mastodon/api';
+import { openModal, closeModal } from 'mastodon/actions/modal';
 
 export const PAWOO_REPORT_INIT   = 'PAWOO_REPORT_INIT';
 export const PAWOO_REPORT_CANCEL = 'PAWOO_REPORT_CANCEL';

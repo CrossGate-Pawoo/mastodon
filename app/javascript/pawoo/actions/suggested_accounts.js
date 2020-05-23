@@ -1,6 +1,6 @@
-import api, { getLinks } from '../../mastodon/api';
-import { fetchRelationships } from '../../mastodon/actions/accounts';
-import { importFetchedAccounts } from '../../mastodon/actions/importer';
+import api, { getLinks } from 'mastodon/api';
+import { fetchRelationships } from 'mastodon/actions/accounts';
+import { importFetchedAccounts } from 'mastodon/actions/importer';
 
 export const SUGGESTED_ACCOUNTS_FETCH_REQUEST = 'SUGGESTED_ACCOUNTS_FETCH_REQUEST';
 export const SUGGESTED_ACCOUNTS_FETCH_SUCCESS = 'SUGGESTED_ACCOUNTS_FETCH_SUCCESS';

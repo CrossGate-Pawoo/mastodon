@@ -1,5 +1,5 @@
 import { changeSetting, saveSettings } from './settings';
-import PawooGA from '../../pawoo/actions/ga';
+import PawooGA from 'pawoo/actions/ga';
 
 const pawooGaCategory = 'Onboarding';
 

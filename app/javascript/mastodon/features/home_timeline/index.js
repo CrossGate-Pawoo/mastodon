@@ -9,7 +9,7 @@ import { addColumn, removeColumn, moveColumn } from '../../actions/columns';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import ColumnSettingsContainer from './containers/column_settings_container';
 import { Link } from 'react-router-dom';
-import PawooTimelineBottomBanner from '../../../pawoo/components/timeline_bottom_banner';
+import PawooTimelineBottomBanner from 'pawoo/components/timeline_bottom_banner';
 
 const messages = defineMessages({
   title: { id: 'column.home', defaultMessage: 'Home' },

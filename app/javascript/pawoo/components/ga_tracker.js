@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import PawooGA from '../../pawoo/actions/ga';
+import PawooGA from 'pawoo/actions/ga';
 
 const gaTracker = (WrappedComponent, prefix = '') => {
 

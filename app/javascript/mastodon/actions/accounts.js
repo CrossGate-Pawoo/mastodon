@@ -1,7 +1,7 @@
 import api, { getLinks } from '../api';
 import openDB from '../storage/db';
 import { importAccount, importFetchedAccount, importFetchedAccounts } from './importer';
-import PawooGA from '../../pawoo/actions/ga';
+import PawooGA from 'pawoo/actions/ga';
 
 const pawooGaCategory = 'Account';
 

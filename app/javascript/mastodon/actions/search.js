@@ -1,7 +1,7 @@
 import api from '../api';
 import { fetchRelationships } from './accounts';
 import { importFetchedAccounts, importFetchedStatuses } from './importer';
-import PawooGA from '../../pawoo/actions/ga';
+import PawooGA from 'pawoo/actions/ga';
 
 const pawooGaCategory = 'Search';
 

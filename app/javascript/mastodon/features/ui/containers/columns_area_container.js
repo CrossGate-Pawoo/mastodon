@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import ColumnsArea from '../components/columns_area';
-import { getColumns } from '../../../../pawoo/selectors';
+import { getColumns } from 'pawoo/selectors';
 
 const mapStateToProps = state => ({
   columns: getColumns(state),

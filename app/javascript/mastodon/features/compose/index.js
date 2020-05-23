@@ -15,10 +15,10 @@ import { changeComposing } from '../../actions/compose';
 import elephantUIPlane from '../../../images/elephant_ui_plane.svg';
 import { mascot } from '../../initial_state';
 import Icon from 'mastodon/components/icon';
-import { setPage as pawooSetPage } from '../../../pawoo/actions/page';
-import Announcements from '../../../pawoo/components/announcements';
-import PawooWebTagLink from '../../../pawoo/components/web_tag_link';
-import TrendTagsContainer from '../../../pawoo/containers/trend_tags_container';
+import { setPage as pawooSetPage } from 'pawoo/actions/page';
+import Announcements from 'pawoo/components/announcements';
+import PawooWebTagLink from 'pawoo/components/web_tag_link';
+import TrendTagsContainer from 'pawoo/containers/trend_tags_container';
 
 const messages = defineMessages({
   start: { id: 'getting_started.heading', defaultMessage: 'Getting started' },

@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { setPage } from '../actions/page';
-import PawooUI from '../../pawoo/images/pawoo-ui.png';
+import PawooUI from 'pawoo/images/pawoo-ui.png';
 import { me, title } from 'mastodon/initial_state';
 
 const mapStateToProps = state => ({

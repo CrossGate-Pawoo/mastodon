@@ -1,7 +1,7 @@
 import api from '../api';
 import { importFetchedAccounts } from './importer';
 import { showAlertForError } from './alerts';
-import PawooGA from '../../pawoo/actions/ga';
+import PawooGA from 'pawoo/actions/ga';
 
 const pawooGaCategory = 'List';
 

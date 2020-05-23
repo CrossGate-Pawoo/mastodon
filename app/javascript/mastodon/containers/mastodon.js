@@ -14,7 +14,7 @@ import { IntlProvider, addLocaleData } from 'react-intl';
 import { getLocale } from '../locales';
 import initialState from '../initial_state';
 import ErrorBoundary from '../components/error_boundary';
-import pawooGaTracker from '../../pawoo/components/ga_tracker';
+import pawooGaTracker from 'pawoo/components/ga_tracker';
 
 const { localeData, messages } = getLocale();
 addLocaleData(localeData);

@@ -49,11 +49,11 @@ import {
 import { me, forceSingleColumn } from '../../initial_state';
 import { previewState as previewMediaState } from './components/media_modal';
 import { previewState as previewVideoState } from './components/video_modal';
-import { resizeColumnMedia as pawooResizeColumnMedia } from '../../../pawoo/actions/column_media';
+import { resizeColumnMedia as pawooResizeColumnMedia } from 'pawoo/actions/column_media';
 import {
   MediaTimeline,
   SuggestedAccountsColumn,
-} from '../../../pawoo/util/async-components';
+} from 'pawoo/util/async-components';
 
 // Dummy import, to make sure that <Status /> ends up in the application bundle.
 // Without this it ends up in ~8 very commonly used bundles.

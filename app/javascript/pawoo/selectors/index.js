@@ -1,6 +1,6 @@
 import { fromJS } from 'immutable';
 import { createSelector } from 'reselect';
-import uuid from '../../mastodon/uuid';
+import uuid from 'mastodon/uuid';
 
 const pages = fromJS({
   ONBOARDING: [

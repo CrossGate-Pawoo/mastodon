@@ -2,8 +2,8 @@ import React from 'react';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { autoPlayGif } from '../../mastodon/initial_state';
-import { isIOS } from '../../mastodon/is_mobile';
+import { autoPlayGif } from 'mastodon/initial_state';
+import { isIOS } from 'mastodon/is_mobile';
 import ga from '../actions/ga';
 
 const gaCategory = 'SuggestedAccount';

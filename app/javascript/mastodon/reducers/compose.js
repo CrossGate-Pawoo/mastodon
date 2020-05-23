@@ -38,7 +38,7 @@ import {
 } from '../actions/compose';
 import {
   COMPOSE_TAG_INSERT as PAWOO_COMPOSE_TAG_INSERT,
-} from '../../pawoo/actions/extensions/compose';
+} from 'pawoo/actions/extensions/compose';
 import { TIMELINE_DELETE } from '../actions/timelines';
 import { STORE_HYDRATE } from '../actions/store';
 import { REDRAFT } from '../actions/statuses';

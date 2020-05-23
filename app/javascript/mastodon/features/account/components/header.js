@@ -12,7 +12,7 @@ import Avatar from 'mastodon/components/avatar';
 import { shortNumberFormat } from 'mastodon/utils/numbers';
 import { NavLink } from 'react-router-dom';
 import DropdownMenuContainer from 'mastodon/containers/dropdown_menu_container';
-import PawooFollowersYouFollow from '../../../../pawoo/containers/followers_you_follow';
+import PawooFollowersYouFollow from 'pawoo/containers/followers_you_follow';
 
 const messages = defineMessages({
   unfollow: { id: 'account.unfollow', defaultMessage: 'Unfollow' },
