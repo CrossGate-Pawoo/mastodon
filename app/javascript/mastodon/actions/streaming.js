@@ -12,26 +12,6 @@ import { fetchFilters } from './filters';
 import { getLocale } from '../locales';
 
 const { messages } = getLocale();
-const pawooListeners = Object.create(null);
-
-export function pawooAddListener(timelineId, listener) {
-  if (pawooListeners[timelineId]) {
-    pawooListeners[timelineId].add(listener);
-  } else {
-    pawooListeners[timelineId] = new Set([listener]);
-  }
-}
-
-// TODO: 消す
-export function pawooRemoveListener(timelineId, listener) {
-  if (pawooListeners[timelineId]) {
-    if (pawooListeners[timelineId].size > 1) {
-      pawooListeners[timelineId].delete(listener);
-    } else {
-      delete pawooListeners[timelineId];
-    }
-  }
-}
 
 export function connectTimelineStream (timelineId, path, pollingRefresh = null, accept = null) {
 

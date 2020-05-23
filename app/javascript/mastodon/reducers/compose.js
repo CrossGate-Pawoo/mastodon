@@ -126,7 +126,7 @@ function appendMedia(state, media) {
     map.set('resetFileKey', Math.floor((Math.random() * 0x10000)));
     map.set('idempotencyKey', uuid());
 
-    if (prevSize === 0 && (state.get('default_sensitive'))) {
+    if (prevSize === 0 && (state.get('default_sensitive') || state.get('spoiler'))) {
       map.set('sensitive', true);
     }
   });
@@ -229,7 +229,9 @@ export default function compose(state = initialState, action) {
       .set('is_composing', false);
   case COMPOSE_SENSITIVITY_CHANGE:
     return state.withMutations(map => {
-      map.set('sensitive', !state.get('sensitive'));
+      if (!state.get('spoiler')) {
+        map.set('sensitive', !state.get('sensitive'));
+      }
 
       map.set('idempotencyKey', uuid());
     });
@@ -238,6 +240,10 @@ export default function compose(state = initialState, action) {
       map.set('spoiler_text', '');
       map.set('spoiler', !state.get('spoiler'));
       map.set('idempotencyKey', uuid());
+
+      if (!state.get('sensitive') && state.get('media_attachments').size >= 1) {
+        map.set('sensitive', true);
+      }
     });
   case COMPOSE_SPOILER_TEXT_CHANGE:
     if (!state.get('spoiler')) return state;

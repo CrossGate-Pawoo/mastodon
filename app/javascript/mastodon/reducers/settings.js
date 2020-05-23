@@ -75,12 +75,6 @@ const initialState = ImmutableMap({
     }),
   }),
 
-  media: ImmutableMap({
-    regex: ImmutableMap({
-      body: '',
-    }),
-  }),
-
   trends: ImmutableMap({
     show: true,
   }),

@@ -59,16 +59,6 @@
   z-index: 2; // .column-headerのz-indexで隠れてしまう
 }
 
-.pawoo-extension-column-header__icon--animation {
-  animation: pawoo-extension-column-header__icon--animation-keyframes 0.5s;
-}
-
-@keyframes pawoo-extension-column-header__icon--animation-keyframes {
-  0% { transform: translateY(0); }
-  50% { transform: translateY(-100%); }
-  100% { transform: translateY(0); }
-}
-
 .pawoo-extension-drawer__inner__mastodon--animation {
   animation: pawoo-extension-drawer__inner__mastodon--animation-keyframes 1s;
 }

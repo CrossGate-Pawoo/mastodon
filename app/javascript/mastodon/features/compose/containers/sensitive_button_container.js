@@ -12,7 +12,7 @@ const messages = defineMessages({
 
 const mapStateToProps = state => ({
   active: state.getIn(['compose', 'sensitive']),
-  // disabled: state.getIn(['compose', 'spoiler']), // NOTE: CW時にNSFWにならない仕様に戻す
+  disabled: state.getIn(['compose', 'spoiler']),
 });
 
 const mapDispatchToProps = dispatch => ({

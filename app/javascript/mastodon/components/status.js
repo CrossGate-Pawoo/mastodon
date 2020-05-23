@@ -78,8 +78,6 @@ class Status extends ImmutablePureComponent {
     onHeightChange: PropTypes.func,
     onToggleHidden: PropTypes.func,
     muted: PropTypes.bool,
-    onPin: PropTypes.func,
-    intersectionObserverWrapper: PropTypes.object,
     hidden: PropTypes.bool,
     unread: PropTypes.bool,
     onMoveUp: PropTypes.func,
