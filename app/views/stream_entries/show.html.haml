@@ -25,7 +25,7 @@
   -# 以下の条件にマッチするときnoindexをつける:
   -# - 100文字未満かつ、画像がついていない
   -# - サイレンスされている
-  - if (@stream_entry.status.present? && @stream_entry.status.text.length < 100 && @stream_entry.status.media_attachments.empty? && @stream_entry.status.pixiv_cards.empty?) || @account.silenced
+  - if (@stream_entry.status.present? && @stream_entry.status.text.length < 100 && @stream_entry.status.media_attachments.empty? && @stream_entry.status.pixiv_cards.empty?) || @account.silenced?
     %meta{ name: 'robots', content: 'noindex,follow' }/
 
   %script{ type: 'application/ld+json' }!= json_escape(Oj.dump(pawoo_schema))

@@ -89,6 +89,7 @@ class PublicTimeline extends React.PureComponent {
               compact
               measureHeight
               onHeightChange={this.handleHeightChange}
+              pawooMediaScale='100%'
             />
           </div>
         )).toArray()}

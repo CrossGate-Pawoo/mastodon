@@ -2,14 +2,23 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
-import { throttle } from 'lodash';
+import { debounce } from 'lodash';
 import { List as ImmutableList } from 'immutable';
-import Masonry from 'react-masonry-component';
+import Masonry from 'react-masonry-infinite';
+import { defineMessages, injectIntl } from 'react-intl';
 import {
   fetchGallery,
   expandGallery,
 } from '../actions/galleries';
-import GalleryItemContainer from './gallery_item_container';
+import DetailedStatusContainer from 'mastodon/features/status/containers/detailed_status_container';
+import LoadingIndicator from 'mastodon/components/loading_indicator';
+import IconButton from 'mastodon/components/icon_button';
+import { isStaff } from 'mastodon/initial_state';
+import { blacklistGallery } from '../actions/galleries';
+
+const messages = defineMessages({
+  blacklist: { id: 'pawoo.gallery.status.blacklist', defaultMessage: 'ブラックリストに追加' },
+});
 
 const mapStateToProps = (state, props) => ({
   statusIds: state.getIn(['pawoo', 'galleries', props.tag, 'items'], ImmutableList()).toList(),
@@ -18,9 +27,11 @@ const mapStateToProps = (state, props) => ({
 });
 
 export default @connect(mapStateToProps)
+@injectIntl
 class Gallery extends React.PureComponent {
 
   static propTypes = {
+    intl: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
     tag: PropTypes.string.isRequired,
     statusIds: ImmutablePropTypes.list,
@@ -34,44 +45,65 @@ class Gallery extends React.PureComponent {
     if (statusIds.size === 0 && !hasMore) {
       this.props.dispatch(fetchGallery(tag));
     }
-
-    document.addEventListener('scroll', this.handleScroll);
   }
 
-  componentWillUnmount () {
-    document.removeEventListener('scroll', this.handleScroll);
-  }
+  handleLoadMore = () => {
+    const { dispatch, tag, isLoading } = this.props;
 
-  handleScroll = throttle(() => {
-    if (document.body.scrollHeight - window.pageYOffset - window.innerHeight < 400) {
-      if (this.props.hasMore && !this.props.isLoading) {
-        this.props.dispatch(expandGallery(this.props.tag));
-      }
+    if (isLoading) {
+      return;
     }
-  }, 300, {
-    trailing: true,
-  });
+
+    dispatch(expandGallery(tag));
+  }
+
+  setRef = c => {
+    this.masonry = c;
+  }
+
+  handleHeightChange = debounce(() => {
+    if (!this.masonry) {
+      return;
+    }
+
+    this.masonry.forcePack();
+  }, 50)
+
+  createHandleBlacklistClick = (statusId) => {
+    const { dispatch, tag } = this.props;
+
+    return () => dispatch(blacklistGallery(tag, statusId));
+  }
 
   render () {
-    const { statusIds, tag, hasMore, isLoading } = this.props;
+    const { statusIds, hasMore, isLoading, intl } = this.props;
 
-    let scrollableContent = null;
+    const sizes = [
+      { columns: 1, gutter: 0 },
+      { mq: '415px', columns: 1, gutter: 10 },
+      { mq: '640px', columns: 2, gutter: 10 },
+      { mq: '960px', columns: 3, gutter: 10 },
+      { mq: '1255px', columns: 3, gutter: 10 },
+    ];
 
-    if (isLoading && this.scrollableContent) {
-      scrollableContent = this.scrollableContent;
-    } else if (statusIds.size > 0 || hasMore) {
-      scrollableContent = statusIds.map((id) => (
-        <GalleryItemContainer key={id} id={id} tag={tag}  />
-      ));
-    } else {
-      scrollableContent = null;
-    }
-
-    this.scrollableContent = scrollableContent;
+    const loader = (isLoading && statusIds.isEmpty()) ? <LoadingIndicator key={0} /> : undefined;
 
     return (
-      <Masonry options={{ transitionDuration: 0 }} >
-        {scrollableContent}
+      <Masonry ref={this.setRef} className='statuses-grid' hasMore={hasMore} loadMore={this.handleLoadMore} sizes={sizes} loader={loader}>
+        {statusIds.map(statusId => (
+          <div className='statuses-grid__item' key={statusId}>
+            <DetailedStatusContainer
+              id={statusId}
+              compact
+              measureHeight
+              onHeightChange={this.handleHeightChange}
+              pawooMediaScale='100%'
+            />
+            {isStaff && (
+              <IconButton className='pawoo-blacklist-icon' size={14} title={intl.formatMessage(messages.blacklist)} icon='ban' onClick={this.createHandleBlacklistClick(statusId)} />
+            )}
+          </div>
+        )).toArray()}
       </Masonry>
     );
   }
