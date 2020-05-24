@@ -31,7 +31,7 @@ function main() {
   const React = require('react');
   const ReactDOM = require('react-dom');
   const Rellax = require('rellax');
-  const createHistory = require('history').createBrowserHistory; // eslint-disable-line import/no-extraneous-dependencies
+  const createHistory = require('history').createBrowserHistory;
 
   const scrollToDetailedStatus = () => {
     const history = createHistory();
@@ -60,31 +60,6 @@ function main() {
       hour: 'numeric',
       minute: 'numeric',
     });
-
-    (() => {
-      // MSIE(IE11のみUAにMSIEを含まないのでTridentで検出)
-      const userAgent = window.navigator.userAgent.toLowerCase();
-      const isMSIE = /MSIE/i.test(userAgent) || /Trident/i.test(userAgent);
-
-      if (isMSIE) {
-        alert('お使いのブラウザはサポートされていません。Microsoft Edge、Google Chromeなどをお試しください。');
-      }
-    })();
-
-    // タイムラインが伸びすぎないようにする
-    if (location.pathname === '/about') {
-      // Reactのレンダリングを待つ必要がある？
-      setTimeout(() => {
-        const timeline = document.getElementsByClassName('about-col main')[0];
-        if (!timeline) return;
-
-        [].forEach.call(document.getElementsByClassName('about-timeline-container'), (content) => {
-          [].forEach.call(content.getElementsByClassName('column'), (column) => {
-            column.style.height = `${timeline.clientHeight}px`;
-          });
-        });
-      }, 200);
-    }
 
     [].forEach.call(document.querySelectorAll('.emojify'), (content) => {
       content.innerHTML = emojify(content.innerHTML);

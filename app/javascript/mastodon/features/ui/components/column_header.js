@@ -7,7 +7,7 @@ export default class ColumnHeader extends React.PureComponent {
 
   static propTypes = {
     icon: PropTypes.string,
-    type: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+    type: PropTypes.string,
     active: PropTypes.bool,
     onClick: PropTypes.func,
     columnHeaderId: PropTypes.string,

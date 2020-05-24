@@ -9,7 +9,7 @@ import { isMobile } from '../../../is_mobile';
 export default class Column extends React.PureComponent {
 
   static propTypes = {
-    heading: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+    heading: PropTypes.string,
     icon: PropTypes.string,
     children: PropTypes.node,
     active: PropTypes.bool,

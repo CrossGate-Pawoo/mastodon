@@ -13,13 +13,6 @@ function loaded() {
     const props = JSON.parse(mountNode.getAttribute('data-props'));
     ReactDOM.render(<TimelineContainer {...props} />, mountNode);
   }
-
-  const pawooMountNode = document.getElementById('pawoo-community-timeline');
-  if (pawooMountNode !== null) {
-    const CommunityTimelineContainer = require('../pawoo/containers/standalone/community_timeline_container').default;
-    const props = JSON.parse(pawooMountNode.getAttribute('data-props'));
-    ReactDOM.render(<CommunityTimelineContainer {...props} />, pawooMountNode);
-  }
 }
 
 function main() {

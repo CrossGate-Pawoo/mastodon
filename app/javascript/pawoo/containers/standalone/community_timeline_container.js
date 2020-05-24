@@ -1,81 +1,45 @@
-import { List as ImmutableList } from 'immutable';
-import React from 'react';
-import { connect } from 'react-redux';
+import React, { Fragment } from 'react';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
 import PropTypes from 'prop-types';
-import StatusListContainer from 'mastodon/features/ui/containers/status_list_container';
-import { expandCommunityTimeline } from 'mastodon/actions/timelines';
-import Column from 'mastodon/components/column';
-import { injectIntl } from 'react-intl';
-import { connectCommunityStream } from 'mastodon/actions/streaming';
+import configureStore from 'mastodon/store/configureStore';
+import { hydrateStore } from 'mastodon/actions/store';
+import { IntlProvider, addLocaleData } from 'react-intl';
+import { getLocale } from 'mastodon/locales';
+import ModalContainer from 'mastodon/features/ui/containers/modal_container';
 import initialState from 'mastodon/initial_state';
+import CommunityTimelineForAboutContainer from '../community_timeline_for_about_container';
 
-import ColumnHeader from 'mastodon/components/column_header';
-import pawooLogo from '../../images/logo_elephant.png';
+const { localeData, messages } = getLocale();
+addLocaleData(localeData);
 
-const mapStateToProps = state => ({
-  pawooStatusCount: state.getIn(['timelines', 'community', 'items'], ImmutableList()).count(),
-});
+const store = configureStore();
 
-export default @connect(mapStateToProps)
-@injectIntl
-class CommunityTimelineContainer extends React.PureComponent {
+if (initialState) {
+  store.dispatch(hydrateStore(initialState));
+}
+
+export default class StandaloneCommunityTimelineContainer extends React.PureComponent {
 
   static propTypes = {
-    dispatch: PropTypes.func.isRequired,
-    intl: PropTypes.object.isRequired,
-    pawooStatusCount: PropTypes.number.isRequired,
+    locale: PropTypes.string.isRequired,
   };
 
-  handleHeaderClick = () => {
-    this.column.scrollTop();
-  }
-
-  setRef = c => {
-    this.column = c;
-  }
-
-  componentDidMount () {
-    const { dispatch } = this.props;
-
-    dispatch(expandCommunityTimeline());
-    this.disconnect = dispatch(connectCommunityStream());
-  }
-
-  componentWillUnmount () {
-    if (this.disconnect) {
-      this.disconnect();
-      this.disconnect = null;
-    }
-  }
-
-  handleLoadMore = maxId => {
-    this.props.dispatch(expandCommunityTimeline({ maxId }));
-  }
-
   render () {
-    const { intl } = this.props;
+    const { locale } = this.props;
 
     return (
-      <Column ref={this.setRef}>
-        <ColumnHeader
-          title={(
-            <div className='pawoo-extension-standalone-community'>
-              <img src={pawooLogo} alt='pawoo' />
-              \ {intl.formatNumber(initialState.pawoo.user_count)}人が、{intl.formatNumber(initialState.pawoo.status_count + this.props.pawooStatusCount)}回パウってます /
-            </div>
-          )}
-          onClick={this.handleHeaderClick}
-          timelineId='community'
-        />
-
-        <StatusListContainer
-          timelineId='community'
-          onLoadMore={this.handleLoadMore}
-          scrollKey='standalone_public_timeline'
-          trackScroll={false}
-          pawooMediaScale='230px'
-        />
-      </Column>
+      <IntlProvider locale={locale} messages={messages}>
+        <Provider store={store}>
+          <Fragment>
+            <CommunityTimelineForAboutContainer />
+            {ReactDOM.createPortal(
+              <ModalContainer />,
+              document.getElementById('modal-container'),
+            )}
+          </Fragment>
+        </Provider>
+      </IntlProvider>
     );
   }
 

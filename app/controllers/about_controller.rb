@@ -12,7 +12,7 @@ class AboutController < ApplicationController
   def show
     @hide_navbar = true
 
-    render 'pawoo/extensions/about/show'
+    render 'pawoo/extensions/about/show', layout: 'application'
   end
 
   def more; end

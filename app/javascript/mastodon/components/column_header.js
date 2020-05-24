@@ -21,6 +21,7 @@ class ColumnHeader extends React.PureComponent {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     title: PropTypes.node,
+    pawooTitle: PropTypes.node,
     icon: PropTypes.string,
     active: PropTypes.bool,
     multiColumn: PropTypes.bool,
@@ -79,7 +80,7 @@ class ColumnHeader extends React.PureComponent {
   }
 
   render () {
-    const { title, icon, active, children, pinned, multiColumn, extraButton, showBackButton, intl: { formatMessage } } = this.props;
+    const { title, icon, active, children, pinned, multiColumn, extraButton, showBackButton, intl: { formatMessage }, pawooTitle } = this.props;
     const { collapsed, animating } = this.state;
 
     const wrapperClassName = classNames('column-header__wrapper', {
@@ -144,15 +145,22 @@ class ColumnHeader extends React.PureComponent {
       collapseButton = <button className={collapsibleButtonClassName} title={formatMessage(collapsed ? messages.show : messages.hide)} aria-label={formatMessage(collapsed ? messages.show : messages.hide)} aria-pressed={collapsed ? 'false' : 'true'} onClick={this.handleToggleClick}><Icon id='sliders' /></button>;
     }
 
-    const hasTitle = icon && title;
+    const hasTitle = (icon && title) || pawooTitle;
 
     return (
       <div className={wrapperClassName}>
         <h1 className={buttonClassName}>
+
           {hasTitle && (
             <button onClick={this.handleTitleClick}>
-              <Icon id={icon} fixedWidth className='column-header__icon' />
-              {title}
+              {pawooTitle ? (
+                pawooTitle
+              ): (
+                <>
+                  <Icon id={icon} fixedWidth className='column-header__icon' />
+                  {title}
+                </>
+              )}
             </button>
           )}
 
