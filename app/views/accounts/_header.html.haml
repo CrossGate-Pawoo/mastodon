@@ -29,11 +29,11 @@
               %span.counter-label= t('accounts.followers', count: account.followers_count)
         .spacer
         .public-account-header__tabs__tabs__buttons
-          .oauth-authentications
+          .pawoo-oauth-authentications
             - account.oauth_authentications.each do |oauth_authentication|
               - if oauth_authentication.provider == 'pixiv'
-                = link_to "https://www.pixiv.net/member.php?id=#{oauth_authentication.uid}", rel: 'me noopener', target: '_blank' do
-                  .oauth-authentication.pixiv
+                = link_to "https://www.pixiv.net/users/#{oauth_authentication.uid}", rel: 'me noopener', target: '_blank' do
+                  .pawoo-oauth-authentication.pixiv
         .public-account-header__tabs__tabs__buttons
           = account_action_button(account)
 

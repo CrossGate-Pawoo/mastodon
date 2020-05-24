@@ -6,7 +6,7 @@
         - if report_target_group.account_pixiv_uid.present?
           %li
             = 'pixiv uid: '
-            = link_to report_target_group.account_pixiv_uid, "https://www.pixiv.net/member.php?id=#{report_target_group.account_pixiv_uid}", target: '_blank', rel: 'noopener'
+            = link_to report_target_group.account_pixiv_uid, "https://www.pixiv.net/users/#{report_target_group.account_pixiv_uid}", target: '_blank', rel: 'noopener'
         %li
           = '状態: '
           - if report_target_group.account.silenced? || report_target_group.account.suspended?

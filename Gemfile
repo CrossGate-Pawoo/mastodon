@@ -105,7 +105,7 @@ gem 'activerecord-import'
 gem 'recaptcha'
 gem 'puma_worker_killer'
 gem 'sidekiq-worker-killer'
-gem 'rack-timeout'
+gem 'rack-timeout', require: 'rack/timeout/base'
 
 group :development, :test do
   gem 'fabrication', '~> 2.20'

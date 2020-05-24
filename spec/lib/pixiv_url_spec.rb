@@ -19,7 +19,7 @@ RSpec.describe PixivUrl do
     context 'given invalid url' do
       it 'returns false' do
         %w(
-          https://www.pixiv.net/?url=https://www.pixiv.net/member.php?id=1
+          https://www.pixiv.net/?url=https://www.pixiv.net/users/1
         ).each do |url|
           is_expected.to_not be_valid_pixiv_url(url)
         end

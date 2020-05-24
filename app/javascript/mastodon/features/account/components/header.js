@@ -259,27 +259,9 @@ class Header extends ImmutablePureComponent {
               <Avatar account={account} size={90} />
             </a>
 
+            <div className='spacer' />
+
             <div className='account__header__tabs__buttons'>
-              {account.getIn(['oauth_authentications'], new Immutable.List()).size > 0 && (
-                <div className='account__header__oauth-authentications oauth-authentications'>
-                  {account.getIn(['oauth_authentications'], new Immutable.List()).map(oauth_authentication => {
-                    const provider = oauth_authentication.get('provider');
-
-                    if (provider === 'pixiv') {
-                      return (
-                        <a key={provider} href={`https://www.pixiv.net/member.php?id=${oauth_authentication.get('uid')}`} target='_blank' rel='noopener'>
-                          <div className='account__header__oauth-authentication oauth-authentication pixiv' />
-                        </a>
-                      );
-                    }
-
-                    return <div key={provider} />;
-                  })}
-                </div>
-              )}
-
-              <div className='spacer' />
-
               {actionBtn}
 
               <DropdownMenuContainer items={menu} icon='ellipsis-v' size={24} direction='right' />
@@ -291,6 +273,24 @@ class Header extends ImmutablePureComponent {
               <span dangerouslySetInnerHTML={displayNameHtml} /> {badge}
               <small>@{acct} {lockedIcon}</small>
             </h1>
+
+            {account.getIn(['oauth_authentications'], new Immutable.List()).size > 0 && (
+              <div className='pawoo-account__header__oauth-authentications pawoo-oauth-authentications'>
+                {account.getIn(['oauth_authentications'], new Immutable.List()).map(oauth_authentication => {
+                  const provider = oauth_authentication.get('provider');
+
+                  if (provider === 'pixiv') {
+                    return (
+                      <a key={provider} href={`https://www.pixiv.net/users/${oauth_authentication.get('uid')}`} target='_blank' rel='noopener'>
+                        <div className='pawoo-oauth-authentication pixiv' />
+                      </a>
+                    );
+                  }
+
+                  return <div key={provider} />;
+                })}
+              </div>
+            )}
           </div>
 
           <div className='account__header__extra'>

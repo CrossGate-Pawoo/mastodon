@@ -9,7 +9,7 @@ class REST::AccountSerializer < ActiveModel::Serializer
 
   has_one :moved_to_account, key: :moved, serializer: REST::AccountSerializer, if: :moved_and_not_nested?
   has_many :emojis, serializer: REST::CustomEmojiSerializer
-  belongs_to :oauth_authentications
+  has_many :oauth_authentications
 
   class FieldSerializer < ActiveModel::Serializer
     attributes :name, :value, :verified_at

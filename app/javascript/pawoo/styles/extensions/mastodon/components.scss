@@ -82,10 +82,12 @@
   background: none; // 象の上のギザギザ無効
 }
 
-.account__header {
-  .account__header__oauth-authentications a {
-    margin-top: 0;
-    margin-bottom: 10px;
+.account__header__tabs__name {
+  display: flex;
+  align-items: center;
+
+  .pawoo-account__header__oauth-authentications {
+    margin-left: auto;
   }
 }
 
