@@ -84,7 +84,7 @@
     "precss": "^2.0.0",
     "prop-types": "^15.5.10",
     "punycode": "^2.1.0",
-    "rails-ujs": "^5.1.2",
+    "rails-ujs": "^5.2.4-3",
     "react": "^16.3.0",
     "react-dom": "^16.3.0",
     "react-hotkeys": "^0.10.0",
