@@ -123,7 +123,7 @@
     "postcss-object-fit-images": "^1.1.2",
     "prop-types": "^15.5.10",
     "punycode": "^2.1.0",
-    "rails-ujs": "^5.2.3",
+    "rails-ujs": "^5.2.4-3",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-hotkeys": "^1.1.4",
