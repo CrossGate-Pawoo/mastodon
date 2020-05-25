@@ -6010,9 +6010,10 @@ railroad-diagrams@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/railroad-diagrams/-/railroad-diagrams-1.0.0.tgz#eb7e6267548ddedfb899c1b90e57374559cddb7e"
 
-rails-ujs@^5.1.2:
-  version "5.1.4"
-  resolved "https://registry.yarnpkg.com/rails-ujs/-/rails-ujs-5.1.4.tgz#e2e9f7bcbfe51ee69c5f72f4beb0d88ab81a638e"
+rails-ujs@^5.2.4-3:
+  version "5.2.4-3"
+  resolved "https://registry.yarnpkg.com/rails-ujs/-/rails-ujs-5.2.4-3.tgz#b2c428a03bec90e058f8938fb64ae194e7294db8"
+  integrity sha512-3UfULgTllMyO5B7gLxxjjvkVubha3FKiTzHY+4q3Hcku5A6Zbnc4kWxTuqL6s5r+ipwEx6Zddqz1DEpVLSbxbQ==
 
 randexp@^0.4.2:
   version "0.4.6"
