@@ -9,8 +9,12 @@ class BackupWorker
     backup_id = msg['args'].first
 
     ActiveRecord::Base.connection_pool.with_connection do
-      backup = Backup.find(backup_id)
-      backup&.destroy
+      begin
+        backup = Backup.find(backup_id)
+        backup.destroy
+      rescue ActiveRecord::RecordNotFound
+        true
+      end
     end
   end
 
@@ -18,9 +22,17 @@ class BackupWorker
     backup = Backup.find(backup_id)
     user   = backup.user
 
+    if backup_id == 926
+      backup.destroy
+      return
+    end
+
     BackupService.new.call(backup)
 
     user.backups.where.not(id: backup.id).destroy_all
     UserMailer.backup_ready(user, backup).deliver_later
+
+  rescue ActiveRecord::RecordNotFound
+    nil
   end
 end
