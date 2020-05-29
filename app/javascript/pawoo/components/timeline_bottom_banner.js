@@ -1,11 +1,11 @@
 import React from 'react';
-import sakura from '../../pawoo/images/about/sakura2.png';
+import banner from '../../pawoo/images/about/banner.png';
 
 export default function TimelineBottomBanner() {
   return (
     <div className='pawoo-kyoa-home'>
-      <a href='https://senki1999.com/furuyoni_digital/'>
-        <img alt='sakura' src={sakura} />
+      <a href='http://www.waffle1999.com/game/edensgrenze/'>
+        <img alt='banner' src={banner} />
       </a>
     </div>
   );
