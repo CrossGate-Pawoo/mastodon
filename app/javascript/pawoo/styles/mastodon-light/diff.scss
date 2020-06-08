@@ -1,3 +1,19 @@
 // Notes!
 // Sass color functions, "darken" and "lighten" are automatically replaced.
 
+.pawoo-announcements {
+  li {
+    color: $darker-text-color;
+    background: darken($ui-base-color, 6%);
+    border: 1px solid lighten($ui-base-color, 8%);
+  }
+
+  .pawoo-announcements__link {
+    color: $darker-text-color;
+    border: solid 1px $darker-text-color;
+  }
+}
+
+.hashtag-editor {
+  border-top: 1px solid lighten($ui-base-color, 8%);
+}
