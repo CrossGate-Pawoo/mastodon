@@ -81,7 +81,7 @@ class Announcements extends React.PureComponent {
             </div>
             <div className='pawoo-announcements__body'>
               <div className='pawoo-announcements__body__dismiss'>
-                <IconButton icon='close' value={`${announcement.get('id')}`} title={intl.formatMessage(messages.dismiss)} onClick={this.handleDismiss} />
+                <IconButton icon='close' inverted value={`${announcement.get('id')}`} title={intl.formatMessage(messages.dismiss)} onClick={this.handleDismiss} />
               </div>
               <p>{announcement.get('body')}</p>
               <p>

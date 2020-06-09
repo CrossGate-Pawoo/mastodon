@@ -17,3 +17,32 @@
 .hashtag-editor {
   border-top: 1px solid lighten($ui-base-color, 8%);
 }
+
+.pawoo-trend-tags {
+  background: $white;
+
+  .pawoo-trend-tags__header {
+    background: darken($ui-base-color, 4%);
+  }
+}
+
+.suggestion-tags__body li {
+  border-bottom: 1px solid lighten($ui-base-color, 8%);
+}
+
+.suggestion-tags__button {
+  color: $action-button-color;
+  background: $white;
+  border: 1px solid lighten($ui-base-color, 8%);
+
+  &:hover,
+  &:focus {
+    color: $action-button-color;
+    background: $ui-base-color;
+  }
+}
+
+
+.drawer__inner__mastodon {
+  background: none; // 象の上のギザギザ無効。diff側で上書きされているので更に上書きする
+}
