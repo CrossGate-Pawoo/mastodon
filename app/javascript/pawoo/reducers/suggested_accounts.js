@@ -1,4 +1,4 @@
-import { List as ImmutableList, Map as ImmutableMap } from 'immutable';
+import { List as ImmutableList, Map as ImmutableMap, fromJS } from 'immutable';
 import {
   SUGGESTED_ACCOUNTS_FETCH_REQUEST,
   SUGGESTED_ACCOUNTS_FETCH_SUCCESS,
@@ -12,15 +12,21 @@ const initialState = ImmutableMap({
   isLoading: true,
   next: null,
   items: ImmutableList(),
+  mediaAttachmentsMap: ImmutableMap({}),
 });
 
 export default function suggestedAccounts(state = initialState, action) {
   switch (action.type) {
   case SUGGESTED_ACCOUNTS_FETCH_SUCCESS:
   case SUGGESTED_ACCOUNTS_EXPAND_SUCCESS:
-    return state.set('next', action.next)
-      .update('items', list => list.push(...action.accounts.map(item => item.id)).toOrderedSet().toList())
-      .set('isLoading', false);
+    return state.withMutations(map => {
+      map.set('next', action.next);
+      map.update('items', list => list.push(...action.accounts.map(item => item.id)).toOrderedSet().toList());
+      for (const account of action.accounts) {
+        map.setIn(['mediaAttachmentsMap', account.id], fromJS(account.media_attachments));
+      }
+      map.set('isLoading', false);
+    });
   case SUGGESTED_ACCOUNTS_FETCH_REQUEST:
   case SUGGESTED_ACCOUNTS_EXPAND_REQUEST:
     return state.set('isLoading', true);

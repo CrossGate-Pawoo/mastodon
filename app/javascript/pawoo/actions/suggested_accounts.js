@@ -15,6 +15,7 @@ export function fetchSuggestedAccounts() {
 
     api(getState).get('/api/v1/suggested_accounts').then(response => {
       const next = getLinks(response).refs.find(link => link.rel === 'next');
+
       dispatch(importFetchedAccounts(response.data));
       dispatch(fetchSuggestedAccountsSuccess(response.data, next ? next.uri : null));
       dispatch(fetchRelationships(response.data.map(item => item.id)));
