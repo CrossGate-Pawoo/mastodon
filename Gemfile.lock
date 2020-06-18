@@ -311,7 +311,7 @@ GEM
     ipaddress (0.8.3)
     iso-639 (0.2.8)
     jmespath (1.4.0)
-    json (2.1.0)
+    json (2.3.0)
     json-ld (2.2.1)
       multi_json (~> 1.12)
       rdf (>= 2.2.8, < 4.0)
