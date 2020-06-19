@@ -80,15 +80,5 @@ describe UserSettingsDecorator do
       expect(user.settings['delete_modal']).to eq false
       expect(user.settings['boost_modal']).to eq true
     end
-
-    it 'does not update unspecified key' do
-      values = { 'setting_auto_play_gif' => '1' }
-      settings.update(values)
-
-      values = { 'setting_delete_modal' => '1' }
-      settings.update(values)
-
-      expect(user.settings['auto_play_gif']).to eq true
-    end
   end
 end

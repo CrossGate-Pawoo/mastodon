@@ -43,6 +43,7 @@ class FeedInsertWorker
     when :home
       FeedManager.instance.push_to_home(@followers, @status)
     when :list
+      # Filter lists of filtered followers
       @lists = @lists.select { |list| @followers.include? list.account }
       FeedManager.instance.push_to_list(@lists, @status)
     end

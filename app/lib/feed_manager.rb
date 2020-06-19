@@ -31,7 +31,6 @@ class FeedManager
     end
   end
 
-  # TODO: テストを書いておく
   def push_to_home(accounts, status)
     accounts = Array.wrap(accounts)
     accounts = accounts.select do |account|
@@ -40,9 +39,11 @@ class FeedManager
 
     return false if accounts.empty?
 
-    push_accounts = accounts.select do |account|
+    accounts.each do |account|
       trim(:home, account.id)
+    end
 
+    push_accounts = accounts.select do |account|
       push_update_required?("timeline:#{account.id}")
     end
 
@@ -57,13 +58,13 @@ class FeedManager
     true
   end
 
-  # TODO: テストを書いておく
   def push_to_list(lists, status)
     lists = Array.wrap(lists)
-    list_accounts_list_ids = ListAccount.where(list_id: lists.map(&:id), account_id: status.in_reply_to_account_id).pluck(:list_id)
+    check_reply_filter = status.reply? && status.in_reply_to_account_id != status.account_id
+    list_accounts_list_ids = check_reply_filter ? ListAccount.where(list_id: lists.map(&:id), account_id: status.in_reply_to_account_id).pluck(:list_id) : nil
 
     lists = lists.select do |list|
-      if status.reply? && status.in_reply_to_account_id != status.account_id
+      if check_reply_filter
         should_filter = status.in_reply_to_account_id != list.account_id
         should_filter &&= !list_accounts_list_ids.include?(list.id)
         next false if should_filter
@@ -74,9 +75,11 @@ class FeedManager
 
     return false if lists.empty?
 
-    push_lists = lists.select do |list|
+    lists.each do |list|
       trim(:list, list.id)
+    end
 
+    push_lists = lists.select do |list|
       push_update_required?("timeline:list:#{list.id}")
     end
 

@@ -190,19 +190,6 @@ RSpec.describe FeedManager do
   end
 
   describe '#push_to_home' do
-    it 'performs pushing updates into home timelines' do
-      accounts = [Fabricate(:account), Fabricate(:account)]
-      status = Fabricate(:status)
-
-      accounts.each do |account|
-        Redis.current.setex("subscribed:timeline:#{account.id}", 10, '1')
-      end
-
-      expect(PushUpdateWorker).to receive(:perform_async).with(accounts.map(&:id), status.id, :home)
-
-      FeedManager.instance.push_to_home(accounts, status)
-    end
-
     it 'trims timelines if they will have more than FeedManager::MAX_ITEMS' do
       account = Fabricate(:account)
       status = Fabricate(:status)
@@ -330,19 +317,6 @@ RSpec.describe FeedManager do
 
       expect(FeedManager.instance.push_to_list(list, reblog)).to eq false
     end
-
-    it 'performs pushing updates into home timelines' do
-      lists = [Fabricate(:list, account: Fabricate(:account)), Fabricate(:list, account: Fabricate(:account))]
-      status = Fabricate(:status)
-
-      lists.each do |list|
-        Redis.current.setex("subscribed:timeline:list:#{list.id}", 10, '1')
-      end
-
-      expect(PushUpdateWorker).to receive(:perform_async).with(lists.map(&:id), status.id, :list)
-
-      FeedManager.instance.push_to_list(lists, status)
-    end
   end
 
   describe '#merge_into_timeline' do
@@ -453,42 +427,6 @@ RSpec.describe FeedManager do
 
       deletion = Oj.dump(event: :delete, payload: status.id.to_s)
       expect(Redis.current).to have_received(:publish).with("timeline:#{receiver.id}", deletion)
-    end
-  end
-
-  describe '#populate_feed' do
-    it 'call #add_to_feed' do
-      account = Fabricate(:account)
-      Fabricate(:status, account: account, text: 'out of range', created_at: 1.month.ago)
-      latest_status = Fabricate(:status, account: account, text: 'last', created_at: 1.week.ago)
-
-      allow(FeedManager.instance).to receive(:add_to_feed).once
-      allow(FeedManager.instance).to receive(:add_to_feed).with(:home, account, latest_status)
-
-      FeedManager.instance.populate_feed(account)
-    end
-  end
-
-  describe '#calc_since_id' do
-    subject { FeedManager.instance.calc_since_id(base_id) }
-
-    let(:account) { Fabricate(:account) }
-    let(:base_id) { nil }
-
-    context 'no base_id' do
-      let!(:status1) { Fabricate(:status, account: account, created_at: (2.weeks + 1.day).ago) }
-      let!(:status2) { Fabricate(:status, account: account, created_at: (2.weeks - 1.day).ago) }
-
-      it { is_expected.to be_between(status1.id, status2.id)  }
-    end
-
-    context 'with base_id' do
-      let!(:status1) { Fabricate(:status, account: account, created_at: (2.weeks + 2.day).ago) }
-      let!(:status2) { Fabricate(:status, account: account, created_at: 2.weeks.ago) }
-      let!(:status3) { Fabricate(:status, account: account, created_at: 1.day.ago) }
-      let(:base_id) { status3.id }
-
-      it { is_expected.to be_between(status1.id, status2.id)  }
     end
   end
 end
