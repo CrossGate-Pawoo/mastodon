@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class REST::SuggestionTagSerializer < ActiveModel::Serializer
+class Pawoo::REST::SuggestionTagSerializer < ActiveModel::Serializer
   include RoutingHelper
 
   attributes :name, :url, :type, :description

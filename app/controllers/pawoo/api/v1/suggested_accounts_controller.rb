@@ -26,7 +26,7 @@ class Pawoo::Api::V1::SuggestedAccountsController < Api::BaseController
     set_pagination_headers(next_path, prev_path)
 
     media_attachments_of = Pawoo::LoadAccountMediaAttachmentsService.new.call(@accounts, 3)
-    render json: @accounts, each_serializer: REST::SuggestedAccountSerializer, media_attachments_of: media_attachments_of
+    render json: @accounts, each_serializer: Pawoo::REST::SuggestedAccountSerializer, media_attachments_of: media_attachments_of
   end
 
   private

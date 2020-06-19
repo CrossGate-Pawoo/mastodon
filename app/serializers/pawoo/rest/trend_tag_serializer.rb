@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class REST::TrendTagSerializer < ActiveModel::Serializer
+class Pawoo::REST::TrendTagSerializer < ActiveModel::Serializer
   include RoutingHelper
 
   attributes :name, :url, :type, :description
