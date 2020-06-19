@@ -15,21 +15,6 @@ module Pawoo::AccountExtension
     validates :note, pawoo_crashed_unicode: true
 
     after_save :check_to_add_blacklisted_url
-
-    class << self
-      def filter_by_time(ids, time_begin = 3.days.ago)
-        sql = <<-SQL.squish
-          SELECT accounts.id
-          FROM accounts
-          WHERE accounts.id IN (:ids)
-          AND suspended_at IS NULL
-          AND silenced_at IS NULL
-          AND (SELECT created_at FROM statuses WHERE statuses.account_id = accounts.id ORDER BY statuses.id DESC LIMIT 1) > :time_begin
-        SQL
-
-        find_by_sql([sql, {ids: ids, time_begin: time_begin}]).map(&:id)
-      end
-    end
   end
 
   def bootstrap_timeline?

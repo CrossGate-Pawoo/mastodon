@@ -73,7 +73,7 @@ class Pawoo::SuggestedAccountQuery
                                   .distinct
                                   .pluck(:id)
 
-      shuffle_ids(Account.filter_by_time(account_ids))
+      shuffle_ids(filter_by_last_status_at(account_ids))
     end
 
     def enable_pixiv_follows_query?
@@ -93,8 +93,8 @@ class Pawoo::SuggestedAccountQuery
     end
 
     def active_popular_account_ids
-      Rails.cache.fetch('pawoo:PopularAccountQuery:active_popular_account_ids', expires_in: 1.day) do
-        Account.filter_by_time(all_popular_account_ids)
+      Rails.cache.fetch('pawoo:PopularAccountQuery:active_popular_account_ids', expires_in: 1.hour) do
+        filter_by_last_status_at(all_popular_account_ids)
       end
     end
 
@@ -126,6 +126,10 @@ class Pawoo::SuggestedAccountQuery
 
   def shuffle_ids(ids)
     ids.shuffle(random: Random.new(seed))
+  end
+
+  def filter_by_last_status_at(ids)
+    AccountStat.where(account_id: ids).where(AccountStat.arel_table[:last_status_at].gt(3.days.ago)).pluck(:id)
   end
 
   def spawn(variables)
