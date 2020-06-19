@@ -9,13 +9,20 @@ class HomeFeed < Feed
 
   def get(limit, max_id = nil, since_id = nil, min_id = nil)
     if redis.exists("account:#{@account.id}:regeneration")
+      # When searching in ascending order, limit the search range because the search range is wide and takes a very long time.
+      # In the case of min_id, it is searched from oldest to newest,
+      # and it can be expected that the search range is not wide,
+      # so wait and see without limiting
       max_id = max_id&.to_i
       since_id = since_id&.to_i
       limited_since_id = FeedManager.instance.calc_since_id(max_id)
+      fixed_since_id = if since_id.nil? || since_id < limited_since_id
+                         limited_since_id
+                       else
+                         since_id
+                       end
 
-      # TODO: min_idも制限をかけるか検討
-
-      from_database(limit, max_id, (since_id.nil? || since_id < limited_since_id) ? limited_since_id : since_id, min_id)
+      from_database(limit, max_id, fixed_since_id, min_id)
     else
       super
     end
