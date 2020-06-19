@@ -66,7 +66,6 @@ class PostStatusService < BaseService
     end
 
     process_hashtags_service.call(@status)
-    # TODO: 時限投稿周りのテストを書く
     process_mentions_service.call(@status)
   end
 

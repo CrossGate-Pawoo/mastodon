@@ -1,52 +1,40 @@
 require 'rails_helper'
 
 describe Pawoo::TimeLimit do
-  describe '.from_tags' do
-    it 'returns true' do
-      tags = [
-        Fabricate(:tag, name: "hoge"),
-        Fabricate(:tag, name: "exp1m"),
-        Fabricate(:tag, name: "fuga"),
-        Fabricate(:tag, name: "exp10m"),
-      ]
-      result = described_class.from_tags(tags)
-      expect(result.to_duration).to eq(1.minute)
-    end
-  end
-
   describe '.from_status' do
-    subject { described_class.from_status(target_status)&.to_duration }
+    subject { described_class.from_status(status)&.to_duration }
 
-    let(:tag) { Fabricate(:tag, name: "exp1m") }
-    let(:local_status) { Fabricate(:status, tags: [tag]) }
-    let(:remote_status) { Fabricate(:status, tags: [tag], local: false, account: Fabricate(:account, domain: 'pawoo.net')) }
+    let(:normal_tag) { Fabricate(:tag, name: "normal") }
+    let(:exp1_tag) { Fabricate(:tag, name: "exp1m") }
+    let(:exp10_tag) { Fabricate(:tag, name: "exp10m") }
 
-    context 'when status is local' do
-      let(:target_status) { local_status }
+    context 'when status has timelimit tag' do
+      let(:tags) { [normal_tag, exp1_tag, exp10_tag] }
 
-      it { is_expected.to eq(1.minute) }
-    end
-
-    context 'when status is remote' do
-      let(:target_status) { remote_status }
-
-      it { is_expected.to be_nil }
-    end
-
-    context 'when status is reblog' do
-      let(:target_status) {  Fabricate(:status, tags: [tag], reblog: reblog_target) }
-
-      context 'reblog target is local status' do
-        let(:reblog_target) { local_status }
+      context 'when status is local' do
+        let(:status) { Fabricate(:status, tags: tags) }
 
         it { is_expected.to eq(1.minute) }
       end
 
       context 'when status is remote' do
-        let(:reblog_target) { remote_status }
+        let(:status) { Fabricate(:status, tags: tags, local: false, account: Fabricate(:account, domain: 'pawoo.net')) }
 
         it { is_expected.to be_nil }
       end
+
+      context 'when status is reblog' do
+        let(:status) {  Fabricate(:status, reblog: Fabricate(:status, tags: tags)) }
+
+        it { is_expected.to eq(1.minute) }
+      end
+    end
+
+    context 'when status does not have timelimit tag' do
+      let(:tags) { [normal_tag] }
+      let(:status) { Fabricate(:status, tags: tags) }
+
+      it { is_expected.to be_nil }
     end
   end
 

@@ -45,7 +45,7 @@ class StatusesController < ApplicationController
       end
 
       format.json do
-        return not_found if Pawoo::TimeLimit.from_status(@status) # TODO: before_actionにできない？
+        return not_found if Pawoo::TimeLimit.enabled?(@status)
 
         render_cached_json(['activitypub', 'note', @status], content_type: 'application/activity+json', public: !@stream_entry.hidden?) do
           ActiveModelSerializers::SerializableResource.new(@status, serializer: ActivityPub::NoteSerializer, adapter: ActivityPub::Adapter)
@@ -55,7 +55,7 @@ class StatusesController < ApplicationController
   end
 
   def activity
-    return not_found if Pawoo::TimeLimit.from_status(@status) # TODO: before_actionにできない？
+    return not_found if Pawoo::TimeLimit.enabled?(@status)
 
     render_cached_json(['activitypub', 'activity', @status], content_type: 'application/activity+json', public: !@stream_entry.hidden?) do
       ActiveModelSerializers::SerializableResource.new(@status, serializer: ActivityPub::ActivitySerializer, adapter: ActivityPub::Adapter)

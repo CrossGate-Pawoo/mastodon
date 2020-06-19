@@ -24,7 +24,7 @@ class ActivityPub::DistributionWorker
   private
 
   def skip_distribution?
-    @status.direct_visibility? || @status.limited_visibility? || Pawoo::TimeLimit.from_status(@status).present?
+    @status.direct_visibility? || @status.limited_visibility? || Pawoo::TimeLimit.enabled?(@status)
   end
 
   def relayable?

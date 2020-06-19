@@ -45,15 +45,15 @@ class ProcessMentionsService < BaseService
   end
 
   def create_notification(mention)
-    time_limit = Pawoo::TimeLimit.from_status(@status)
+    disable_time_limit = !Pawoo::TimeLimit.enabled?(@status)
 
     mentioned_account = mention.account
 
     if mentioned_account.local?
       LocalNotificationWorker.perform_async(mentioned_account.id, mention.id, mention.class.name)
-    elsif time_limit.nil? && mentioned_account.ostatus? && !@status.stream_entry.hidden?
+    elsif disable_time_limit && mentioned_account.ostatus? && !@status.stream_entry.hidden?
       NotificationWorker.perform_async(ostatus_xml, @status.account_id, mentioned_account.id)
-    elsif time_limit.nil? && mentioned_account.activitypub?
+    elsif disable_time_limit && mentioned_account.activitypub?
       ActivityPub::DeliveryWorker.perform_async(activitypub_json, mention.status.account_id, mentioned_account.inbox_url)
     end
   end

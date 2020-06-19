@@ -4,19 +4,18 @@ class Pawoo::TimeLimit
   TIME_LIMIT_RE = /^exp(?<value>\d+)(?<unit>[mhd])$/.freeze
   VALID_DURATION = (1.minute..7.days).freeze
 
-  def self.from_tags(tags)
-    return unless tags
-
-    tags.map { |tag| new(tag.name) }.find(&:valid?)
-  end
-
   def self.from_status(status)
     return unless status
 
     status = status.reblog if status.reblog?
     return unless status.local?
+    return unless status.tags
 
-    from_tags(status.tags)
+    status.tags.map { |tag| new(tag.name) }.find(&:valid?)
+  end
+
+  def self.enabled?(status)
+    from_status(status).present?
   end
 
   def initialize(name)
