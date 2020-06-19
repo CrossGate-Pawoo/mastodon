@@ -24,27 +24,27 @@ class Pawoo::SuggestedAccountQuery
     spawn(page_number: page_number.to_i)
   end
 
-  concerning :TradicAccountQuery do
+  concerning :PotentialFriendshipQuery do
     included do
-      attr_reader :account, :with_tradic_limit
+      attr_reader :account, :with_potential_friendship_limit
     end
 
-    def with_tradic(account, limit: 4)
-      spawn(account: account, with_tradic_limit: limit.to_i)
+    def with_potential_friendship(account, limit: 4)
+      spawn(account: account, with_potential_friendship_limit: limit.to_i)
     end
 
     private
 
-    def triadic_account_ids
-      return [] unless enable_tradic_account_query?
+    def potential_friendship_account_ids
+      return [] unless enable_potential_friendship_account_query?
 
-      offset = with_tradic_limit * page_number
-      accounts = Account.triadic_closures(account, offset: offset, limit: with_tradic_limit, exclude_ids: excluded_ids)
-      accounts.map(&:id)
+      offset = with_potential_friendship_limit * page_number
+      account_ids = PotentialFriendshipTracker.get(account.id, limit: with_potential_friendship_limit, offset: offset).map(&:id)
+      account_ids - excluded_ids
     end
 
-    def enable_tradic_account_query?
-      with_tradic_limit.to_i.positive? && account
+    def enable_potential_friendship_account_query?
+      with_potential_friendship_limit.to_i.positive? && account
     end
   end
 
@@ -107,7 +107,7 @@ class Pawoo::SuggestedAccountQuery
   def all
     ids = []
     ids += pickup(pixiv_following_account_ids, limit: with_pixiv_follows_limit)
-    ids += (triadic_account_ids - ids)
+    ids += (potential_friendship_account_ids - ids)
     ids += pickup(popular_account_ids - ids, limit: limit - ids.length) # limitに達する数までidを取得する
 
     # sort_byにより、取得したAccountがidsの順番通りになるよう再度並び替える
@@ -135,6 +135,6 @@ class Pawoo::SuggestedAccountQuery
   end
 
   def default_scoped
-    Account.local.where(suspended_at: nil, silenced_at: nil)
+    Account.searchable
   end
 end

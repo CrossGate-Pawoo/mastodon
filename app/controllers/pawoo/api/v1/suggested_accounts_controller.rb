@@ -39,6 +39,6 @@ class Pawoo::Api::V1::SuggestedAccountsController < Api::BaseController
     Pawoo::SuggestedAccountQuery.new
       .exclude_ids([account.id] + following + muted_and_blocked)
       .with_pixiv_follows(oauth_authentication, limit: 6)
-      .with_tradic(account, limit: 6)
+      .with_potential_friendship(account, limit: 6)
   end
 end
