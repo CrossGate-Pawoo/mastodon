@@ -4,7 +4,6 @@ module Pawoo::StatusExtension
   extend ActiveSupport::Concern
 
   included do
-    has_one :status_pin, dependent: :destroy # TODO: 本家に合わせる、cache_associated側も
     has_many :pixiv_cards, dependent: :destroy
     has_many :gallery_blacklisted_statuses, dependent: :destroy, class_name: 'Pawoo::GalleryBlacklistedStatus'
 

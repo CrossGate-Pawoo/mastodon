@@ -43,9 +43,6 @@ class ActivityPub::FetchFeaturedCollectionService < BaseService
 
     StatusPin.where(account: @account, status_id: to_remove).delete_all unless to_remove.empty?
 
-    # Pawoo Extension
-    Status.select(:id, :updated_at).where(id: to_remove).each { |status| Rails.cache.delete(status.cache_key) } if to_remove.present?
-
     to_add.each do |status_id|
       StatusPin.create!(account: @account, status_id: status_id)
     end

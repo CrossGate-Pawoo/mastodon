@@ -110,7 +110,6 @@ class Status < ApplicationRecord
                    :stream_entry,
                    :preloadable_poll,
                    :pixiv_cards,
-                   :status_pin,
                    account: [:account_stat, :oauth_authentications],
                    active_mentions: { account: [:account_stat, :oauth_authentications] },
                    reblog: [
@@ -123,7 +122,6 @@ class Status < ApplicationRecord
                      :status_stat,
                      :preloadable_poll,
                      :pixiv_cards,
-                     :status_pin,
                      account: [:account_stat, :oauth_authentications],
                      active_mentions: { account: [:account_stat, :oauth_authentications] },
                    ],
