@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe TrendTagService do
+RSpec.describe Pawoo::TrendTagService do
   describe '#call' do
     let(:service) { described_class.new }
     let(:time) { Time.current }

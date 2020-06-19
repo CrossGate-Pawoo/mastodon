@@ -44,9 +44,9 @@
   pghero_scheduler:
     cron: '0 0 * * *'
     class: Scheduler::PgheroScheduler
-  trend_tag_scheduler:
+  pawoo_trend_tag_scheduler:
     cron: '*/30 * * * *'
-    class: Scheduler::TrendTagScheduler
+    class: Pawoo::Scheduler::TrendTagScheduler
   pawoo_report_target_cleanup_scheduler:
     cron: '<%= Random.rand(0..59) %> <%= Random.rand(2..4) %> * * * Asia/Tokyo'
     class: Pawoo::Scheduler::ReportTargetCleanupScheduler

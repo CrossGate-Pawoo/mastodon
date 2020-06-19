@@ -1,11 +1,11 @@
 require 'rails_helper'
 
-RSpec.describe TrendTag, type: :model do
+RSpec.describe Pawoo::TrendTag, type: :model do
   describe '.find_tags' do
-    subject { TrendTag.find_tags(limit) }
+    subject { Pawoo::TrendTag.find_tags(limit) }
 
     before do
-      allow(TrendTag).to receive(:trend_tags).and_return([expected_trend_tag])
+      allow(Pawoo::TrendTag).to receive(:trend_tags).and_return([expected_trend_tag])
     end
 
     let(:limit) { 3 }
@@ -14,7 +14,7 @@ RSpec.describe TrendTag, type: :model do
     let(:tag_name) { 'suggested_ngword_test' }
     let(:tag_description) { 'this tag is ngword_test' }
 
-    let(:expected_trend_tag) { TrendTag.new(name: trend_tag_name, description: '', tag_type: 'trend') }
+    let(:expected_trend_tag) { Pawoo::TrendTag.new(name: trend_tag_name, description: '', tag_type: 'trend') }
     let(:trend_tag_name) { 'trend_ngword_test' }
 
     context 'ng trend tag does not exist' do

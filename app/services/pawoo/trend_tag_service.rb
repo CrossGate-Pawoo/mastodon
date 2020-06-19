@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class TrendTagService < BaseService
+class Pawoo::TrendTagService < BaseService
   SPAN = 60.minutes
   TREND_HISTORIES_KEY = 'trend_histories'
   TREND_LENGTH = 3
@@ -62,7 +62,7 @@ class TrendTagService < BaseService
     # 現在のトレンドを計算する
     tag_scores = current_trend_tag_scores(current_tag_scores, tag_score_histories)
     tag_scores.map(&:tag_name).tap do |tag_names|
-      TrendTag.update_trend_tags(tag_names)
+      Pawoo::TrendTag.update_trend_tags(tag_names)
     end
   end
 
