@@ -32,7 +32,7 @@ RSpec.describe Pawoo::TrendTagService do
     before do
       # Clear redis values
       Redis.current.del(described_class::TREND_HISTORIES_KEY)
-      TrendTag.update_trend_tags([])
+      Pawoo::TrendTag.update_trend_tags([])
     end
 
     context 'initial tag_score_histories' do
