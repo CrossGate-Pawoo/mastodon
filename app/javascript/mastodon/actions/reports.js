@@ -47,6 +47,7 @@ export function submitReport() {
       status_ids: getState().getIn(['reports', 'new', 'status_ids']),
       comment: getState().getIn(['reports', 'new', 'comment']),
       forward: getState().getIn(['reports', 'new', 'forward']),
+      pawoo_report_type: getState().getIn(['reports', 'new', 'pawoo_report_type']),
     }).then(response => {
       dispatch(closeModal());
       dispatch(submitReportSuccess(response.data));

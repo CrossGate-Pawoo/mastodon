@@ -222,40 +222,32 @@
   color: lighten($ui-base-color, 50%);
 }
 
+.pawoo-report-type-list {
+  margin-bottom: 20px;
 
-.pawoo__report-modal__select-type {
-  display: flex;
-
-  .pawoo__report-modal__select-type-title {
-    flex: 1 1 auto;
-    padding: 10px;
+  .pawoo-report-type-list__items {
+    @media screen and (max-width: 480px) {
+      max-height: 10vh;
+      overflow: auto;
+    }
   }
 
-  .pawoo__report-modal__select-type-toggle {
+  .pawoo-report-type-list__item {
+    display: flex;
+    margin-bottom: 12px;
+  }
+
+  .pawoo-report-type-list__type-name {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+  }
+
+  .pawoo-report-type-list__toggle {
     flex: 0 0 auto;
-    padding: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-}
-
-.pawoo__status-check-box__status {
-  margin: 10px 0 10px 10px;
-  flex: 1;
-
-  .media-gallery {
-    max-width: 250px;
-  }
-
-  .status__content {
-    padding: 0;
-    white-space: normal;
-    word-break: break-all;
-  }
-
-  .media-gallery__item-thumbnail {
-    cursor: default;
   }
 }
 

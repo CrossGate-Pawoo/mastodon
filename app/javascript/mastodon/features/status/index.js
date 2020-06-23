@@ -32,7 +32,7 @@ import {
   revealStatus,
 } from '../../actions/statuses';
 import { initMuteModal } from '../../actions/mutes';
-import { initReport } from 'pawoo/actions/reports';
+import { initReport } from '../../actions/reports';
 import { makeGetStatus } from '../../selectors';
 import { ScrollContainer } from 'react-router-scroll-4';
 import ColumnBackButton from '../../components/column_back_button';

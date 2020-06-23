@@ -12,10 +12,12 @@ import ImmutablePureComponent from 'react-immutable-pure-component';
 import Button from '../../../components/button';
 import Toggle from 'react-toggle';
 import IconButton from '../../../components/icon_button';
+import ReportTypeList from 'pawoo/components/report_type_list';
+import { changeReportType } from 'pawoo/actions/extensions/reports';
 
 const messages = defineMessages({
   close: { id: 'lightbox.close', defaultMessage: 'Close' },
-  placeholder: { id: 'report.placeholder', defaultMessage: 'Additional comments' },
+  placeholder: { id: 'pawoo.report.placeholder', defaultMessage: 'Additional comments (required for other cases)' },
   submit: { id: 'report.submit', defaultMessage: 'Submit' },
 });
 
@@ -30,6 +32,7 @@ const makeMapStateToProps = () => {
       account: getAccount(state, accountId),
       comment: state.getIn(['reports', 'new', 'comment']),
       forward: state.getIn(['reports', 'new', 'forward']),
+      pawooReportType: state.getIn(['reports', 'new', 'pawoo_report_type']),
       statusIds: OrderedSet(state.getIn(['timelines', `account:${accountId}:with_replies`, 'items'])).union(state.getIn(['reports', 'new', 'status_ids'])),
     };
   };
@@ -47,6 +50,7 @@ class ReportModal extends ImmutablePureComponent {
     statusIds: ImmutablePropTypes.orderedSet.isRequired,
     comment: PropTypes.string.isRequired,
     forward: PropTypes.bool,
+    reportType: PropTypes.string,
     dispatch: PropTypes.func.isRequired,
     intl: PropTypes.object.isRequired,
   };
@@ -79,8 +83,18 @@ class ReportModal extends ImmutablePureComponent {
     }
   }
 
+  pawooIsSendable() {
+    const { comment, pawooReportType } = this.props;
+
+    return pawooReportType && (pawooReportType !== 'other' || comment.length > 0);
+  }
+
+  pawooHandleReportTypeToggle = (reportType) => {
+    this.props.dispatch(changeReportType(reportType));
+  }
+
   render () {
-    const { account, comment, intl, statusIds, isSubmitting, forward, onClose } = this.props;
+    const { account, comment, intl, statusIds, isSubmitting, forward, onClose, pawooReportType } = this.props;
 
     if (!account) {
       return null;
@@ -97,6 +111,8 @@ class ReportModal extends ImmutablePureComponent {
 
         <div className='report-modal__container'>
           <div className='report-modal__comment'>
+            <ReportTypeList pawooReportType={pawooReportType} onToggle={this.pawooHandleReportTypeToggle} disabled={isSubmitting} />
+
             <p><FormattedMessage id='report.hint' defaultMessage='The report will be sent to your server moderators. You can provide an explanation of why you are reporting this account below:' /></p>
 
             <textarea
@@ -120,7 +136,7 @@ class ReportModal extends ImmutablePureComponent {
               </div>
             )}
 
-            <Button disabled={isSubmitting} text={intl.formatMessage(messages.submit)} onClick={this.handleSubmit} />
+            <Button disabled={isSubmitting || !this.pawooIsSendable()} text={intl.formatMessage(messages.submit)} onClick={this.handleSubmit} />
           </div>
 
           <div className='report-modal__statuses'>
