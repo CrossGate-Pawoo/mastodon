@@ -93,8 +93,8 @@ class Video extends React.PureComponent {
     preview: PropTypes.string,
     src: PropTypes.string.isRequired,
     alt: PropTypes.string,
-    width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    width: PropTypes.number,
+    height: PropTypes.number,
     sensitive: PropTypes.bool,
     startTime: PropTypes.number,
     onOpenVideo: PropTypes.func,
@@ -381,7 +381,7 @@ class Video extends React.PureComponent {
     const volumeHandleLoc = (muted) ? this.volHandleOffset(0) : this.volHandleOffset(volume);
     const playerStyle = {};
 
-    let { width, height } = this.props; // eslint-disable-line no-unused-vars
+    let { width, height } = this.props;
 
     if (inline && containerWidth) {
       width  = containerWidth;
@@ -431,6 +431,8 @@ class Video extends React.PureComponent {
           tabIndex='0'
           aria-label={alt}
           title={alt}
+          width={width}
+          height={height}
           volume={volume}
           onClick={this.togglePlay}
           onPlay={this.handlePlay}

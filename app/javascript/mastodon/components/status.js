@@ -206,7 +206,7 @@ class Status extends ImmutablePureComponent {
   }
 
   renderLoadingVideoPlayer () {
-    return <div className='media-spoiler-video' style={{ height: 132 }} />;
+    return <div className='media-spoiler-video' style={{ height: '110px' }} />;
   }
 
   handleOpenVideo = (media, startTime) => {
@@ -362,7 +362,7 @@ class Status extends ImmutablePureComponent {
                 src={attachment.get('url')}
                 alt={attachment.get('description')}
                 width={this.props.cachedMediaWidth}
-                height={229}
+                height={110}
                 inline
                 sensitive={status.get('sensitive')}
                 onOpenVideo={this.handleOpenVideo}

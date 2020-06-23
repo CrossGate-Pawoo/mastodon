@@ -50,7 +50,7 @@ class SuggestedAccount extends React.PureComponent {
   }
 
   renderLoadingVideoPlayer = () => {
-    return <div className='media-spoiler-video' style={{ height: 132 }} />;
+    return <div className='media-spoiler-video' style={{ height: '110px' }} />;
   }
 
   render () {
