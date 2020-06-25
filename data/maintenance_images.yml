@@ -22,16 +22,6 @@
   images:
     - https://img.pawoo.net/media_attachments/files/000/626/473/original/1f294cf0cd1c72a2.jpg
 -
-  id: 6384774
-  statuses:
-    - 403
-    - 404
-    - 410
-    - 422
-    - 500
-  images:
-    - https://img.pawoo.net/media_attachments/files/000/496/153/original/ba22dbaa0c0b5a88.png
--
   id: 4888566
   statuses:
     - 403
@@ -521,16 +511,6 @@
     - 503
   images:
     - https://img.pawoo.net/media_attachments/files/000/394/756/original/5ef3f8201d674775.png
-- id: 4998686
-  statuses:
-    - 403
-    - 404
-    - 410
-    - 422
-    - 500
-    - 503
-  images:
-    - https://img.pawoo.net/media_attachments/files/000/389/996/original/b224feffa2f3de65.png
 - id: 4948435
   statuses:
     - 403
@@ -551,16 +531,6 @@
     - 503
   images:
     - https://img.pawoo.net/media_attachments/files/000/385/820/original/4105dc4fdcabe517.jpg
-- id: 4898199
-  statuses:
-    - 403
-    - 404
-    - 410
-    - 422
-    - 500
-    - 503
-  images:
-    - https://img.pawoo.net/media_attachments/files/000/384/188/original/6e2ce7f2a562dfc4.png
 - id: 4862537
   statuses:
     - 403
@@ -591,16 +561,6 @@
     - 503
   images:
     - https://img.pawoo.net/media_attachments/files/000/380/668/original/78d1aa83fe8eda2d.jpg
-- id: 4825171
-  statuses:
-    - 403
-    - 404
-    - 410
-    - 422
-    - 500
-    - 503
-  images:
-    - https://img.pawoo.net/media_attachments/files/000/378/982/original/8af94e392ee82302.png
 - id: 4819618
   statuses:
     - 403
@@ -851,16 +811,6 @@
     - 503
   images:
     - https://img.pawoo.net/media_attachments/files/000/318/801/original/b460cc9168072f4c.jpg
-- id: 3935949
-  statuses:
-    - 403
-    - 404
-    - 410
-    - 422
-    - 500
-    - 503
-  images:
-    - https://img.pawoo.net/media_attachments/files/000/318/835/original/0b4e0ceb929185ea.png
 - id: 3881887
   statuses:
     - 403

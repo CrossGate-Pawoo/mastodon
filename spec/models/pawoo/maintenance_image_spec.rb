@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe MaintenanceImage do
+RSpec.describe Pawoo::MaintenanceImage do
   describe 'validation' do
     let(:instance) { described_class.new }
 

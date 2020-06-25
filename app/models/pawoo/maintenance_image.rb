@@ -1,4 +1,6 @@
-class MaintenanceImage
+# frozen_string_literal: true
+
+class Pawoo::MaintenanceImage
   include ActiveModel::Model
 
   attr_accessor :id, :statuses, :images

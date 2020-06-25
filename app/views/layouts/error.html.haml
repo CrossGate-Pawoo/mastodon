@@ -3,94 +3,20 @@
   %head
     %meta{ content: 'text/html; charset=UTF-8', 'http-equiv' => 'Content-Type' }/
     %meta{ charset: 'utf-8' }/
+    %title= safe_join([yield(:page_title), Setting.default_settings['site_title']], ' - ')
     %meta{ name: 'robots', content: 'noindex' }
-    %title= yield :page_title
     %meta{ content: 'width=device-width,initial-scale=1', name: 'viewport' }/
-    %link{ href: 'https://fonts.googleapis.com/css?family=Roboto:400', rel: 'stylesheet' }/
+    = stylesheet_pack_tag 'common', media: 'all'
+    = stylesheet_pack_tag Setting.default_settings['theme'], media: 'all'
+    = javascript_pack_tag 'common', integrity: true, crossorigin: 'anonymous'
+    = javascript_pack_tag 'pawoo/error', integrity: true, crossorigin: 'anonymous'
 
-    -# TODO: 本家側をベースに修正する
+    %script#pawoo_maintenance_images{ type: 'application/json' }!= json_escape(Pawoo::MaintenanceImage.mappings.to_json)
 
-    :css
-      body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        background: #282c37;
-        color: #9baec8;
-        text-align: center;
-        margin: 0;
-        padding: 20px;
-      }
-
-      .container {
-        width: 700px;
-        margin: 0 auto;
-        margin-top: 40px;
-      }
-
-      .service-logo img {
-        display: block;
-        margin: 0 auto 20px;
-        width: 100px;
-      }
-
-      .dialog img {
-        display: block;
-        max-width: 600px;
-        width: 100%;
-        height: auto;
-        margin: 50px auto;
-      }
-
-      .dialog h1 {
-        font: 20px/28px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        font-weight: 400;
-      }
-
-      a {
-        color: white;
-        font-size: 14px;
-      }
-
-      @media screen and (max-width: 700px) {
-        .container {
-            width: 100%;
-            margin: 0;
-        }
-      }
-
-
-    :javascript
-      document.addEventListener('DOMContentLoaded', function() {
-        var json = JSON.parse(document.getElementById('maintenance_images').textContent);
-        var img = document.getElementById('error_image');
-        var statusCode = Number(img.getAttribute('data-status-code'));
-        var imageUrls = [];
-        var defaultUrl = '/oops.png';
-
-        for(var index in json) {
-          var attributes = json[index];
-
-          if (attributes['statuses'].indexOf(statusCode) > -1) {
-            Array.prototype.push.apply(imageUrls, attributes['images']);
-          }
-        }
-
-        var imageUrl = imageUrls[Math.floor(Math.random() * imageUrls.length)];
-        img.setAttribute('src', imageUrl || defaultUrl);
-      });
-
-  %body
-    %script#maintenance_images{ type: 'application/json' }!= json_escape(MaintenanceImage.mappings.to_json)
-
-    .container
-      .logo-container
-        %h1
-          = link_to root_path do
-            = svg_logo_full
-
-      .dialog
-        = link_to root_path do
-          %img#error_image{ alt: 'Mastodon', src: '', data: { status_code: response.code } }/
-        %div
-          %h1= yield :content
-
-      = link_to t('errors.top'), root_path
+  %body.error
+    .dialog
+      = link_to root_path, class: 'dialog__illustration' do
+        %img{ alt: Setting.default_settings['site_title'], src: '', data: { pawoo_status_code: response.code } }/
+      .dialog__message
+        %h1= yield :content
+      = link_to t('errors.top'), root_path, class: 'pawoo-extension-error__top-link'
