@@ -103,6 +103,5 @@ Rails.application.configure do
     'X-XSS-Protection'       => '1; mode=block',
   }
 
-  config.x.activerecord_dowsing.enabled = false
   config.x.otp_secret = ENV.fetch('OTP_SECRET')
 end
