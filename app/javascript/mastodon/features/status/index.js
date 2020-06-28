@@ -124,9 +124,6 @@ const makeMapStateToProps = () => {
       descendantsIds,
       askReplyConfirmation: state.getIn(['compose', 'text']).trim().length !== 0,
       domain: state.getIn(['meta', 'domain']),
-      pawooMediaScale: state.getIn(['pawoo', 'column_media', 'scale']),
-      pawooWideMedia: typeof props.pawooWideMedia === 'boolean' ?
-        props.pawooWideMedia : state.getIn(['pawoo', 'column_media', 'wide']),
     };
   };
 
@@ -150,8 +147,6 @@ class Status extends ImmutablePureComponent {
     intl: PropTypes.object.isRequired,
     askReplyConfirmation: PropTypes.bool,
     domain: PropTypes.string.isRequired,
-    pawooMediaScale: PropTypes.string,
-    pawooWideMedia: PropTypes.bool,
   };
 
   state = {
@@ -497,8 +492,6 @@ class Status extends ImmutablePureComponent {
                   domain={domain}
                   showMedia={this.state.showMedia}
                   onToggleMediaVisibility={this.handleToggleMediaVisibility}
-                  pawooMediaScale={this.props.pawooMediaScale}
-                  pawooWideMedia={this.props.pawooWideMedia}
                 />
 
                 <ActionBar

@@ -97,7 +97,6 @@ class Gallery extends React.PureComponent {
               compact
               measureHeight
               onHeightChange={this.handleHeightChange}
-              pawooMediaScale='100%'
             />
             {isStaff && (
               <IconButton className='pawoo-blacklist-icon' size={14} title={intl.formatMessage(messages.blacklist)} icon='ban' onClick={this.createHandleBlacklistClick(statusId)} />

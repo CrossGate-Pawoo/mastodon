@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Immutable from 'immutable';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import Avatar from '../../../components/avatar';
 import DisplayName from '../../../components/display_name';
@@ -14,6 +13,7 @@ import Video from '../../video';
 import scheduleIdleTask from '../../ui/util/schedule_idle_task';
 import classNames from 'classnames';
 import Icon from 'mastodon/components/icon';
+import { convertToMediaAttachmentsFromPixivCards } from 'pawoo/util/pixiv_card';
 
 export default class DetailedStatus extends ImmutablePureComponent {
 
@@ -32,8 +32,6 @@ export default class DetailedStatus extends ImmutablePureComponent {
     compact: PropTypes.bool,
     showMedia: PropTypes.bool,
     onToggleMediaVisibility: PropTypes.func,
-    pawooMediaScale: PropTypes.string,
-    pawooWideMedia: PropTypes.bool,
   };
 
   state = {
@@ -110,17 +108,8 @@ export default class DetailedStatus extends ImmutablePureComponent {
     }
 
     let attachments = status.get('media_attachments');
-    if (attachments.size === 0 && status.getIn(['pixiv_cards'], Immutable.List()).size > 0) {
-      attachments = status.get('pixiv_cards').map(card => {
-        return Immutable.fromJS({
-          id: Math.random().toString(),
-          preview_url: card.get('image_url'),
-          remote_url: '',
-          text_url: card.get('url'),
-          type: 'image',
-          url: card.get('image_url'),
-        });
-      });
+    if (attachments.size === 0) {
+      attachments = convertToMediaAttachmentsFromPixivCards(status);
     }
 
     if (attachments.size > 0) {
@@ -145,13 +134,13 @@ export default class DetailedStatus extends ImmutablePureComponent {
       } else {
         media = (
           <MediaGallery
+            standalone
             sensitive={status.get('sensitive')}
             media={attachments}
+            height={300}
             onOpenMedia={this.props.onOpenMedia}
             visible={this.props.showMedia}
             onToggleVisibility={this.props.onToggleMediaVisibility}
-            pawooScale={this.props.pawooMediaScale}
-            pawooWide={this.props.pawooWideMedia}
           />
         );
       }

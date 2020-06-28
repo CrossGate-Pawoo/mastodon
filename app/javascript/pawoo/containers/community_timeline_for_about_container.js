@@ -73,7 +73,6 @@ class CommunityTimelineForAboutContainer extends React.PureComponent {
           onLoadMore={this.handleLoadMore}
           scrollKey='standalone_public_timeline'
           trackScroll={false}
-          pawooMediaScale='230px'
         />
       </Column>
     );

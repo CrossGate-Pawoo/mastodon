@@ -1,4 +1,3 @@
-import { resizeColumnMedia as pawooResizeColumnMedia } from 'pawoo/actions/column_media';
 import api from '../api';
 import { debounce } from 'lodash';
 import { showAlertForError } from './alerts';
@@ -15,7 +14,6 @@ export function changeSetting(path, value) {
     });
 
     dispatch(saveSettings());
-    dispatch(pawooResizeColumnMedia());
   };
 };
 

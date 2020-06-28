@@ -23,7 +23,6 @@ class Item extends React.PureComponent {
     onClick: PropTypes.func.isRequired,
     displayWidth: PropTypes.number,
     visible: PropTypes.bool.isRequired,
-    pawooMaxWidth: PropTypes.string,
   };
 
   static defaultProps = {
@@ -102,7 +101,7 @@ class Item extends React.PureComponent {
   }
 
   render () {
-    const { attachment, index, size, standalone, displayWidth, visible, pawooMaxWidth } = this.props;
+    const { attachment, index, size, standalone, displayWidth, visible } = this.props;
 
     let width  = 50;
     let height = 100;
@@ -223,7 +222,7 @@ class Item extends React.PureComponent {
     }
 
     return (
-      <div className={classNames('media-gallery__item', { standalone })} key={attachment.get('id')} style={{ left: left, top: top, right: right, bottom: bottom, width: `${width}%`, height: `${height}%`, maxWidth: pawooMaxWidth }}>
+      <div className={classNames('media-gallery__item', { standalone })} key={attachment.get('id')} style={{ left: left, top: top, right: right, bottom: bottom, width: `${width}%`, height: `${height}%` }}>
         <canvas width={32} height={32} ref={this.setCanvasRef} className={classNames('media-gallery__preview', { 'media-gallery__preview--hidden': visible && this.state.loaded })} />
         {visible && thumbnail}
       </div>
@@ -247,10 +246,6 @@ class MediaGallery extends React.PureComponent {
     cacheWidth: PropTypes.func,
     visible: PropTypes.bool,
     onToggleVisibility: PropTypes.func,
-    pawooOnClick: PropTypes.func,
-    pawooScale: PropTypes.string.isRequired,
-    pawooWide: PropTypes.bool,
-    pawooVertical: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -299,12 +294,12 @@ class MediaGallery extends React.PureComponent {
   }
 
   render () {
-    const { media, intl, sensitive, defaultWidth, pawooOnClick, pawooScale, pawooWide, pawooVertical } = this.props;
+    const { media, intl, sensitive, height, defaultWidth } = this.props;
     const { visible } = this.state;
 
     const width = this.state.width || defaultWidth;
 
-    let children, spoilerButton, pawooMaxWidth;
+    let children, spoilerButton;
 
     const style = {};
 
@@ -312,32 +307,29 @@ class MediaGallery extends React.PureComponent {
       if (width) {
         style.height = width / this.props.media.getIn([0, 'meta', 'small', 'aspect']);
       }
-    } else if (media.size === 1) {
-      // crop the image
-      if (pawooWide) {
-        pawooMaxWidth = pawooScale;
-        style.height = `calc(${pawooScale}/${Math.max(media.getIn([0, 'meta', 'small', 'aspect']), 1)})`;
+    } else if (width) {
+      const defaultHeight = width / 4 * 3;
+      if (media.size === 1) {
+        const aspect = this.props.media.getIn([0, 'meta', 'small', 'aspect']);
+        if (aspect) {
+          style.height = Math.min(defaultHeight, width / aspect);
+        } else {
+          // pixiv card
+          style.height = 'auto';
+        }
       } else {
-        pawooMaxWidth = `calc(${pawooScale}*${Math.max(media.getIn([0, 'meta', 'small', 'aspect']), 1)})`;
-        style.height = pawooScale;
+        style.height = media.size < 3 ? width / 16 * 9 : defaultHeight;
       }
     } else {
-      style.height = pawooWide && media.size < 3 ? `calc(${pawooScale}/2)` : pawooScale;
-    }
-
-    // for pawoo-gallery
-    if (!visible && pawooVertical) {
-      if (width) {
-        style.height = this.props.media.reduce((height, media) => height + width / media.getIn(['meta', 'small', 'aspect'], 1), (this.props.media.size - 1) * 5);
-      }
+      style.height = height;
     }
 
     const size = media.take(4).size;
 
     if (this.isStandaloneEligible()) {
-      children = <Item standalone onClick={this.handleClick} attachment={media.get(0)} pawooMaxWidth={pawooMaxWidth} visible={visible} />;
+      children = <Item standalone onClick={this.handleClick} attachment={media.get(0)} displayWidth={width} visible={visible} />;
     } else {
-      children = media.take(4).map((attachment, i) => <Item key={attachment.get('id')} onClick={this.handleClick} attachment={attachment} index={i} size={pawooVertical ? 1 : size} pawooMaxWidth={pawooMaxWidth} visible={visible} />);
+      children = media.take(4).map((attachment, i) => <Item key={attachment.get('id')} onClick={this.handleClick} attachment={attachment} index={i} size={size} displayWidth={width} visible={visible} />);
     }
 
     if (visible) {
@@ -352,7 +344,6 @@ class MediaGallery extends React.PureComponent {
 
     return (
       <div className='media-gallery' style={style} ref={this.handleRef}>
-        {pawooOnClick && visible && <div aria-hidden='true' className='pawoo-extension-media-gallery__background' onClick={pawooOnClick} />}
         <div className={classNames('spoiler-button', { 'spoiler-button--minified': visible })}>
           {spoilerButton}
         </div>

@@ -78,7 +78,7 @@ export default class ImageLoader extends React.PureComponent {
     };
     const handleLoad = () => {
       removeEventListeners();
-      if (width && height) {
+      if (width && height) { // pixiv card can't get width and height
         this.canvasContext.drawImage(image, 0, 0, width, height);
       }
       resolve();

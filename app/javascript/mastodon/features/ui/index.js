@@ -49,7 +49,6 @@ import {
 import { me, forceSingleColumn } from '../../initial_state';
 import { previewState as previewMediaState } from './components/media_modal';
 import { previewState as previewVideoState } from './components/video_modal';
-import { resizeColumnMedia as pawooResizeColumnMedia } from 'pawoo/actions/column_media';
 import {
   MediaTimeline,
   SuggestedAccountsColumn,
@@ -235,7 +234,6 @@ class UI extends React.PureComponent {
   handleLayoutChange = () => {
     // The cached heights are no longer accurate, invalidate
     this.props.dispatch(clearHeight());
-    this.props.dispatch(pawooResizeColumnMedia(isMobile(innerWidth)));
   }
 
   handleDragEnter = (e) => {
@@ -328,7 +326,6 @@ class UI extends React.PureComponent {
 
     this.props.dispatch(expandHomeTimeline());
     this.props.dispatch(expandNotifications());
-    this.props.dispatch(pawooResizeColumnMedia(isMobile(this.state.width)));
 
     setTimeout(() => this.props.dispatch(fetchFilters()), 500);
   }
@@ -490,7 +487,7 @@ class UI extends React.PureComponent {
 
     return (
       <HotKeys keyMap={keyMap} handlers={handlers} ref={this.setHotkeysRef} attach={window} focused>
-        <div className={classNames('ui', 'pawoo-extension-ui--multi-column', { 'is-composing': isComposing })} ref={this.setRef} style={{ pointerEvents: dropdownMenuIsOpen ? 'none' : null }}>
+        <div className={classNames('ui', { 'is-composing': isComposing })} ref={this.setRef} style={{ pointerEvents: dropdownMenuIsOpen ? 'none' : null }}>
           <SwitchingColumnsArea location={location} onLayoutChange={this.handleLayoutChange}>
             {children}
           </SwitchingColumnsArea>

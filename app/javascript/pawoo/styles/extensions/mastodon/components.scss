@@ -1,33 +1,6 @@
 .column {
-  flex: 1 0 330px;
-}
-
-.ui {
-  &.pawoo-extension-ui--multi-column {
-    max-width: 1920px;
-  }
-
-  &:not(.pawoo-extension-ui--multi-column) .column {
-    max-width: 700px;
-  }
-}
-
-.getting-started {
-  display: flex;
-  flex-direction: column;
-
-  .pawoo-extension-getting-started__column-toggle {
-    display: flex;
-    align-items: end;
-    flex: 1;
-  }
-}
-
-.pawoo-extension-media-gallery__background {
-  cursor: pointer;
-  position: absolute;
-  width: 100%;
-  height: 100%;
+  flex: 1 0 350px;
+  max-width: 600px;
 }
 
 .pawoo-extension-standalone-community {
@@ -38,10 +11,6 @@
     vertical-align: bottom;
     width: 32px;
   }
-}
-
-.dropdown-menu {
-  z-index: 2; // .column-headerのz-indexで隠れてしまう
 }
 
 .pawoo-extension-drawer__inner__mastodon--animation {

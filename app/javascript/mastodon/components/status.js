@@ -1,5 +1,4 @@
 import React from 'react';
-import Immutable from 'immutable';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import PropTypes from 'prop-types';
 import Avatar from './avatar';
@@ -18,6 +17,7 @@ import { HotKeys } from 'react-hotkeys';
 import classNames from 'classnames';
 import Icon from 'mastodon/components/icon';
 import { displayMedia } from '../initial_state';
+import { convertToMediaAttachmentsFromPixivCards } from 'pawoo/util/pixiv_card';
 
 // We use the component (and not the container) since we do not want
 // to use the progress bar to show download progress
@@ -87,8 +87,6 @@ class Status extends ImmutablePureComponent {
     updateScrollBottom: PropTypes.func,
     cacheMediaWidth: PropTypes.func,
     cachedMediaWidth: PropTypes.number,
-    pawooMediaScale: PropTypes.string,
-    pawooWideMedia: PropTypes.bool,
   };
 
   // Avoid checking props that are functions (and whose equality will always
@@ -202,7 +200,7 @@ class Status extends ImmutablePureComponent {
   };
 
   renderLoadingMediaGallery () {
-    return <div className='media_gallery' style={{ height: 132 }} />;
+    return <div className='media_gallery' style={{ height: '110px' }} />;
   }
 
   renderLoadingVideoPlayer () {
@@ -275,7 +273,7 @@ class Status extends ImmutablePureComponent {
 
     const { intl, hidden, featured, otherAccounts, unread, showThread } = this.props;
 
-    let { status, account, pawooMediaScale, pawooWideMedia, ...other } = this.props;
+    let { status, account, ...other } = this.props;
 
     if (status === null) {
       return null;
@@ -329,17 +327,8 @@ class Status extends ImmutablePureComponent {
     }
 
     let attachments = status.get('media_attachments');
-    if (attachments.size === 0 && status.getIn(['pixiv_cards'], Immutable.List()).size > 0) {
-      attachments = status.get('pixiv_cards').map(card => {
-        return Immutable.fromJS({
-          id: Math.random().toString(),
-          preview_url: card.get('image_url'),
-          remote_url: '',
-          text_url: card.get('url'),
-          type: 'image',
-          url: card.get('image_url'),
-        });
-      });
+    if (attachments.size === 0) {
+      attachments = convertToMediaAttachmentsFromPixivCards(status);
     }
 
     if (attachments.size > 0) {
@@ -380,14 +369,12 @@ class Status extends ImmutablePureComponent {
               <Component
                 media={attachments}
                 sensitive={status.get('sensitive')}
+                height={110}
                 onOpenMedia={this.props.onOpenMedia}
                 cacheWidth={this.props.cacheMediaWidth}
                 defaultWidth={this.props.cachedMediaWidth}
                 visible={this.state.showMedia}
                 onToggleVisibility={this.handleToggleMediaVisibility}
-                pawooOnClick={this.handleClick}
-                pawooScale={pawooMediaScale}
-                pawooWide={pawooWideMedia}
               />
             )}
           </Bundle>
