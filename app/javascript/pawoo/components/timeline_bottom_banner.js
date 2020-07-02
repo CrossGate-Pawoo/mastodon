@@ -14,6 +14,6 @@ export default function TimelineBottomBanner() {
   );
 };
 
-export function handleTBBClick() {
+function handleTBBClick() {
   PawooGA.event({ eventCategory: pawooGaCategory, eventAction: 'click', eventLabel: 'http://www.waffle1999.com/game/edensgrenze/' });
 };
