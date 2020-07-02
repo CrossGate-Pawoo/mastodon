@@ -2,6 +2,8 @@ import React from 'react';
 import banner from '../../pawoo/images/about/banner.png';
 import PawooGA from '../actions/ga';
 
+const pawooGaCategory = 'TimelineBottomBanner';
+
 export default function TimelineBottomBanner() {
   return (
     <div className='pawoo-kyoa-home'>
@@ -13,5 +15,5 @@ export default function TimelineBottomBanner() {
 };
 
 export function handleTBBClick() {
-  ga('send', 'event', 'TimelineBottomBanner', 'click', 'http://www.waffle1999.com/game/edensgrenze/');
+  PawooGA.event({ eventCategory: pawooGaCategory, eventAction: 'click', eventLabel: 'http://www.waffle1999.com/game/edensgrenze/' });
 };
