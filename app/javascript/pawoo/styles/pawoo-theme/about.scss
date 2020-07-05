@@ -1,5 +1,5 @@
 .pawoo-about-body {
-  background-color: darken($ui-base-color, 7%);
+  background-color: #191b22;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -15,9 +15,10 @@
     line-height: 36px;
     justify-content: space-between;
     margin: 0 10px;
+    color: #ffffff;
 
     a {
-      color: $ui-primary-color;
+      color: #9baec8;
     }
 
     img {
@@ -48,14 +49,15 @@
       flex: 0 0 auto;
       box-sizing: border-box;
       width: 330px;
-      background-color: $ui-base-color;
-      border-left: 1px solid lighten($ui-base-color, 4%);
+      background-color: #282c37;
+      border-left: 1px solid lighten(#282c37, 4%);
     }
 
     > .main {
       display: flex;
       flex-direction: column;
       max-width: 100%;
+      color: #ffffff;
 
       flex: 1.1;
       background-position: center -640px;
@@ -92,7 +94,7 @@
         left: 0;
         width: 100%;
         height: 30px;
-        background: linear-gradient(rgba(255, 255, 255, 0) 0%, rgba(40, 44, 55, 1) 60%);
+        background: linear-gradient(rgba($ui-base-color, 0) 0%, $ui-base-color 60%);
       }
 
       > * {
@@ -128,7 +130,7 @@
       p {
         margin-bottom: 10px;
         padding: 0 60px;
-        color: $primary-text-color;
+        color: #ffffff;
       }
 
       .start-pawoo {

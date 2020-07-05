@@ -10,7 +10,6 @@ import { connectCommunityStream } from 'mastodon/actions/streaming';
 import initialState from 'mastodon/initial_state';
 
 import ColumnHeader from 'mastodon/components/column_header';
-import pawooLogo from '../images/logo_elephant.png';
 
 const mapStateToProps = state => ({
   pawooStatusCount: state.getIn(['timelines', 'community', 'items'], ImmutableList()).count(),
@@ -60,7 +59,7 @@ class CommunityTimelineForAboutContainer extends React.PureComponent {
         <ColumnHeader
           pawooTitle={(
             <div className='pawoo-extension-standalone-community'>
-              <img src={pawooLogo} alt='pawoo' />
+              <svg viewBox='0 0 24 24' class='pawoo-svg-logo' alt='pawoo'><use xlinkHref='#pawoo-svg-logo' /></svg>
               \ {intl.formatNumber(initialState.pawoo.user_count)}人が、{intl.formatNumber(initialState.pawoo.status_count + this.props.pawooStatusCount)}回パウってます /
             </div>
           )}

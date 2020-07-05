@@ -6,10 +6,13 @@
 .pawoo-extension-standalone-community {
   display: inline-block;
 
-  > img {
-    margin-right: 16px;
+  svg.pawoo-svg-logo {
+    fill: currentColor;
+    margin-right: 8px;
     vertical-align: bottom;
-    width: 32px;
+    height: 34px;
+    margin-top: -8px;
+    margin-bottom: -6px;
   }
 }
 

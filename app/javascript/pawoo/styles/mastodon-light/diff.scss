@@ -42,7 +42,18 @@
   }
 }
 
-
 .drawer__inner__mastodon {
   background: none; // 象の上のギザギザ無効。diff側で上書きされているので更に上書きする
+}
+
+.pawoo-about-body {
+  .about-cols {
+    > .timeline {
+      background-color: $white;
+
+      &:after {
+        background: linear-gradient(rgba($white, 0) 0%, $white 60%);
+      }
+    }
+  }
 }
