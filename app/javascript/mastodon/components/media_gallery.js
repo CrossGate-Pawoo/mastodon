@@ -315,7 +315,7 @@ class MediaGallery extends React.PureComponent {
           style.height = Math.min(defaultHeight, width / aspect);
         } else {
           // pixiv card
-          style.height = 'auto';
+          style.height = visible ? 'auto' : defaultHeight;
         }
       } else {
         style.height = media.size < 3 ? width / 16 * 9 : defaultHeight;
