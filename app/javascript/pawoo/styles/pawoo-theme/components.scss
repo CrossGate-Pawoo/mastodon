@@ -138,15 +138,22 @@
   }
 }
 
+.account.suggested_account {
+  padding: 10px;
+
+  .account__avatar-wrapper {
+    margin-left: 0;
+  }
+
+  .account__relationship {
+    padding-right: 0;
+  }
+}
+
 .suggested_account_media {
-  padding-left: 13px;
   margin-top: 5px;
   $media-height: 90px;
   height: $media-height;
-
-  .media-gallery__item {
-    max-height: $media-height;
-  }
 
   .pawoo-video-thumbnail {
     display: flex;
@@ -301,7 +308,7 @@
       overflow: hidden;
 
       > * {
-        flex: 1 330px;
+        flex: 1 280px;
       }
 
       .account {
@@ -372,6 +379,7 @@
 
 .pawoo-suggested-accounts-page {
   flex: 1;
+  max-width: none;
 
   .column-header,
   .column-header * {

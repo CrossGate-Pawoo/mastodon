@@ -65,10 +65,10 @@ class Item extends React.PureComponent {
   render () {
     const { attachment, index, size } = this.props;
 
-    let width  = (100 - (size - 1)) / size;
+    let width  = (100 - (size - 1) * 2) / size;
     let height = 100;
     let top    = 'auto';
-    let left   = `${index}%`;
+    let left   = `${index * 2}%`;
     let bottom = 'auto';
     let right  = 'auto';
     let thumbnail = '';
