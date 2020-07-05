@@ -3,12 +3,14 @@ import SearchContainer from 'mastodon/features/compose/containers/search_contain
 import ComposeFormContainer from 'mastodon/features/compose/containers/compose_form_container';
 import NavigationContainer from 'mastodon/features/compose/containers/navigation_container';
 import LinkFooter from './link_footer';
+import Announcements from 'pawoo/components/announcements';
 
 const ComposePanel = () => (
   <div className='compose-panel'>
     <SearchContainer openInRoute />
     <NavigationContainer />
     <ComposeFormContainer singleColumn />
+    <Announcements />
     <LinkFooter withHotkeys />
   </div>
 );
