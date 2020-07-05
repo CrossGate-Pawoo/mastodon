@@ -2608,39 +2608,6 @@
   {
     "descriptors": [
       {
-        "defaultMessage": "Welcome to {site}!",
-        "id": "pawoo.onboarding.heading"
-      },
-      {
-        "defaultMessage": "Your full handle",
-        "id": "onboarding.page_one.full_handle"
-      },
-      {
-        "defaultMessage": "{site} is connected with other servers called Mastodon instances to be part of a larger social network. This handle will be used by those on such instances. Simply {acct} may be used by others on {site}.",
-        "id": "pawoo.onboarding.description"
-      },
-      {
-        "defaultMessage": "Find people",
-        "id": "pawoo.onboarding.suggested_accounts.heading"
-      },
-      {
-        "defaultMessage": "Follow people you like. This list is also available later as \"Active Accounts.\"",
-        "id": "pawoo.onboarding.suggested_accounts.description"
-      },
-      {
-        "defaultMessage": "Ready to get started?",
-        "id": "pawoo.onboarding.start.heading"
-      },
-      {
-        "defaultMessage": "Get started",
-        "id": "pawoo.onboarding.start.description"
-      }
-    ],
-    "path": "app/javascript/pawoo/containers/onboarding_page_container.json"
-  },
-  {
-    "descriptors": [
-      {
         "defaultMessage": "Close",
         "id": "lightbox.close"
       },
@@ -2698,27 +2665,6 @@
       }
     ],
     "path": "app/javascript/pawoo/containers/report_modal_container.json"
-  },
-  {
-    "descriptors": [
-      {
-        "defaultMessage": "Welcome to {site}!",
-        "id": "pawoo.onboarding.heading"
-      },
-      {
-        "defaultMessage": "Your full handle",
-        "id": "onboarding.page_one.full_handle"
-      },
-      {
-        "defaultMessage": "{site} is connected with other servers called Mastodon instances to be part of a larger social network. This handle will be used by those on such instances. Simply {acct} may be used by others on {site}.",
-        "id": "pawoo.onboarding.description"
-      },
-      {
-        "defaultMessage": "Find people",
-        "id": "pawoo.onboarding.suggested_accounts.heading"
-      }
-    ],
-    "path": "app/javascript/pawoo/containers/single_column_onboarding_container.json"
   },
   {
     "descriptors": [

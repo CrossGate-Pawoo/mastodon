@@ -266,35 +266,6 @@
   }
 }
 
-.pawoo-onboarding-page {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-
-  .pawoo-onboarding-page__suggested-accounts {
-    background: $classic-base-color;
-    flex: 1;
-    margin-bottom: 12px;
-
-    // The below is required by:
-    // Mozilla/5.0 (X11; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0
-    min-height: 0;
-  }
-}
-
-.pawoo-single-column-onboarding {
-  display: flex;
-  flex-direction: column;
-
-  .pawoo-single-column-onboarding__text {
-    margin: 12px;
-  }
-
-  .pawoo-single-column-onboarding__ui {
-    flex: 1;
-  }
-}
-
 .pawoo-suggested-accounts {
   height: 100%;
 
@@ -372,8 +343,10 @@
     text-align: right;
   }
 
-  img {
-    flex: 1;
+  > img {
+    object-fit: scale-down;
+    object-position: bottom left;
+    transform: scale(-1, 1);
   }
 }
 
@@ -393,14 +366,6 @@
     // Mozilla/5.0 (X11; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0
     min-height: 0;
   }
-}
-
-.pawoo-getting-started-on-onboarding-page,
-.pawoo-single-column-onboarding__ui,
-.pawoo-suggested-accounts-column--page > img {
-  object-fit: scale-down;
-  object-position: bottom left;
-  transform: scale(-1, 1);
 }
 
 .pawoo-followers-you-follow {

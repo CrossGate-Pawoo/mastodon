@@ -151,6 +151,10 @@ class Introduction extends React.PureComponent {
   }
 
   handleFinish = () => {
+    // Move to recommended user page only for the first time
+    // context.history.push cannot be used in this component
+    history.pushState(null, document.title, '/web/suggested_accounts');
+
     this.props.dispatch(closeOnboarding());
   }
 

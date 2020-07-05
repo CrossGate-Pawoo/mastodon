@@ -20,8 +20,7 @@ import NavigationPanel from './navigation_panel';
 import detectPassiveEvents from 'detect-passive-events';
 import { scrollRight } from '../../../scroll';
 
-import { MediaTimeline, SuggestionTags, OnboardingPageContainer, SuggestedAccountsPage } from 'pawoo/util/async-components';
-import PawooSingleColumnOnboardingContainer from 'pawoo/containers/single_column_onboarding_container';
+import { MediaTimeline, SuggestionTags, SuggestedAccountsPage } from 'pawoo/util/async-components';
 
 const componentMap = {
   'COMPOSE': Compose,
@@ -36,7 +35,6 @@ const componentMap = {
 
   'MEDIA': MediaTimeline,
   'SUGGESTION_TAGS': SuggestionTags,
-  'PAWOO_ONBOARDING': OnboardingPageContainer,
   'PAWOO_SUGGESTED_ACCOUNTS': SuggestedAccountsPage,
 };
 
@@ -176,10 +174,6 @@ class ColumnsArea extends ImmutablePureComponent {
     const columnIndex = getIndex(this.context.router.history.location.pathname);
 
     if (singleColumn) {
-      if (pawooPage === 'ONBOARDING') {
-        return <PawooSingleColumnOnboardingContainer />;
-      }
-
       const floatingActionButton = shouldHideFAB(this.context.router.history.location.pathname) ? null : <Link key='floating-action-button' to='/statuses/new' className='floating-action-button' aria-label={intl.formatMessage(messages.publish)}><Icon id='pencil' /></Link>;
 
       const content = columnIndex !== -1 ? (

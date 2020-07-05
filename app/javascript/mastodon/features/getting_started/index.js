@@ -14,8 +14,6 @@ import NavigationBar from '../compose/components/navigation_bar';
 import Icon from 'mastodon/components/icon';
 import LinkFooter from 'mastodon/features/ui/components/link_footer';
 
-import PawooGettingStartedOnOnboardingPage from 'pawoo/components/getting_started_on_onboarding_page';
-
 const messages = defineMessages({
   home_timeline: { id: 'tabs_bar.home', defaultMessage: 'Home' },
   notifications: { id: 'tabs_bar.notifications', defaultMessage: 'Notifications' },
@@ -44,7 +42,6 @@ const messages = defineMessages({
 const mapStateToProps = state => ({
   myAccount: state.getIn(['accounts', me]),
   unreadFollowRequests: state.getIn(['user_lists', 'follow_requests', 'items'], ImmutableList()).size,
-  pawooPage: state.getIn(['pawoo', 'page']),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -79,7 +76,6 @@ class GettingStarted extends ImmutablePureComponent {
     fetchFollowRequests: PropTypes.func.isRequired,
     unreadFollowRequests: PropTypes.number,
     unreadNotifications: PropTypes.number,
-    pawooPage: PropTypes.string,
   };
 
   componentDidMount () {
@@ -96,17 +92,13 @@ class GettingStarted extends ImmutablePureComponent {
   }
 
   render () {
-    const { intl, myAccount, multiColumn, unreadFollowRequests, pawooPage } = this.props;
+    const { intl, myAccount, multiColumn, unreadFollowRequests } = this.props;
 
     const navItems = [];
     let i = 1;
     let height = (multiColumn) ? 0 : 60;
 
     if (multiColumn) {
-      if (pawooPage === 'ONBOARDING') {
-        return <PawooGettingStartedOnOnboardingPage />;
-      }
-
       navItems.push(
         <ColumnSubheading key={i++} text={intl.formatMessage(messages.discover)} />,
         <ColumnLink key={i++} icon='users' text={intl.formatMessage(messages.community_timeline)} to='/timelines/public/local' />,

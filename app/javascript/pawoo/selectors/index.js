@@ -4,9 +4,6 @@ import uuid from 'mastodon/uuid';
 import { makeGetAccount } from 'mastodon/selectors';
 
 const pages = fromJS({
-  ONBOARDING: [
-    { id: 'PAWOO_ONBOARDING', uuid: uuid(), params: {} },
-  ],
   SUGGESTED_ACCOUNTS: [
     { id: 'COMPOSE', uuid: uuid(), params: {} },
     { id: 'PAWOO_SUGGESTED_ACCOUNTS', uuid: uuid(), params: {} },
