@@ -141,7 +141,7 @@ class Compose extends React.PureComponent {
               <TrendTagsContainer Tag={PawooWebTagLink} />
             </div>
 
-            <div className='drawer__inner__mastodon'>
+            <div className='drawer__inner__mastodon pawoo-extension-drawer__inner__mastodon'>
               <img alt='' draggable='false' ref={this.pawooSetRef} src={mascot || elephantUIPlane} />
             </div>
           </div>}
