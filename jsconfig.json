@@ -1,12 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2017",
-    "allowSyntheticDefaultImports": false,
-    "baseUrl": "./",
-    "paths": {
-      "pawoo/*": ["app/javascript/pawoo/*"],
-      "mastodon/*": ["app/javascript/mastodon/*"]
-    }
+    "baseUrl": "./app/javascript"
   },
-  "exclude": ["node_modules", "tmp", "vendor", "public"]
+  "include": ["./app/javascript"]
 }
