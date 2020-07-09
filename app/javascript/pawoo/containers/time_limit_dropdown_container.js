@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import TimeLimitDropdown from '../components/time_limit_dropdown';
-import { openModal, closeModal } from '../../../actions/modal';
-import { isUserTouching } from '../../../is_mobile';
+import { openModal, closeModal } from 'mastodon/actions/modal';
+import { isUserTouching } from 'mastodon/is_mobile';
 
 const mapStateToProps = state => ({
   isModalOpen: state.get('modal').modalType === 'ACTIONS',

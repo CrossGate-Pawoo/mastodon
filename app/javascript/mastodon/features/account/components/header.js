@@ -123,6 +123,30 @@ class Header extends ImmutablePureComponent {
     this.node = c;
   }
 
+  pawooRenderOauthAthenticationsIcon (account) {
+    if (account.getIn(['oauth_authentications'], new Immutable.List()).size > 0) {
+      return (
+        <div className='pawoo-account__header__oauth-authentications pawoo-oauth-authentications'>
+          {account.getIn(['oauth_authentications'], new Immutable.List()).map(oauth_authentication => {
+            const provider = oauth_authentication.get('provider');
+
+            if (provider === 'pixiv') {
+              return (
+                <a key={provider} href={`https://www.pixiv.net/users/${oauth_authentication.get('uid')}`} target='_blank' rel='noopener'>
+                  <div className='pawoo-oauth-authentication pixiv' />
+                </a>
+              );
+            }
+
+            return <div key={provider} />;
+          })}
+        </div>
+      );
+    }
+
+    return null;
+  }
+
   render () {
     const { account, intl, domain, identity_proofs } = this.props;
 
@@ -274,23 +298,7 @@ class Header extends ImmutablePureComponent {
               <small>@{acct} {lockedIcon}</small>
             </h1>
 
-            {account.getIn(['oauth_authentications'], new Immutable.List()).size > 0 && (
-              <div className='pawoo-account__header__oauth-authentications pawoo-oauth-authentications'>
-                {account.getIn(['oauth_authentications'], new Immutable.List()).map(oauth_authentication => {
-                  const provider = oauth_authentication.get('provider');
-
-                  if (provider === 'pixiv') {
-                    return (
-                      <a key={provider} href={`https://www.pixiv.net/users/${oauth_authentication.get('uid')}`} target='_blank' rel='noopener'>
-                        <div className='pawoo-oauth-authentication pixiv' />
-                      </a>
-                    );
-                  }
-
-                  return <div key={provider} />;
-                })}
-              </div>
-            )}
+            {this.pawooRenderOauthAthenticationsIcon(account)}
           </div>
 
           <div className='account__header__extra'>

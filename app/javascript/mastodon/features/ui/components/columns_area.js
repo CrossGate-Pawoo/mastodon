@@ -62,7 +62,7 @@ class ColumnsArea extends ImmutablePureComponent {
 
   state = {
     shouldAnimate: false,
-  };
+  }
 
   componentWillReceiveProps() {
     this.setState({ shouldAnimate: false });
