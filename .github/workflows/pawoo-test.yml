@@ -76,8 +76,8 @@ jobs:
     - name: yarn install
       run: yarn install --frozen-lockfile
 
-    # - name: Run rubocop
-    #   run: bundle exec rubocop --parallel
+    - name: Run rubocop
+      run: bundle exec rubocop --fail-level W --display-only-fail-level-offenses --parallel
     - name: Run eslint
       run: yarn test:lint
 

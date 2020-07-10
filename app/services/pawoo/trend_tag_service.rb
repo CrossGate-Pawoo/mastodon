@@ -15,8 +15,7 @@ class Pawoo::TrendTagService < BaseService
   class TagScore
     include ActiveModel::Model
 
-    attr_accessor :tag_id, :tag_name, :favourites_count, :reblogs_count, :accounts_count
-    attr_accessor :favourites_count, :reblogs_count, :accounts_count, :count
+    attr_accessor :tag_id, :tag_name, :favourites_count, :reblogs_count, :accounts_count, :count
 
     def score
       favourites_count * 1 + reblogs_count * 3 + accounts_count * 30
@@ -105,7 +104,7 @@ class Pawoo::TrendTagService < BaseService
 
   def build_tag_scores_from_statuses(statuses)
     trend_ng_words = TrendNgWord.pluck(:word)
-    tag_statuses = Hash.new { |h, k| h[k] = [] }
+    tag_statuses_map = Hash.new { |h, k| h[k] = [] }
 
     # tagでStatusをグルーピングする
     statuses.each do |status|
@@ -116,18 +115,18 @@ class Pawoo::TrendTagService < BaseService
         # NGワードを含む ふさわしくないTagは弾く
         tag_name = tag.name.downcase
         next if IGNORE_TAG_NAMES.include?(tag_name) || trend_ng_words.any? { |ng_word| tag_name.include?(ng_word) }
-        tag_statuses[tag].push(status)
+        tag_statuses_map[tag].push(status)
       end
     end
 
-    tag_statuses.map { |tag, statuses|
+    tag_statuses_map.map { |tag, tag_statuses|
       TagScore.new(
         count: 1,
         tag_id: tag.id,
         tag_name: tag.name,
-        favourites_count: statuses.sum(&:favourites_count),
-        reblogs_count: statuses.sum(&:reblogs_count),
-        accounts_count: statuses.uniq(&:account_id).size
+        favourites_count: tag_statuses.sum(&:favourites_count),
+        reblogs_count: tag_statuses.sum(&:reblogs_count),
+        accounts_count: tag_statuses.uniq(&:account_id).size
       )
     }.select(&:include_in_calculation?)
   end

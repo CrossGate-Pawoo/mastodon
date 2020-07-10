@@ -3,7 +3,7 @@
 class SidekiqErrorHandler
   def call(*)
     yield
-  rescue Mastodon::HostValidationError
+  rescue Mastodon::HostValidationError # rubocop:disable Lint/HandleExceptions
     # Do not retry
   ensure
     socket = Thread.current[:statsd_socket]

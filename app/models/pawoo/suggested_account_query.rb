@@ -1,3 +1,4 @@
+# rubocop:disable Lint/UselessAccessModifier
 class Pawoo::SuggestedAccountQuery
   attr_reader :excluded_ids, :seed, :limit, :page_number
 
@@ -142,3 +143,4 @@ class Pawoo::SuggestedAccountQuery
     Account.searchable
   end
 end
+# rubocop:enable Lint/UselessAccessModifier

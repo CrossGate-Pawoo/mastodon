@@ -16,7 +16,7 @@ class RelationshipsController < ApplicationController
   def update
     @form = Form::AccountBatch.new(form_account_batch_params.merge(current_account: current_account, action: action_from_button))
     @form.save
-  rescue ActionController::ParameterMissing
+  rescue ActionController::ParameterMissing # rubocop:disable Lint/HandleExceptions
     # Do nothing
   ensure
     redirect_to relationships_path(current_params)
