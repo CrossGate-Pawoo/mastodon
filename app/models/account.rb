@@ -48,6 +48,9 @@
 #
 
 class Account < ApplicationRecord
+  # Pawoo extension: Remove ignored_columns settings after deleting columns.
+  self.ignored_columns = %w(statuses_count following_count followers_count suspended silenced)
+
   USERNAME_RE = /[a-z0-9_]+([a-z0-9_\.-]+[a-z0-9_]+)?/i
   MENTION_RE  = /(?<=^|[^\/[:word:]])@((#{USERNAME_RE})(?:@[a-z0-9\.\-]+[a-z0-9]+)?)/i
   MIN_FOLLOWERS_DISCOVERY = 10
