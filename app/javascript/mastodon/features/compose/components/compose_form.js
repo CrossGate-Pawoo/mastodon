@@ -3,7 +3,6 @@ import CharacterCounter from './character_counter';
 import Button from '../../../components/button';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import PropTypes from 'prop-types';
-import Immutable from 'immutable';
 import ReplyIndicatorContainer from '../containers/reply_indicator_container';
 import AutosuggestTextarea from '../../../components/autosuggest_textarea';
 import AutosuggestInput from '../../../components/autosuggest_input';
@@ -29,7 +28,6 @@ const allowedAroundShortCode = '><\u0085\u0020\u00a0\u1680\u2000\u2001\u2002\u20
 const messages = defineMessages({
   placeholder: { id: 'compose_form.placeholder', defaultMessage: 'What is on your mind?' },
   spoiler_placeholder: { id: 'compose_form.spoiler_placeholder', defaultMessage: 'Write your warning here' },
-  hashtag_editor_placeholder: { id: 'pawoo.compose_form.hashtag_editor_placeholder', defaultMessage: 'Append tag (press enter to add)' },
   publish: { id: 'compose_form.publish', defaultMessage: 'Toot' },
   publishLoud: { id: 'compose_form.publish_loud', defaultMessage: '{publish}!' },
 });
@@ -64,17 +62,15 @@ class ComposeForm extends ImmutablePureComponent {
     onPickEmoji: PropTypes.func.isRequired,
     showSearch: PropTypes.bool,
     onSelectTimeLimit: PropTypes.func.isRequired,
-    onInsertHashtag: PropTypes.func.isRequired,
     anyMedia: PropTypes.bool,
     singleColumn: PropTypes.bool,
     pawooKeepCaretPosition: PropTypes.bool.isRequired,
+    pawooOnInsertHashtag: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
     showSearch: false,
   };
-
-  state = { tagSuggestionFrom: null }
 
   handleChange = (e) => {
     this.props.onChange(e.target.value);
@@ -106,22 +102,14 @@ class ComposeForm extends ImmutablePureComponent {
 
   onSuggestionsClearRequested = () => {
     this.props.onClearSuggestions();
-    this.setState({ tagSuggestionFrom: null });
   }
 
   onSuggestionsFetchRequested = (token) => {
-    this.setState({ tagSuggestionFrom: 'autosuggested-textarea' });
     this.props.onFetchSuggestions(token);
   }
 
   onSuggestionSelected = (tokenStart, token, value) => {
     this.props.onSuggestionSelected(tokenStart, token, value, ['text']);
-    this.setState({ tagSuggestionFrom: null });
-  }
-
-  onHashTagSuggestionsFetchRequested = (token) => {
-    this.setState({ tagSuggestionFrom: 'hashtag-editor' });
-    this.props.onFetchSuggestions(`#${token}`);
   }
 
   onSpoilerSuggestionSelected = (tokenStart, token, value) => {
@@ -212,7 +200,6 @@ class ComposeForm extends ImmutablePureComponent {
 
   render () {
     const { intl, onPaste, showSearch, anyMedia } = this.props;
-    const { tagSuggestionFrom } = this.state;
     const disabled = this.props.isSubmitting;
     const text     = [this.props.spoilerText, countableText(this.props.text)].join('');
     const disabledButton = disabled || this.props.isUploading || this.props.isChangingUpload || length(text) > 500 || (text.length !== 0 && text.trim().length === 0 && !anyMedia);
@@ -238,7 +225,7 @@ class ComposeForm extends ImmutablePureComponent {
             onKeyDown={this.handleKeyDown}
             disabled={!this.props.spoiler}
             ref={this.setSpoilerText}
-            suggestions={tagSuggestionFrom === 'autosuggested-textarea' ? this.props.suggestions : Immutable.List()}
+            suggestions={this.props.suggestions}
             onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
             onSuggestionsClearRequested={this.onSuggestionsClearRequested}
             onSuggestionSelected={this.onSpoilerSuggestionSelected}
@@ -268,16 +255,16 @@ class ComposeForm extends ImmutablePureComponent {
           <div className='compose-form__modifiers'>
             <UploadFormContainer />
             <PollFormContainer />
-            <PawooHashtagEditor
-              placeholder={intl.formatMessage(messages.hashtag_editor_placeholder)}
-              disabled={disabled}
-              suggestions={tagSuggestionFrom === 'hashtag-editor' ? this.props.suggestions : Immutable.List()}
-              onSuggestionsFetchRequested={this.onHashTagSuggestionsFetchRequested}
-              onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-              onInsertHashtag={this.props.onInsertHashtag}
-            />
           </div>
         </AutosuggestTextarea>
+
+        <PawooHashtagEditor
+          disabled={disabled}
+          suggestions={this.props.suggestions}
+          onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+          onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+          onInsertHashtag={this.props.pawooOnInsertHashtag}
+        />
 
         <div className='compose-form__buttons-wrapper'>
           <div className='compose-form__buttons'>

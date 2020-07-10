@@ -51,6 +51,7 @@ export default class AutosuggestInput extends ImmutablePureComponent {
     id: PropTypes.string,
     searchTokens: PropTypes.arrayOf(PropTypes.string),
     maxLength: PropTypes.number,
+    pawooGetHashtagWord: PropTypes.func,
   };
 
   static defaultProps = {
@@ -67,7 +68,9 @@ export default class AutosuggestInput extends ImmutablePureComponent {
   };
 
   onChange = (e) => {
-    const [ tokenStart, token ] = textAtCursorMatchesToken(e.target.value, e.target.selectionStart, this.props.searchTokens);
+    const [ tokenStart, token ] = this.props.pawooGetHashtagWord
+      ? this.props.pawooGetHashtagWord(e.target.value)
+      : textAtCursorMatchesToken(e.target.value, e.target.selectionStart, this.props.searchTokens);
 
     if (token !== null && this.state.lastToken !== token) {
       this.setState({ lastToken: token, selectedSuggestion: 0, tokenStart });

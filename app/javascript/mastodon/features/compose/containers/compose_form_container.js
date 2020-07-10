@@ -85,7 +85,7 @@ const mapDispatchToProps = (dispatch, { pawooOnSubmit }) => ({
     dispatch(insertTagCompose(tag));
   },
 
-  onInsertHashtag (tag) {
+  pawooOnInsertHashtag (tag) {
     PawooGA.event({ eventCategory: pawooGaCategory, eventAction: 'InsertHashtag' });
     dispatch(insertTagCompose(tag));
   },

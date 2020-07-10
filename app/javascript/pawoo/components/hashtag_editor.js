@@ -1,171 +1,86 @@
 import React from 'react';
+import { defineMessages, injectIntl } from 'react-intl';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import PropTypes from 'prop-types';
 import ImmutablePureComponent from 'react-immutable-pure-component';
+import AutosuggestInput from 'mastodon/components/autosuggest_input';
 
-const getHashtagWord = (value) => {
+const messages = defineMessages({
+  hashtag_editor_placeholder: { id: 'pawoo.compose_form.hashtag_editor_placeholder', defaultMessage: 'Append tag (press enter to add)' },
+});
+
+const pawooGetHashtagWord = (value) => {
   if (!value) {
-    return '';
+    return [null, null];
   }
 
-  const trimmed = value.trim();
-  return (trimmed[0] === '#') ? trimmed.slice(1) : trimmed;
+  const trimmed = value.trim().replace(/#/g, '');
+  if (!trimmed) {
+    return [null, null];
+  }
+
+  return [1, '#' + trimmed];
 };
 
-export default class HashtagEditor extends ImmutablePureComponent {
+
+export default @injectIntl
+class HashtagEditor extends ImmutablePureComponent {
 
   static propTypes = {
     disabled: PropTypes.bool,
-    placeholder: PropTypes.string,
     onInsertHashtag: PropTypes.func.isRequired,
     onSuggestionsClearRequested: PropTypes.func.isRequired,
     onSuggestionsFetchRequested: PropTypes.func.isRequired,
-    onKeyUp: PropTypes.func,
-    onKeyDown: PropTypes.func,
     suggestions: ImmutablePropTypes.list,
+    intl: PropTypes.object.isRequired,
   };
 
   state = {
     value: '',
-    suggestionsHidden: false,
-    selectedSuggestion: 0,
-    lastToken: null,
   };
 
-  onChange = (e) => {
-    const { value } = e.target;
-    const hashtag = getHashtagWord(value);
-    if (hashtag) {
-      this.setState({ value, lastToken: hashtag });
-      this.props.onSuggestionsFetchRequested(hashtag);
-    } else {
-      this.setState({ value, lastToken: null });
-      this.props.onSuggestionsClearRequested();
-    }
+  handleChange = (e) => {
+    this.setState({ value: e.target.value });
   }
 
-  onKeyDown = (e) => {
-    const { disabled, suggestions } = this.props;
-    const { value, suggestionsHidden, selectedSuggestion } = this.state;
-
-    if (disabled) {
+  handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
       e.preventDefault();
-      return;
-    }
+      e.stopPropagation();
 
-    switch(e.key) {
-    case 'Escape':
-      if (!suggestionsHidden) {
-        e.preventDefault();
-        this.setState({ suggestionsHidden: true });
+      const [, hashtag] = pawooGetHashtagWord(this.state.value);
+      if (hashtag) {
+        this.props.onInsertHashtag(hashtag);
+        this.setState({ value: '' });
       }
-
-      break;
-    case 'ArrowDown':
-      if (suggestions.size > 0 && !suggestionsHidden) {
-        e.preventDefault();
-        this.setState({ selectedSuggestion: Math.min(selectedSuggestion + 1, suggestions.size - 1) });
-      }
-
-      break;
-    case 'ArrowUp':
-      if (suggestions.size > 0 && !suggestionsHidden) {
-        e.preventDefault();
-        this.setState({ selectedSuggestion: Math.max(selectedSuggestion -1, 0) });
-      }
-
-      break;
-    case 'Enter':
-    case 'Tab':
-      // Note: Ignore the event of Confirm Conversion of IME
-      if (e.keyCode === 229) {
-        break;
-      }
-
-      if (this.state.lastToken !== null && suggestions.size > 0 && !suggestionsHidden) {
-        e.preventDefault();
-        this.insertHashtag(suggestions.get(selectedSuggestion));
-      } else if (e.keyCode === 13) {
-        e.preventDefault();
-        this.insertHashtag(value);
-      }
-
-      break;
-    }
-
-    if (e.defaultPrevented || !this.props.onKeyDown) {
-      return;
-    }
-
-    this.props.onKeyDown(e);
-  }
-
-  insertHashtag = (value) => {
-    const hashtag = getHashtagWord(value);
-    if (hashtag) {
-      this.props.onInsertHashtag(`#${hashtag}`);
-      this.props.onSuggestionsClearRequested();
-      this.setState({
-        value: '',
-        suggestionsHidden: true,
-        selectedSuggestion: 0,
-        lastToken: null,
-      });
     }
   }
 
-  onSuggestionClick = (e) => {
-    e.preventDefault();
-    const { suggestions } = this.props;
-    const index = e.currentTarget.getAttribute('data-index');
-    this.insertHashtag(suggestions.get(index));
-  }
-
-  componentWillReceiveProps (nextProps) {
-    if (nextProps.suggestions !== this.props.suggestions &&
-      nextProps.suggestions.size > 0 && this.state.suggestionsHidden) {
-      this.setState({ suggestionsHidden: false });
-    }
-  }
-
-  renderHashTagSuggestion = (tag, i) => {
-    const { selectedSuggestion } = this.state;
-
-    return (
-      <div
-        role='button'
-        tabIndex='0'
-        key={tag}
-        className={`autosuggest-textarea__suggestions__item ${i === selectedSuggestion ? 'selected' : ''}`}
-        data-index={i}
-        onClick={this.onSuggestionClick}
-      >
-        {tag}
-      </div>
-    );
+  handleSuggestionSelected = (tokenStart, token, value) => {
+    this.props.onInsertHashtag(value);
+    this.setState({ value: '' });
   }
 
   render () {
-    const { suggestions, disabled, placeholder, onKeyUp } = this.props;
-    const { value, suggestionsHidden } = this.state;
+    const { suggestions, disabled, intl } = this.props;
+    const { value } = this.state;
 
     return (
-      <div className='hashtag-editor'>
-        <i className='fa fa-fw fa-hashtag' />
-        <input
-          className='hastag-editor__input'
-          disabled={disabled}
-          placeholder={placeholder}
+      <div className='pawoo-hashtag-editor'>
+        <AutosuggestInput
+          pawooGetHashtagWord={pawooGetHashtagWord}
+          placeholder={intl.formatMessage(messages.hashtag_editor_placeholder)}
           value={value}
-          onChange={this.onChange}
-          onKeyDown={this.onKeyDown}
-          onKeyUp={onKeyUp}
-          onBlur={this.onBlur}
+          onChange={this.handleChange}
+          onKeyDown={this.handleKeyDown}
+          disabled={disabled}
+          suggestions={suggestions}
+          onSuggestionsFetchRequested={this.props.onSuggestionsFetchRequested}
+          onSuggestionsClearRequested={this.props.onSuggestionsClearRequested}
+          onSuggestionSelected={this.handleSuggestionSelected}
+          className='pawoo-hastag-editor__input'
         />
-
-        <div style={{ display: (suggestions.size > 0 && !suggestionsHidden) ? 'block' : 'none' }}  className='autosuggest-textarea__suggestions'>
-          {suggestions.map(this.renderHashTagSuggestion)}
-        </div>
+        <i className='fa fa-fw fa-hashtag pawoo-hashtag-editor__icon' />
       </div>
     );
   }

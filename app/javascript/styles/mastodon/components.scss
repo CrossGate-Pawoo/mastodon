@@ -345,7 +345,6 @@
 
   .autosuggest-textarea,
   .autosuggest-input,
-  .hashtag-editor,
   .spoiler-input {
     position: relative;
   }
@@ -362,8 +361,8 @@
     }
   }
 
+  .pawoo-hastag-editor__input,
   .autosuggest-textarea__textarea,
-  .hastag-editor__input,
   .spoiler-input__input {
     display: block;
     box-sizing: border-box;
