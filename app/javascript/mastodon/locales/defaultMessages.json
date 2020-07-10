@@ -326,6 +326,10 @@
         "id": "status.favourite"
       },
       {
+        "defaultMessage": "Expand this status",
+        "id": "status.open"
+      },
+      {
         "defaultMessage": "Report @{name}",
         "id": "status.report"
       },
@@ -565,6 +569,10 @@
         "id": "account.follow"
       },
       {
+        "defaultMessage": "Cancel follow request",
+        "id": "account.cancel_follow_request"
+      },
+      {
         "defaultMessage": "Awaiting approval. Click to cancel follow request",
         "id": "account.requested"
       },
@@ -791,6 +799,10 @@
       {
         "defaultMessage": "Muted words",
         "id": "navigation_bar.filters"
+      },
+      {
+        "defaultMessage": "Logout",
+        "id": "navigation_bar.logout"
       }
     ],
     "path": "app/javascript/mastodon/features/compose/components/action_bar.json"
@@ -804,10 +816,6 @@
       {
         "defaultMessage": "Write your warning here",
         "id": "compose_form.spoiler_placeholder"
-      },
-      {
-        "defaultMessage": "Append tag (press enter to add)",
-        "id": "pawoo.compose_form.hashtag_editor_placeholder"
       },
       {
         "defaultMessage": "Toot",
@@ -1005,6 +1013,10 @@
         "id": "search_results.statuses"
       },
       {
+        "defaultMessage": "Searching toots by their content is not enabled on this Mastodon server.",
+        "id": "search_results.statuses_fts_disabled"
+      },
+      {
         "defaultMessage": "Hashtags",
         "id": "search_results.hashtags"
       },
@@ -1103,15 +1115,6 @@
   {
     "descriptors": [
       {
-        "defaultMessage": "Please be sure to click on the eye icon and set NSFW if the image you are trying to post is erotic content",
-        "id": "pawoo.compose_form.sensitive_message"
-      }
-    ],
-    "path": "app/javascript/mastodon/features/compose/containers/sensitive_guide_container.json"
-  },
-  {
-    "descriptors": [
-      {
         "defaultMessage": "Text is hidden behind warning",
         "id": "compose_form.spoiler.marked"
       },
@@ -1174,8 +1177,8 @@
         "id": "pawoo.column.media"
       },
       {
-        "defaultMessage": "Logout",
-        "id": "navigation_bar.logout"
+        "defaultMessage": "Help",
+        "id": "pawoo.navigation_bar.help"
       },
       {
         "defaultMessage": "Compose new toot",
@@ -1365,6 +1368,18 @@
       {
         "defaultMessage": "Profile directory",
         "id": "getting_started.directory"
+      },
+      {
+        "defaultMessage": "Pawoo Help",
+        "id": "pawoo.navigation_bar.help"
+      },
+      {
+        "defaultMessage": "Active Accounts",
+        "id": "pawoo.navigation_bar.suggested_accounts"
+      },
+      {
+        "defaultMessage": "Media timeline",
+        "id": "pawoo.navigation_bar.media_timeline"
       }
     ],
     "path": "app/javascript/mastodon/features/getting_started/index.json"
@@ -1757,19 +1772,6 @@
       }
     ],
     "path": "app/javascript/mastodon/features/lists/index.json"
-  },
-  {
-    "descriptors": [
-      {
-        "defaultMessage": "Media timeline",
-        "id": "pawoo.column.media"
-      },
-      {
-        "defaultMessage": "The local timeline is empty. Write something publicly to get the ball rolling!",
-        "id": "empty_column.community"
-      }
-    ],
-    "path": "app/javascript/mastodon/features/media_timeline/index.json"
   },
   {
     "descriptors": [
@@ -2270,6 +2272,10 @@
         "id": "getting_started.documentation"
       },
       {
+        "defaultMessage": "Gallery",
+        "id": "pawoo.navigation_bar.gallery"
+      },
+      {
         "defaultMessage": "Logout",
         "id": "navigation_bar.logout"
       },
@@ -2337,12 +2343,20 @@
         "id": "tabs_bar.local_timeline"
       },
       {
+        "defaultMessage": "Media",
+        "id": "pawoo.tabs_bar.media_timeline"
+      },
+      {
         "defaultMessage": "Federated",
         "id": "tabs_bar.federated_timeline"
       },
       {
         "defaultMessage": "Direct messages",
         "id": "navigation_bar.direct"
+      },
+      {
+        "defaultMessage": "Active Users",
+        "id": "pawoo.column.suggested_accounts"
       },
       {
         "defaultMessage": "Favourites",
@@ -2355,6 +2369,10 @@
       {
         "defaultMessage": "Preferences",
         "id": "navigation_bar.preferences"
+      },
+      {
+        "defaultMessage": "Help",
+        "id": "pawoo.navigation_bar.help"
       },
       {
         "defaultMessage": "Follows and followers",
@@ -2374,8 +2392,8 @@
         "id": "lightbox.close"
       },
       {
-        "defaultMessage": "Additional comments",
-        "id": "report.placeholder"
+        "defaultMessage": "Additional comments (required for other cases)",
+        "id": "pawoo.report.placeholder"
       },
       {
         "defaultMessage": "Submit",
@@ -2415,8 +2433,8 @@
         "id": "tabs_bar.local_timeline"
       },
       {
-        "defaultMessage": "Federated",
-        "id": "tabs_bar.federated_timeline"
+        "defaultMessage": "Media",
+        "id": "pawoo.tabs_bar.media_timeline"
       },
       {
         "defaultMessage": "Search",
@@ -2522,6 +2540,57 @@
   {
     "descriptors": [
       {
+        "defaultMessage": "Append tag (press enter to add)",
+        "id": "pawoo.compose_form.hashtag_editor_placeholder"
+      }
+    ],
+    "path": "app/javascript/pawoo/components/hashtag_editor.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "I do not like it",
+        "id": "pawoo.report.select.donotlike"
+      },
+      {
+        "defaultMessage": "Incorrect NSFW setting",
+        "id": "pawoo.report.select.nsfw"
+      },
+      {
+        "defaultMessage": "Spam",
+        "id": "pawoo.report.select.spam"
+      },
+      {
+        "defaultMessage": "Unauthorized reproduction",
+        "id": "pawoo.report.select.reproduction"
+      },
+      {
+        "defaultMessage": "Prohibited act",
+        "id": "pawoo.report.select.prohibited"
+      },
+      {
+        "defaultMessage": "Other",
+        "id": "pawoo.report.select.other"
+      },
+      {
+        "defaultMessage": "Please select the reason for reporting",
+        "id": "pawoo.report.select.title"
+      }
+    ],
+    "path": "app/javascript/pawoo/components/report_type_list.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "* Please mark media as sensitive if the media you are trying to post is erotic content",
+        "id": "pawoo.compose_form.sensitive_message"
+      }
+    ],
+    "path": "app/javascript/pawoo/components/sensitive_guide.json"
+  },
+  {
+    "descriptors": [
+      {
         "defaultMessage": "Follow",
         "id": "account.follow"
       },
@@ -2569,6 +2638,31 @@
   {
     "descriptors": [
       {
+        "defaultMessage": "{days, number} {days, plural, one {day} other {days}} later",
+        "id": "pawoo.time_limit.days"
+      },
+      {
+        "defaultMessage": "{hours, number} {hours, plural, one {hour} other {hours}} later",
+        "id": "pawoo.time_limit.hours"
+      },
+      {
+        "defaultMessage": "{minutes, number} {minutes, plural, one {minute} other {minutes}} later",
+        "id": "pawoo.time_limit.minutes"
+      },
+      {
+        "defaultMessage": "Specify the time of automatic disappearance (Beta)",
+        "id": "pawoo.time_limit.select_time_limit"
+      },
+      {
+        "defaultMessage": "Note: If specified, it will not be delivered to external instances.",
+        "id": "pawoo.time_limit.time_limit_note"
+      }
+    ],
+    "path": "app/javascript/pawoo/components/time_limit_dropdown.json"
+  },
+  {
+    "descriptors": [
+      {
         "defaultMessage": "Suggested tag",
         "id": "pawoo.trend_tags.title"
       }
@@ -2578,102 +2672,24 @@
   {
     "descriptors": [
       {
-        "defaultMessage": "Boost",
-        "id": "status.reblog"
-      },
-      {
-        "defaultMessage": "Favourite",
-        "id": "status.favourite"
-      },
-      {
         "defaultMessage": "ブラックリストに追加",
         "id": "pawoo.gallery.status.blacklist"
-      },
-      {
-        "defaultMessage": "This post cannot be boosted",
-        "id": "status.cannot_reblog"
       }
     ],
-    "path": "app/javascript/pawoo/containers/gallery_item_container.json"
+    "path": "app/javascript/pawoo/containers/gallery_container.json"
   },
   {
     "descriptors": [
       {
-        "defaultMessage": "Expand",
-        "id": "pawoo.expand"
+        "defaultMessage": "Media timeline",
+        "id": "pawoo.column.media"
+      },
+      {
+        "defaultMessage": "The local timeline is empty. Write something publicly to get the ball rolling!",
+        "id": "empty_column.community"
       }
     ],
-    "path": "app/javascript/pawoo/containers/navigation_column_container.json"
-  },
-  {
-    "descriptors": [
-      {
-        "defaultMessage": "Close",
-        "id": "lightbox.close"
-      },
-      {
-        "defaultMessage": "Additional comments (required for other cases)",
-        "id": "pawoo.report.placeholder"
-      },
-      {
-        "defaultMessage": "Submit",
-        "id": "report.submit"
-      },
-      {
-        "defaultMessage": "Please select the reason for reporting",
-        "id": "pawoo.report.select.title"
-      },
-      {
-        "defaultMessage": "I do not like it",
-        "id": "pawoo.report.select.donotlike"
-      },
-      {
-        "defaultMessage": "Incorrect NSFW setting",
-        "id": "pawoo.report.select.nsfw"
-      },
-      {
-        "defaultMessage": "Spam",
-        "id": "pawoo.report.select.spam"
-      },
-      {
-        "defaultMessage": "Unauthorized reproduction",
-        "id": "pawoo.report.select.reproduction"
-      },
-      {
-        "defaultMessage": "Prohibited act",
-        "id": "pawoo.report.select.prohibited"
-      },
-      {
-        "defaultMessage": "Other",
-        "id": "pawoo.report.select.other"
-      },
-      {
-        "defaultMessage": "Report {target}",
-        "id": "report.target"
-      },
-      {
-        "defaultMessage": "The report will be sent to your instance moderators. You can provide an explanation of why you are reporting this account below:",
-        "id": "report.hint"
-      },
-      {
-        "defaultMessage": "The account is from another server. Send an anonymized copy of the report there as well?",
-        "id": "report.forward_hint"
-      },
-      {
-        "defaultMessage": "Forward to {target}",
-        "id": "report.forward"
-      }
-    ],
-    "path": "app/javascript/pawoo/containers/report_modal_container.json"
-  },
-  {
-    "descriptors": [
-      {
-        "defaultMessage": "Active Users",
-        "id": "pawoo.column.suggested_accounts"
-      }
-    ],
-    "path": "app/javascript/pawoo/containers/standalone/suggestion_strip_container.json"
+    "path": "app/javascript/pawoo/containers/media_timeline_container.json"
   },
   {
     "descriptors": [
@@ -2687,5 +2703,18 @@
       }
     ],
     "path": "app/javascript/pawoo/containers/suggested_account_container.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Suggested tags",
+        "id": "pawoo.suggestion_tags.normal"
+      },
+      {
+        "defaultMessage": "Comiket tags",
+        "id": "pawoo.suggestion_tags.comiket"
+      }
+    ],
+    "path": "app/javascript/pawoo/containers/suggestion_tags_container.json"
   }
 ]
