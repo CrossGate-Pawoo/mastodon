@@ -59,7 +59,7 @@ class CommunityTimelineForAboutContainer extends React.PureComponent {
         <ColumnHeader
           pawooTitle={(
             <div className='pawoo-extension-standalone-community'>
-              <svg viewBox='0 0 24 24' class='pawoo-svg-logo' alt='pawoo'><use xlinkHref='#pawoo-svg-logo' /></svg>
+              <svg viewBox='0 0 24 24' className='pawoo-svg-logo' alt='pawoo'><use xlinkHref='#pawoo-svg-logo' /></svg>
               \ {intl.formatNumber(initialState.pawoo.user_count)}人が、{intl.formatNumber(initialState.pawoo.status_count + this.props.pawooStatusCount)}回パウってます /
             </div>
           )}
