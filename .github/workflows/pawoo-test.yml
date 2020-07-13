@@ -72,7 +72,7 @@ jobs:
           v1-node-dependencies-
 
     - name: bundle install
-      run: bundle install --clean --jobs 4 --path ./vendor/bundle/ --retry 3 --with pam_authentication --without development production && bundle clean
+      run: bundle install --clean --jobs 4 --path ./vendor/bundle/ --retry 3 --with pam_authentication --without production && bundle clean
     - name: yarn install
       run: yarn install --frozen-lockfile
 
