@@ -17,8 +17,7 @@
     %meta{ name: 'msapplication-config', content: '/browserconfig.xml' }/
     %meta{ name: 'theme-color', content: '#282c37' }/
     %meta{ name: 'apple-mobile-web-app-capable', content: 'yes' }/
-    %script{ 'data-ad-client': 'pub-3050691455323056', async:'', src: 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js'}
-
+    %script{ 'data-ad-client': 'pub-3050691455323056', async:'', src: 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js', nonce: content_security_policy_nonce}
 
     - if current_account
       %meta{ name: 'pawoo-ga-uid', content: current_account.id }/
