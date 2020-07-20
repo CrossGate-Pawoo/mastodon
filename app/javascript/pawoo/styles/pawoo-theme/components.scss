@@ -376,7 +376,7 @@
 .pawoo-followers-you-follow {
   padding: 10px 10px;
 
-  &__account-list {
+  .pawoo-followers-you-follow__account-list {
     display: flex;
     justify-content: left;
     flex-wrap: wrap;
@@ -397,7 +397,7 @@
   p {
     font-weight: bold;
     margin-bottom: 5px;
-    color: $classic-primary-color;
+    color: $darker-text-color;
   }
 }
 
