@@ -10,7 +10,7 @@ Rails.application.config.content_security_policy_nonce_generator = -> (_request)
 
 pawoo_script_src = ['https://www.google-analytics.com', 'https://ssl.google-analytics.com']
 pawoo_img_src = ['https://www.google-analytics.com']
-pawoo_connect_src = ['https://www.google-analytics.com']
+pawoo_connect_src = ['https://www.google-analytics.com', 'https://pagead2.googlesyndication.com']
 
 Rails.application.config.content_security_policy do |p|
   p.base_uri        :none
