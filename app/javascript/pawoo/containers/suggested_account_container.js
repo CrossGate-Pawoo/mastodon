@@ -50,7 +50,7 @@ const mapDispatchToProps = (dispatch, { intl }) => ({
   },
 
   onOpenMedia (media) {
-    if (media.get('type') === 'video') {
+    if (['video', 'audio'].includes(media.get('type'))) {
       dispatch(openModal('VIDEO', { media, time: 0 }));
     } else {
       dispatch(openModal('MEDIA', { media: ImmutableList([media]), index: 0 }));

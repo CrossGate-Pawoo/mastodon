@@ -59,3 +59,11 @@
     }
   }
 }
+
+.pawoo-suggested-accounts {
+  > .scrollable {
+    background: $white;
+    border: 1px solid lighten($ui-base-color, 8%);
+    border-top: 0;
+  }
+}

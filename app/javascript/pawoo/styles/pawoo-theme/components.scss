@@ -138,7 +138,7 @@
 }
 
 .account.suggested_account {
-  padding: 10px;
+  padding: 15px;
 
   .account__avatar-wrapper {
     margin-left: 0;
@@ -150,9 +150,9 @@
 }
 
 .suggested_account_media {
-  margin-top: 5px;
-  $media-height: 90px;
-  height: $media-height;
+  display: flex;
+  margin-top: 10px;
+  height: 100px;
 
   .pawoo-video-thumbnail {
     display: flex;
@@ -172,6 +172,15 @@
       height: 50px;
       width: 50px;
       opacity: 0.8;
+    }
+  }
+
+  > .media-gallery__item {
+    width: 100%;
+    margin-right: 4px;
+
+    &:last-child {
+      margin-right: 0;
     }
   }
 }
@@ -276,6 +285,7 @@
 
   > .scrollable {
     height: 100%;
+    background: $ui-base-color;
 
     .item-list {
       display: flex;
@@ -284,13 +294,15 @@
       overflow: hidden;
 
       > * {
-        flex: 1 280px;
+        flex: 1 330px;
       }
 
       .account {
         border: 0 solid lighten($ui-base-color, 8%);
         border-left-width: 1px;
         border-top-width: 1px;
+        height: 100%;
+        box-sizing: border-box;
       }
 
       > .load-more {
@@ -358,11 +370,6 @@
 .pawoo-suggested-accounts-page {
   flex: 1;
   max-width: none;
-
-  .column-header,
-  .column-header * {
-    background: transparent;
-  }
 
   .pawoo-suggested-accounts-page__suggested-accounts {
     flex: 1;
