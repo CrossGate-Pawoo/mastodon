@@ -130,7 +130,7 @@ class Pawoo::SuggestedAccountQuery
   end
 
   def filter_by_last_status_at(ids)
-    AccountStat.where(account_id: ids).where(AccountStat.arel_table[:last_status_at].gt(3.days.ago)).pluck(:id)
+    AccountStat.where(account_id: ids).where(AccountStat.arel_table[:last_status_at].gt(3.days.ago)).pluck(:account_id)
   end
 
   def spawn(variables)
