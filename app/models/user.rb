@@ -35,6 +35,9 @@
 #  moderator                 :boolean          default(FALSE), not null
 #  invite_id                 :bigint(8)
 #  remember_token            :string
+#  chosen_languages          :string           is an Array
+#  created_by_application_id :bigint(8)
+#  approved                  :boolean          default(TRUE), not null
 #
 
 class User < ApplicationRecord

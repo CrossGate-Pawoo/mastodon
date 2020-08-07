@@ -14,6 +14,7 @@
 #  target_account_id          :bigint(8)        not null
 #  pawoo_report_type          :integer          default("other"), not null
 #  assigned_account_id        :bigint(8)
+#  uri                        :string
 #
 
 class Report < ApplicationRecord

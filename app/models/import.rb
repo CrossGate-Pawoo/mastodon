@@ -13,6 +13,7 @@
 #  data_file_size    :integer
 #  data_updated_at   :datetime
 #  account_id        :bigint(8)        not null
+#  overwrite         :boolean          default(FALSE), not null
 #
 
 class Import < ApplicationRecord
