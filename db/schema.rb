@@ -89,10 +89,9 @@ ActiveRecord::Schema.define(version: 2020_05_10_110808) do
     t.string "actor_type"
     t.string "also_known_as", array: true
     t.index "(((setweight(to_tsvector('simple'::regconfig, (display_name)::text), 'A'::\"char\") || setweight(to_tsvector('simple'::regconfig, (username)::text), 'B'::\"char\")) || setweight(to_tsvector('simple'::regconfig, (COALESCE(domain, ''::character varying))::text), 'C'::\"char\")))", name: "search_index", using: :gin
-    t.index "lower((username)::text), lower((domain)::text)", name: "index_accounts_on_username_and_domain_lower"
+    t.index "lower((username)::text), lower((domain)::text)", name: "index_accounts_on_username_and_domain_lower", unique: true
     t.index ["uri"], name: "index_accounts_on_uri"
     t.index ["url"], name: "index_accounts_on_url"
-    t.index ["username", "domain"], name: "index_accounts_on_username_and_domain", unique: true
   end
 
   create_table "admin_action_logs", force: :cascade do |t|
