@@ -38,6 +38,7 @@ module PawooShouldCaptureChecker
     HTTP::Request::UnsupportedSchemeError
     OpenSSL::SSL::SSLError
     Stoplight::Error::RedLight
+    Net::OpenTimeout
     Net::ReadTimeout
   ].freeze
 
