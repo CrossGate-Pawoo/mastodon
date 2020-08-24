@@ -12,7 +12,7 @@ class PreserveOldLayoutForExistingUsers < ActiveRecord::Migration[5.2]
     # end
 
     ::Web::Setting.preload(:user).find_each do |web_setting|
-      if web_setting.data.dig('pawoo', 'multiColumn')
+      if web_setting.data&.dig('pawoo', 'multiColumn')
         web_setting.user.settings.advanced_layout = true
       end
     end
