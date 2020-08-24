@@ -47,6 +47,9 @@
 #  fields                  :jsonb
 #  actor_type              :string
 #  also_known_as           :string           is an Array
+#  discoverable            :boolean
+#  silenced_at             :datetime
+#  suspended_at            :datetime
 #
 
 class Account < ApplicationRecord
