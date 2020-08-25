@@ -131,13 +131,8 @@ ActiveRecord::Schema.define(version: 2020_06_20_164023) do
     t.datetime "header_updated_at"
     t.string "avatar_remote_url"
     t.datetime "subscription_expires_at"
-    t.boolean "silenced", default: false, null: false
-    t.boolean "suspended", default: false, null: false
     t.boolean "locked", default: false, null: false
     t.string "header_remote_url", default: "", null: false
-    t.integer "statuses_count", default: 0, null: false
-    t.integer "followers_count", default: 0, null: false
-    t.integer "following_count", default: 0, null: false
     t.datetime "last_webfingered_at"
     t.string "inbox_url", default: "", null: false
     t.string "outbox_url", default: "", null: false
