@@ -7,8 +7,11 @@ class ActivityPub::OutboxesController < Api::BaseController
 
   before_action :set_account
   before_action :set_statuses
+  before_action :set_cache_headers
 
   def show
+    expires_in 1.minute, public: true unless page_requested?
+
     render json: outbox_presenter, serializer: ActivityPub::OutboxSerializer, adapter: ActivityPub::Adapter, content_type: 'application/activity+json'
   end
 

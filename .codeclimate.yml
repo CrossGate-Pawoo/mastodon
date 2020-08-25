@@ -27,10 +27,11 @@ plugins:
     enabled: true
   eslint:
     enabled: true
-    channel: eslint-4
+    channel: eslint-5
   rubocop:
     enabled: true
-  scss-lint:
+    channel: rubocop-0-71
+  sass-lint:
     enabled: true
 exclude_patterns:
 - spec/

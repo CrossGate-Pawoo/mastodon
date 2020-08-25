@@ -1,7 +1,11 @@
-@import 'extensions/mastodon/accounts.scss';
-@import 'extensions/mastodon/components.scss';
-@import 'extensions/mastodon/containers.scss';
-@import 'extensions/mastodon/stream_entries.scss';
-@import 'mastodon/basics.scss';
-@import 'mastodon/components.scss';
-@import 'mastodon/oauth_registration.scss';
+@import 'extensions/mastodon/basics';
+@import 'extensions/mastodon/components';
+@import 'extensions/mastodon/containers';
+@import 'extensions/mastodon/modal';
+@import 'extensions/mastodon/stream_entries';
+
+@import 'pawoo-theme/about';
+@import 'pawoo-theme/accounts';
+@import 'pawoo-theme/admin';
+@import 'pawoo-theme/components';
+@import 'pawoo-theme/oauth';

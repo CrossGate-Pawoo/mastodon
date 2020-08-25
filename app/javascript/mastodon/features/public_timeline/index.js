@@ -1,28 +1,37 @@
 import React from 'react';
-import ImmutablePropTypes from 'react-immutable-proptypes';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
 import StatusListContainer from '../ui/containers/status_list_container';
 import Column from '../../components/column';
+import ColumnHeader from '../../components/column_header';
 import { expandPublicTimeline } from '../../actions/timelines';
-import { addColumn, removeColumn, moveColumn, changeColumnParams } from '../../actions/columns';
+import { addColumn, removeColumn, moveColumn } from '../../actions/columns';
 import ColumnSettingsContainer from './containers/column_settings_container';
-// import SectionHeadline from '../community_timeline/components/section_headline';
 import { connectPublicStream } from '../../actions/streaming';
-import ColumnHeader from '../../../pawoo/components/animated_timeline_column_header';
 
 const messages = defineMessages({
   title: { id: 'column.public', defaultMessage: 'Federated timeline' },
 });
 
-const mapStateToProps = (state, { onlyMedia }) => ({
-  hasUnread: state.getIn(['timelines', `public${onlyMedia ? ':media' : ''}`, 'unread']) > 0,
-});
+const mapStateToProps = (state, { onlyMedia, columnId }) => {
+  const uuid = columnId;
+  const columns = state.getIn(['settings', 'columns']);
+  const index = columns.findIndex(c => c.get('uuid') === uuid);
 
-@connect(mapStateToProps)
+  return {
+    hasUnread: state.getIn(['timelines', `public${onlyMedia ? ':media' : ''}`, 'unread']) > 0,
+    onlyMedia: (columnId && index >= 0) ? columns.get(index).getIn(['params', 'other', 'onlyMedia']) : state.getIn(['settings', 'public', 'other', 'onlyMedia']),
+  };
+};
+
+export default @connect(mapStateToProps)
 @injectIntl
-export default class PublicTimeline extends React.PureComponent {
+class PublicTimeline extends React.PureComponent {
+
+  static contextTypes = {
+    router: PropTypes.object,
+  };
 
   static defaultProps = {
     onlyMedia: false,
@@ -30,12 +39,12 @@ export default class PublicTimeline extends React.PureComponent {
 
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
+    shouldUpdateScroll: PropTypes.func,
     intl: PropTypes.object.isRequired,
     columnId: PropTypes.string,
     multiColumn: PropTypes.bool,
     hasUnread: PropTypes.bool,
     onlyMedia: PropTypes.bool,
-    pawoo: ImmutablePropTypes.map.isRequired,
   };
 
   handlePin = () => {
@@ -91,31 +100,12 @@ export default class PublicTimeline extends React.PureComponent {
     dispatch(expandPublicTimeline({ maxId, onlyMedia }));
   }
 
-  handleHeadlineLinkClick = e => {
-    const { columnId, dispatch } = this.props;
-    const onlyMedia = /\/media$/.test(e.currentTarget.href);
-
-    dispatch(changeColumnParams(columnId, { other: { onlyMedia } }));
-  }
-
   render () {
-    const { intl, columnId, hasUnread, multiColumn, onlyMedia, pawoo } = this.props;
+    const { intl, shouldUpdateScroll, columnId, hasUnread, multiColumn, onlyMedia } = this.props;
     const pinned = !!columnId;
 
-    // pending
-    //
-    // const headline = (
-    //   <SectionHeadline
-    //     timelineId='public'
-    //     to='/timelines/public'
-    //     pinned={pinned}
-    //     onlyMedia={onlyMedia}
-    //     onClick={this.handleHeadlineLinkClick}
-    //   />
-    // );
-
     return (
-      <Column ref={this.setRef}>
+      <Column ref={this.setRef} label={intl.formatMessage(messages.title)}>
         <ColumnHeader
           icon='globe'
           active={hasUnread}
@@ -125,19 +115,17 @@ export default class PublicTimeline extends React.PureComponent {
           onClick={this.handleHeaderClick}
           pinned={pinned}
           multiColumn={multiColumn}
-          pawoo={pawoo}
-          pawooUrl='/timelines/public'
-          timelineId={`public${onlyMedia ? ':media' : ''}`}
         >
-          <ColumnSettingsContainer />
+          <ColumnSettingsContainer columnId={columnId} />
         </ColumnHeader>
 
         <StatusListContainer
-          // prepend={headline}
           timelineId={`public${onlyMedia ? ':media' : ''}`}
           onLoadMore={this.handleLoadMore}
+          trackScroll={!pinned}
           scrollKey={`public_timeline-${columnId}`}
-          emptyMessage={<FormattedMessage id='empty_column.public' defaultMessage='There is nothing here! Write something publicly, or manually follow users from other instances to fill it up' />}
+          emptyMessage={<FormattedMessage id='empty_column.public' defaultMessage='There is nothing here! Write something publicly, or manually follow users from other servers to fill it up' />}
+          shouldUpdateScroll={shouldUpdateScroll}
         />
       </Column>
     );

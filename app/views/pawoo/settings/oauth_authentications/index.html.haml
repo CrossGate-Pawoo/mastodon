@@ -22,7 +22,7 @@
           - case provider
           - when :pixiv
             - if oauth_authentication
-              = link_to oauth_authentication.uid, "https://www.pixiv.net/member.php?id=#{oauth_authentication.uid}", target: '_blank'
+              = link_to oauth_authentication.uid, "https://www.pixiv.net/users/#{oauth_authentication.uid}", target: '_blank'
             - else
               = '-'
         %td

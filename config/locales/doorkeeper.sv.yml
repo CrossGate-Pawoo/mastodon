@@ -72,7 +72,6 @@ sv:
       index:
         application: Applikation
         created_at: Auktoriserad
-        date_format: "%Y-%m-%d %H:%M:%S"
         scopes: Omfattning
         title: Dina behöriga ansökningar
     errors:
@@ -115,5 +114,6 @@ sv:
         title: OAuth-behörighet krävs
     scopes:
       follow: följa, blockera, ta bort blockerade och sluta följa konton
+      push: ta emot push aviseringar för ditt konto
       read: läsa dina kontodata
       write: posta åt dig

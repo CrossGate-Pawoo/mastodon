@@ -8,6 +8,11 @@ const messages = defineMessages({
   minutes: { id: 'relative_time.minutes', defaultMessage: '{number}m' },
   hours: { id: 'relative_time.hours', defaultMessage: '{number}h' },
   days: { id: 'relative_time.days', defaultMessage: '{number}d' },
+  moments_remaining: { id: 'time_remaining.moments', defaultMessage: 'Moments remaining' },
+  seconds_remaining: { id: 'time_remaining.seconds', defaultMessage: '{number, plural, one {# second} other {# seconds}} left' },
+  minutes_remaining: { id: 'time_remaining.minutes', defaultMessage: '{number, plural, one {# minute} other {# minutes}} left' },
+  hours_remaining: { id: 'time_remaining.hours', defaultMessage: '{number, plural, one {# hour} other {# hours}} left' },
+  days_remaining: { id: 'time_remaining.days', defaultMessage: '{number, plural, one {# day} other {# days}} left' },
 });
 
 const dateFormatOptions = {
@@ -60,13 +65,60 @@ const getUnitDelay = units => {
   }
 };
 
-@injectIntl
-export default class RelativeTimestamp extends React.Component {
+export const timeAgoString = (intl, date, now, year) => {
+  const delta = now - date.getTime();
+
+  let relativeTime;
+
+  if (delta < 10 * SECOND) {
+    relativeTime = intl.formatMessage(messages.just_now);
+  } else if (delta < 7 * DAY) {
+    if (delta < MINUTE) {
+      relativeTime = intl.formatMessage(messages.seconds, { number: Math.floor(delta / SECOND) });
+    } else if (delta < HOUR) {
+      relativeTime = intl.formatMessage(messages.minutes, { number: Math.floor(delta / MINUTE) });
+    } else if (delta < DAY) {
+      relativeTime = intl.formatMessage(messages.hours, { number: Math.floor(delta / HOUR) });
+    } else {
+      relativeTime = intl.formatMessage(messages.days, { number: Math.floor(delta / DAY) });
+    }
+  } else if (date.getFullYear() === year) {
+    relativeTime = intl.formatDate(date, shortDateFormatOptions);
+  } else {
+    relativeTime = intl.formatDate(date, { ...shortDateFormatOptions, year: 'numeric' });
+  }
+
+  return relativeTime;
+};
+
+const timeRemainingString = (intl, date, now) => {
+  const delta = date.getTime() - now;
+
+  let relativeTime;
+
+  if (delta < 10 * SECOND) {
+    relativeTime = intl.formatMessage(messages.moments_remaining);
+  } else if (delta < MINUTE) {
+    relativeTime = intl.formatMessage(messages.seconds_remaining, { number: Math.floor(delta / SECOND) });
+  } else if (delta < HOUR) {
+    relativeTime = intl.formatMessage(messages.minutes_remaining, { number: Math.floor(delta / MINUTE) });
+  } else if (delta < DAY) {
+    relativeTime = intl.formatMessage(messages.hours_remaining, { number: Math.floor(delta / HOUR) });
+  } else {
+    relativeTime = intl.formatMessage(messages.days_remaining, { number: Math.floor(delta / DAY) });
+  }
+
+  return relativeTime;
+};
+
+export default @injectIntl
+class RelativeTimestamp extends React.Component {
 
   static propTypes = {
     intl: PropTypes.object.isRequired,
     timestamp: PropTypes.string.isRequired,
     year: PropTypes.number.isRequired,
+    futureDate: PropTypes.bool,
   };
 
   state = {
@@ -119,30 +171,10 @@ export default class RelativeTimestamp extends React.Component {
   }
 
   render () {
-    const { timestamp, intl, year } = this.props;
+    const { timestamp, intl, year, futureDate } = this.props;
 
-    const date  = new Date(timestamp);
-    const delta = this.state.now - date.getTime();
-
-    let relativeTime;
-
-    if (delta < 10 * SECOND) {
-      relativeTime = intl.formatMessage(messages.just_now);
-    } else if (delta < 7 * DAY) {
-      if (delta < MINUTE) {
-        relativeTime = intl.formatMessage(messages.seconds, { number: Math.floor(delta / SECOND) });
-      } else if (delta < HOUR) {
-        relativeTime = intl.formatMessage(messages.minutes, { number: Math.floor(delta / MINUTE) });
-      } else if (delta < DAY) {
-        relativeTime = intl.formatMessage(messages.hours, { number: Math.floor(delta / HOUR) });
-      } else {
-        relativeTime = intl.formatMessage(messages.days, { number: Math.floor(delta / DAY) });
-      }
-    } else if (date.getFullYear() === year) {
-      relativeTime = intl.formatDate(date, shortDateFormatOptions);
-    } else {
-      relativeTime = intl.formatDate(date, { ...shortDateFormatOptions, year: 'numeric' });
-    }
+    const date         = new Date(timestamp);
+    const relativeTime = futureDate ? timeRemainingString(intl, date, this.state.now) : timeAgoString(intl, date, this.state.now, year);
 
     return (
       <time dateTime={timestamp} title={intl.formatDate(date, dateFormatOptions)}>
@@ -152,4 +184,3 @@ export default class RelativeTimestamp extends React.Component {
   }
 
 }
-

@@ -20,9 +20,9 @@ const mapDispatchToProps = dispatch => ({
   onSubmit: () => dispatch(submitListEditor(true)),
 });
 
-@connect(mapStateToProps, mapDispatchToProps)
+export default @connect(mapStateToProps, mapDispatchToProps)
 @injectIntl
-export default class NewListForm extends React.PureComponent {
+class NewListForm extends React.PureComponent {
 
   static propTypes = {
     value: PropTypes.string.isRequired,
@@ -66,7 +66,7 @@ export default class NewListForm extends React.PureComponent {
         </label>
 
         <IconButton
-          disabled={disabled}
+          disabled={disabled || !value}
           icon='plus'
           title={title}
           onClick={this.handleClick}

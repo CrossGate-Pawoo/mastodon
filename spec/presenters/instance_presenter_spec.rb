@@ -33,34 +33,6 @@ describe InstancePresenter do
 
   context do
     around do |example|
-      open_registrations = Setting.open_registrations
-      example.run
-      Setting.open_registrations = open_registrations
-    end
-
-    it "delegates open_registrations to Setting" do
-      Setting.open_registrations = false
-
-      expect(instance_presenter.open_registrations).to eq false
-    end
-  end
-
-  context do
-    around do |example|
-      closed_registrations_message = Setting.closed_registrations_message
-      example.run
-      Setting.closed_registrations_message = closed_registrations_message
-    end
-
-    it "delegates closed_registrations_message to Setting" do
-      Setting.closed_registrations_message = "Closed message"
-
-      expect(instance_presenter.closed_registrations_message).to eq "Closed message"
-    end
-  end
-
-  context do
-    around do |example|
       site_contact_email = Setting.site_contact_email
       example.run
       Setting.site_contact_email = site_contact_email
@@ -109,6 +81,39 @@ describe InstancePresenter do
       Rails.cache.write 'distinct_domain_count', 345
 
       expect(instance_presenter.domain_count).to eq(345)
+    end
+  end
+
+  describe '#version_number' do
+    it 'returns Mastodon::Version' do
+      expect(instance_presenter.version_number).to be(Mastodon::Version)
+    end
+  end
+
+  describe '#source_url' do
+    it 'returns "https://github.com/tootsuite/mastodon"' do
+      expect(instance_presenter.source_url).to eq('https://github.com/tootsuite/mastodon')
+    end
+  end
+
+  describe '#thumbnail' do
+    it 'returns SiteUpload' do
+      thumbnail = Fabricate(:site_upload, var: 'thumbnail')
+      expect(instance_presenter.thumbnail).to eq(thumbnail)
+    end
+  end
+
+  describe '#hero' do
+    it 'returns SiteUpload' do
+      hero = Fabricate(:site_upload, var: 'hero')
+      expect(instance_presenter.hero).to eq(hero)
+    end
+  end
+
+  describe '#mascot' do
+    it 'returns SiteUpload' do
+      mascot = Fabricate(:site_upload, var: 'mascot')
+      expect(instance_presenter.mascot).to eq(mascot)
     end
   end
 end

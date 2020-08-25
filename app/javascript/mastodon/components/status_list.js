@@ -1,12 +1,12 @@
 import { debounce } from 'lodash';
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import PropTypes from 'prop-types';
 import StatusContainer from '../containers/status_container';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 import LoadGap from './load_gap';
 import ScrollableList from './scrollable_list';
-import { FormattedMessage } from 'react-intl';
 
 export default class StatusList extends ImmutablePureComponent {
 
@@ -24,8 +24,8 @@ export default class StatusList extends ImmutablePureComponent {
     hasMore: PropTypes.bool,
     prepend: PropTypes.node,
     emptyMessage: PropTypes.node,
-    pawooMediaScale: PropTypes.string,
-    pawooWideMedia: PropTypes.bool,
+    alwaysPrepend: PropTypes.bool,
+    timelineId: PropTypes.string,
   };
 
   static defaultProps = {
@@ -46,22 +46,28 @@ export default class StatusList extends ImmutablePureComponent {
 
   handleMoveUp = (id, featured) => {
     const elementIndex = this.getCurrentStatusIndex(id, featured) - 1;
-    this._selectChild(elementIndex);
+    this._selectChild(elementIndex, true);
   }
 
   handleMoveDown = (id, featured) => {
     const elementIndex = this.getCurrentStatusIndex(id, featured) + 1;
-    this._selectChild(elementIndex);
+    this._selectChild(elementIndex, false);
   }
 
   handleLoadOlder = debounce(() => {
-    this.props.onLoadMore(this.props.statusIds.last());
+    this.props.onLoadMore(this.props.statusIds.size > 0 ? this.props.statusIds.last() : undefined);
   }, 300, { leading: true })
 
-  _selectChild (index) {
-    const element = this.node.node.querySelector(`article:nth-of-type(${index + 1}) .focusable`);
+  _selectChild (index, align_top) {
+    const container = this.node.node;
+    const element = container.querySelector(`article:nth-of-type(${index + 1}) .focusable`);
 
     if (element) {
+      if (align_top && container.scrollTop > element.offsetTop) {
+        element.scrollIntoView(true);
+      } else if (!align_top && container.scrollTop + container.clientHeight < element.offsetTop + element.offsetHeight) {
+        element.scrollIntoView(false);
+      }
       element.focus();
     }
   }
@@ -71,7 +77,7 @@ export default class StatusList extends ImmutablePureComponent {
   }
 
   render () {
-    const { statusIds, featuredStatusIds, onLoadMore, pawooMediaScale, pawooWideMedia, ...other }  = this.props;
+    const { statusIds, featuredStatusIds, shouldUpdateScroll, onLoadMore, timelineId, ...other }  = this.props;
     const { isLoading, isPartial } = other;
 
     if (isPartial) {
@@ -103,8 +109,8 @@ export default class StatusList extends ImmutablePureComponent {
           id={statusId}
           onMoveUp={this.handleMoveUp}
           onMoveDown={this.handleMoveDown}
-          pawooMediaScale={pawooMediaScale}
-          pawooWideMedia={pawooWideMedia}
+          contextType={timelineId}
+          showThread
         />
       ))
     ) : null;
@@ -117,12 +123,14 @@ export default class StatusList extends ImmutablePureComponent {
           featured
           onMoveUp={this.handleMoveUp}
           onMoveDown={this.handleMoveDown}
+          contextType={timelineId}
+          showThread
         />
       )).concat(scrollableContent);
     }
 
     return (
-      <ScrollableList {...other} onLoadMore={onLoadMore && this.handleLoadOlder} ref={this.setRef}>
+      <ScrollableList {...other} showLoading={isLoading && statusIds.size === 0} onLoadMore={onLoadMore && this.handleLoadOlder} shouldUpdateScroll={shouldUpdateScroll} ref={this.setRef}>
         {scrollableContent}
       </ScrollableList>
     );

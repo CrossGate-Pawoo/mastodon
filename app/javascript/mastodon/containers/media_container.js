@@ -6,6 +6,7 @@ import { getLocale } from '../locales';
 import MediaGallery from '../components/media_gallery';
 import Video from '../features/video';
 import Card from '../features/status/components/card';
+import Poll from 'mastodon/components/poll';
 import ModalRoot from '../components/modal_root';
 import MediaModal from '../features/ui/components/media_modal';
 import { List as ImmutableList, fromJS } from 'immutable';
@@ -13,7 +14,7 @@ import { List as ImmutableList, fromJS } from 'immutable';
 const { localeData, messages } = getLocale();
 addLocaleData(localeData);
 
-const MEDIA_COMPONENTS = { MediaGallery, Video, Card };
+const MEDIA_COMPONENTS = { MediaGallery, Video, Card, Poll };
 
 export default class MediaContainer extends PureComponent {
 
@@ -29,19 +30,19 @@ export default class MediaContainer extends PureComponent {
   };
 
   handleOpenMedia = (media, index) => {
-    document.body.classList.add('media-standalone__body');
+    document.body.classList.add('with-modals--active');
     this.setState({ media, index });
   }
 
   handleOpenVideo = (video, time) => {
     const media = ImmutableList([video]);
 
-    document.body.classList.add('media-standalone__body');
+    document.body.classList.add('with-modals--active');
     this.setState({ media, time });
   }
 
   handleCloseMedia = () => {
-    document.body.classList.remove('media-standalone__body');
+    document.body.classList.remove('with-modals--active');
     this.setState({ media: null, index: null, time: null });
   }
 
@@ -54,11 +55,12 @@ export default class MediaContainer extends PureComponent {
           {[].map.call(components, (component, i) => {
             const componentName = component.getAttribute('data-component');
             const Component = MEDIA_COMPONENTS[componentName];
-            const { media, card, ...props } = JSON.parse(component.getAttribute('data-props'));
+            const { media, card, poll, ...props } = JSON.parse(component.getAttribute('data-props'));
 
             Object.assign(props, {
               ...(media ? { media: fromJS(media) } : {}),
               ...(card  ? { card:  fromJS(card)  } : {}),
+              ...(poll  ? { poll:  fromJS(poll)  } : {}),
 
               ...(componentName === 'Video' ? {
                 onOpenVideo: this.handleOpenVideo,

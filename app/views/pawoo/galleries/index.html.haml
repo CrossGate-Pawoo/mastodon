@@ -5,8 +5,10 @@
   = render partial: 'og'
   = opengraph 'og:title', t('pawoo.gallery.index')
 
-= render 'accounts/service_logo'
-
+.logo-container
+  %h1
+    = link_to root_path do
+      = svg_logo_full
 
 .pawoo-gallery-index
   %h1= t('pawoo.gallery.index')

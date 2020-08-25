@@ -1,27 +1,24 @@
 import { fromJS } from 'immutable';
 import { createSelector } from 'reselect';
-import uuid from '../../mastodon/uuid';
+import uuid from 'mastodon/uuid';
+import { makeGetAccount } from 'mastodon/selectors';
 
 const pages = fromJS({
-  ONBOARDING: [
-    { id: 'PAWOO_ONBOARDING', uuid: uuid(), params: {} },
-  ],
   SUGGESTED_ACCOUNTS: [
     { id: 'COMPOSE', uuid: uuid(), params: {} },
     { id: 'PAWOO_SUGGESTED_ACCOUNTS', uuid: uuid(), params: {} },
   ],
 });
 
-const getAccountRelationship = (state, id) => state.getIn(['relationships', id], null);
-const getAccountBase = (state, id) => state.getIn(['accounts', id], null);
+const getAccountMediaAttachments = (state, id) => state.getIn(['pawoo', 'suggested_accounts', 'mediaAttachmentsMap', id], fromJS([]));
 
 export const makeGetSuggestedAccount = () => {
-  return createSelector([getAccountBase, getAccountRelationship], (base, relationship) => {
+  return createSelector([makeGetAccount(), getAccountMediaAttachments], (base, mediaAttachments) => {
     if (base === null) {
       return null;
     }
 
-    return base.set('relationship', relationship);
+    return base.set('media_attachments', mediaAttachments);
   });
 };
 

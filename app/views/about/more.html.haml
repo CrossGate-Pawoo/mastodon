@@ -5,46 +5,44 @@
   = javascript_pack_tag 'public', integrity: true, crossorigin: 'anonymous'
   = render partial: 'shared/og'
 
-.landing-page
-  .header-wrapper.compact
-    .header
-      = render 'links'
+.grid-3
+  .column-0
+    .public-account-header.public-account-header--no-bar
+      .public-account-header__image
+        = image_tag @instance_presenter.hero&.file&.url || @instance_presenter.thumbnail&.file&.url || asset_pack_path('media/images/preview.jpg'), alt: @instance_presenter.site_title, class: 'parallax'
 
-      .container-alt.hero
-        .heading
-          %h3= t('about.description_headline', domain: site_hostname)
-          %p= @instance_presenter.site_description.html_safe.presence || t('about.generic_description', domain: site_hostname)
+  .column-1
+    .landing-page__call-to-action{ dir: 'ltr' }
+      .row
+        .row__information-board
+          .information-board__section
+            %span= t 'about.user_count_before'
+            %strong= number_with_delimiter @instance_presenter.user_count
+            %span= t 'about.user_count_after', count: @instance_presenter.user_count
+          .information-board__section
+            %span= t 'about.status_count_before'
+            %strong= number_with_delimiter @instance_presenter.status_count
+            %span= t 'about.status_count_after', count: @instance_presenter.status_count
+        .row__mascot
+          .landing-page__mascot
+            = image_tag @instance_presenter.mascot&.file&.url || asset_pack_path('media/images/elephant_ui_plane.svg'), alt: ''
 
-  .information-board
-    .container-alt
-      .information-board__sections
-        .information-board__section
-          %span= t 'about.user_count_before'
-          %strong= number_with_delimiter @instance_presenter.user_count
-          %span= t 'about.user_count_after'
-        .information-board__section
-          %span= t 'about.status_count_before'
-          %strong= number_with_delimiter @instance_presenter.status_count
-          %span= t 'about.status_count_after'
-        .information-board__section
-          %span= t 'about.domain_count_before'
-          %strong= number_with_delimiter @instance_presenter.domain_count
-          %span= t 'about.domain_count_after'
-      = render 'contact', contact: @instance_presenter
-
-  .extended-description
-    .container-alt
-      = render 'header'
-      = render 'notice'
-
-      %h3= t 'about.contact'
+  .column-2
+    .landing-page__information.contact-widget
       %p
-        = t('about.contact_body_mastodon').html_safe
-        = ' → '
-        = link_to '@pawoo_support', account_path('pawoo_support')
+        %strong= t 'about.administered_by'
 
-  .footer-links
-    .container-alt
-      %p
-        = link_to t('about.source_code'), @instance_presenter.source_url
-        = " (#{@instance_presenter.version_number})"
+      = account_link_to(@instance_presenter.contact_account)
+
+      %p.contact-widget__mail
+        %strong
+          = succeed ':' do
+            = t 'about.contact'
+          = account_link_to(Account.find_local('pawoo_support'))
+        - if @instance_presenter.site_contact_email.present?
+          %br/
+          = mail_to @instance_presenter.site_contact_email, nil, title: @instance_presenter.site_contact_email
+
+  .column-3
+    .box-widget
+      .rich-formatting= @instance_presenter.site_extended_description.html_safe.presence || t('about.extended_description_html')

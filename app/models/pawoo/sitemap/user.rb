@@ -5,8 +5,8 @@ class Pawoo::Sitemap::User < Pawoo::Sitemap
   ALLOW_FOLLOWERS_COUNT = 10
   ALLOW_STATUS_COUNT    = 5
 
-  def self.paging_class
-    ::User
+  def self.page_count
+    (::User.maximum(:id) / SITEMAPINDEX_SIZE) + 1
   end
 
   def query
@@ -27,10 +27,20 @@ class Pawoo::Sitemap::User < Pawoo::Sitemap
 
   private
 
-  def account_scope
-    Account.local.where(suspended: false)
-      .where('accounts.followers_count >= ?', ALLOW_FOLLOWERS_COUNT)
-      .where('accounts.statuses_count >= ?', ALLOW_STATUS_COUNT)
+  def min_id
+    (page.to_i - 1) * SITEMAPINDEX_SIZE
+  end
 
+  def max_id
+    min_id + SITEMAPINDEX_SIZE
+  end
+
+  def account_scope
+    Account.local.where(suspended_at: nil)
+  end
+
+  def account_stat_scope
+    AccountStat.where('account_stats.followers_count >= ?', ALLOW_FOLLOWERS_COUNT)
+               .where('account_stats.statuses_count >= ?', ALLOW_STATUS_COUNT)
   end
 end

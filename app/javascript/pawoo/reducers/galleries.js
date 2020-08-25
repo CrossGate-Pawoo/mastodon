@@ -36,10 +36,10 @@ export default function suggestedAccounts(state = initialState, action) {
     }));
   case PAWOO_GALLERY_FETCH_REQUEST:
   case PAWOO_GALLERY_EXPAND_REQUEST:
-    return state.set('isLoading', true);
+    return state.setIn([action.tag, 'isLoading'], true);
   case PAWOO_GALLERY_FETCH_FAIL:
   case PAWOO_GALLERY_EXPAND_FAIL:
-    return state.set('isLoading', false);
+    return state.setIn([action.tag, 'isLoading'], false);
   case PAWOO_GALLERY_BLACKLIST_SUCCESS:
     return state.update(action.tag, initialTimeline, map => map.withMutations(mMap => {
       mMap.update('items', OrderedSet(), ids => ids.delete(action.statusId));

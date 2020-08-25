@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ReportService < BaseService
+  include Payloadable
+
   def call(source_account, target_account, options = {})
     @source_account = source_account
     @target_account = target_account
@@ -12,7 +14,7 @@ class ReportService < BaseService
 
     # 管理者権限を持つ全てのアカウントにメールが送信されるため一旦無効化
     # notify_staff!
-    enqueue_notify_report_worker
+    pawoo_enqueue_notify_report_worker
 
     forward_to_origin! if !@target_account.local? && ActiveModel::Type::Boolean.new.cast(@options[:forward])
 
@@ -26,19 +28,23 @@ class ReportService < BaseService
       target_account: @target_account,
       status_ids: @status_ids,
       comment: @comment,
+      uri: @options[:uri],
       action_taken: true,
-      pawoo_report_type: @options[:pawoo_report_type],
+      pawoo_report_type: @options[:pawoo_report_type].presence || 'other',
       pawoo_report_targets: pawoo_report_targets
     )
   end
 
   def notify_staff!
+    return if @report.unresolved_siblings?
+
     User.staff.includes(:account).each do |u|
+      next unless u.allows_report_emails?
       AdminMailer.new_report(u.account, @report).deliver_later
     end
   end
 
-  def enqueue_notify_report_worker
+  def pawoo_enqueue_notify_report_worker
     return unless @report.pawoo_report_type == 'spam'
 
     Pawoo::NotifyReportWorker.perform_async(@report.id)
@@ -53,16 +59,11 @@ class ReportService < BaseService
   end
 
   def payload
-    Oj.dump(ActiveModelSerializers::SerializableResource.new(
-      @report,
-      serializer: ActivityPub::FlagSerializer,
-      adapter: ActivityPub::Adapter,
-      account: some_local_account
-    ).as_json)
+    Oj.dump(serialize_payload(@report, ActivityPub::FlagSerializer, account: some_local_account))
   end
 
   def some_local_account
-    @some_local_account ||= Account.local.where(suspended: false).first
+    @some_local_account ||= Account.representative
   end
 
   def pawoo_report_targets
@@ -76,7 +77,7 @@ class ReportService < BaseService
       end
     end
 
-    status_ids = Status.joins(:account).where(id: @status_ids).merge(Account.where(suspended: false)).pluck(:id)
+    status_ids = Status.joins(:account).where(id: @status_ids).merge(Account.where(suspended_at: nil)).pluck(:id)
     resolved_target_ids = Pawoo::ReportTarget.where(state: :resolved, target_type: 'Status', target_id: status_ids).distinct(:target_id).pluck(:target_id)
     status_ids -= resolved_target_ids
 

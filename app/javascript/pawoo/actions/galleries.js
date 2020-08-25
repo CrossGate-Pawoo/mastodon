@@ -1,5 +1,5 @@
-import api, { getLinks } from '../../mastodon/api';
-import { importFetchedStatuses } from '../../mastodon/actions/importer';
+import api, { getLinks } from 'mastodon/api';
+import { importFetchedStatuses } from 'mastodon/actions/importer';
 
 export const PAWOO_GALLERY_FETCH_REQUEST = 'PAWOO_GALLERY_FETCH_REQUEST';
 export const PAWOO_GALLERY_FETCH_SUCCESS = 'PAWOO_GALLERY_FETCH_SUCCESS';
@@ -89,9 +89,8 @@ export function expandGalleryFail(tag, error) {
 };
 
 
-export function blacklistGallery(tag, status) {
+export function blacklistGallery(tag, statusId) {
   return (dispatch, getState) => {
-    const statusId = status.get('id');
     api(getState).put(`/api/v1/pawoo/galleries/${tag}/blacklist/${statusId}`).then(() => {
       dispatch(blacklistGallerySuccess(tag, statusId));
     }).catch(error => {

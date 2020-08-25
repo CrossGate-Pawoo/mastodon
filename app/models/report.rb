@@ -18,6 +18,8 @@
 #
 
 class Report < ApplicationRecord
+  include Paginable
+
   belongs_to :account
   belongs_to :target_account, class_name: 'Account'
   belongs_to :action_taken_by_account, class_name: 'Account', optional: true
@@ -30,8 +32,15 @@ class Report < ApplicationRecord
 
   scope :unresolved, -> { where(action_taken: false) }
   scope :resolved,   -> { where(action_taken: true) }
+  scope :with_accounts, -> { includes([:account, :target_account, :action_taken_by_account, :assigned_account].each_with_object({}) { |k, h| h[k] = { user: [:invite_request, :invite] } }) }
 
   validates :comment, length: { maximum: 1000 }
+
+  def local?
+    false # Force uri_for to use uri attribute
+  end
+
+  before_validation :set_uri, only: :create
 
   def object_type
     :flag
@@ -65,6 +74,10 @@ class Report < ApplicationRecord
     !action_taken?
   end
 
+  def unresolved_siblings?
+    Report.where.not(id: id).where(target_account_id: target_account_id).unresolved.exists?
+  end
+
   def history
     time_range = created_at..updated_at
 
@@ -89,5 +102,9 @@ class Report < ApplicationRecord
     ].map { |query| "(#{query.to_sql})" }.join(' UNION ALL ')
 
     Admin::ActionLog.from("(#{sql}) AS admin_action_logs")
+  end
+
+  def set_uri
+    self.uri = ActivityPub::TagManager.instance.generate_uri_for(self) if uri.nil? && account.local?
   end
 end

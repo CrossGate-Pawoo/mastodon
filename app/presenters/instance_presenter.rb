@@ -2,30 +2,38 @@
 
 class InstancePresenter
   delegate(
-    :closed_registrations_message,
     :site_contact_email,
-    :open_registrations,
     :site_title,
+    :site_short_description,
     :site_description,
     :site_extended_description,
     :site_terms,
+    :closed_registrations_message,
     to: Setting
   )
 
   def contact_account
-    Account.find_local(Setting.site_contact_username)
+    Account.find_local(Setting.site_contact_username.strip.gsub(/\A@/, ''))
   end
 
   def user_count(pawoo_fetch_force: false)
-    Rails.cache.fetch('user_count', race_condition_ttl: 1.minute, expires_in: 1.day, force: pawoo_fetch_force) { User.confirmed.count }
+    Rails.cache.fetch('user_count', race_condition_ttl: 1.minute, expires_in: 1.day, force: pawoo_fetch_force) { User.confirmed.joins(:account).merge(Account.without_suspended).count }
+  end
+
+  def active_user_count
+    Rails.cache.fetch('active_user_count') { Redis.current.pfcount(*(0..3).map { |i| "activity:logins:#{i.weeks.ago.utc.to_date.cweek}" }) }
   end
 
   def status_count(pawoo_fetch_force: false)
-    Rails.cache.fetch('local_status_count', race_condition_ttl: 1.minute, expires_in: 1.day, force: pawoo_fetch_force) { Account.local.sum(:statuses_count) }
+    Rails.cache.fetch('local_status_count', race_condition_ttl: 1.minute, expires_in: 1.day, force: pawoo_fetch_force) { Account.local.joins(:account_stat).sum('account_stats.statuses_count') }.to_i
   end
 
   def domain_count(pawoo_fetch_force: false)
     Rails.cache.fetch('distinct_domain_count', race_condition_ttl: 1.minute, expires_in: 1.day, force: pawoo_fetch_force) { Account.distinct.count(:domain) }
+  end
+
+  def sample_accounts
+    Rails.cache.fetch('sample_accounts', expires_in: 12.hours, race_condition_ttl: 1.minute) { Account.discoverable.popular.limit(3) }
   end
 
   def version_number
@@ -42,5 +50,9 @@ class InstancePresenter
 
   def hero
     @hero ||= Rails.cache.fetch('site_uploads/hero') { SiteUpload.find_by(var: 'hero') }
+  end
+
+  def mascot
+    @mascot ||= Rails.cache.fetch('site_uploads/mascot') { SiteUpload.find_by(var: 'mascot') }
   end
 end

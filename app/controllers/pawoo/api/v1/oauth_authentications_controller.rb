@@ -7,7 +7,7 @@ class Pawoo::Api::V1::OauthAuthenticationsController < Api::BaseController
   respond_to :json
 
   def show
-    render json: @account, serializer: REST::CredentialAccountSerializer
+    render json: @account, serializer: ::REST::CredentialAccountSerializer
   end
 
   private

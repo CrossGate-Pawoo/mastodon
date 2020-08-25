@@ -7,7 +7,10 @@
   %script#initial-state{ type: 'application/json' }!= json_escape(@initial_state_json)
   = javascript_pack_tag 'pawoo/gallery', integrity: true, crossorigin: 'anonymous'
 
-= render 'accounts/service_logo'
+.logo-container
+  %h1
+    = link_to root_path do
+      = svg_logo_full
 
 .pawoo-gallery
   .pawoo-gallery__breadcrumb

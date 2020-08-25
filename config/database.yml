@@ -3,10 +3,9 @@ default: &default
   pool: <%= ENV["DB_POOL"] || ENV['MAX_THREADS'] || 5 %>
   timeout: 5000
   encoding: unicode
-  variables:
-    statement_timeout: <%= ENV['STATEMENT_TIMEOUT'] || 0 %>
+  sslmode: <%= ENV['DB_SSLMODE'] || "prefer" %>
 
-development: &development
+development:
   <<: *default
   database: <%= ENV['DB_NAME'] || 'pawoo_development' %>
   username: <%= ENV['DB_USER'] %>
@@ -17,7 +16,7 @@ development: &development
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
-test: &test
+test:
   <<: *default
   database: <%= ENV['DB_NAME'] || 'pawoo' %>_test<%= ENV['TEST_ENV_NUMBER'] %>
   username: <%= ENV['DB_USER'] %>
@@ -25,7 +24,7 @@ test: &test
   host: <%= ENV['DB_HOST'] %>
   port: <%= ENV['DB_PORT'] %>
 
-production: &production
+production:
   <<: *default
   database: <%= ENV['DB_NAME'] || 'mastodon_production' %>
   username: <%= ENV['DB_USER'] || 'mastodon' %>
@@ -33,3 +32,4 @@ production: &production
   host: <%= ENV['DB_HOST'] || 'localhost' %>
   port: <%= ENV['DB_PORT'] || 5432 %>
   prepared_statements: <%= ENV['PREPARED_STATEMENTS'] || 'true' %>
+

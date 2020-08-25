@@ -91,13 +91,18 @@
       "description": "Internal scalingo configuration",
       "required": true,
       "value": "https://github.com/Scalingo/multi-buildpack.git"
+    },
+    "WITH_FFPROBE": {
+      "description": "Internal scalingo configuration to install ffprobe",
+      "required": true,
+      "value": "true"
     }
   },
   "scripts": {
     "postdeploy": "bundle exec rails db:migrate && bundle exec rails db:seed"
   },
   "addons": [
-    "scalingo-postgresql",
-    "scalingo-redis"
+    "postgresql",
+    "redis"
   ]
 }

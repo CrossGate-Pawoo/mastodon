@@ -24,8 +24,6 @@ en:
       user:
         send_paranoid_instructions: Password setting email sent
 
-  about:
-    contact_body_mastodon: From here inside Pawoo
   admin:
     accounts:
       oauth_authentications: pixiv Login

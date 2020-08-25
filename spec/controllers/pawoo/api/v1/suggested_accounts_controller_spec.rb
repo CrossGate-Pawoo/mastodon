@@ -84,14 +84,13 @@ describe Pawoo::Api::V1::SuggestedAccountsController, type: :controller do
         expect(body_as_json.pluck(:id)).to include suggested_authentication.user.account_id.to_s
       end
 
-      it 'queries triadic relations' do
-         first = Fabricate(:follow, account: user.account)
-         second = Fabricate(:follow, account: first.target_account)
-         Fabricate(:status, account: second.target_account)
+      it 'queries potential friendship' do
+        target_account = Fabricate(:account)
+        PotentialFriendshipTracker.record(user.account.id, target_account.id, :favourite)
 
-         get :index
+        get :index
 
-         expect(body_as_json.pluck(:id)).to include second.target_account_id.to_s
+        expect(body_as_json.pluck(:id)).to include target_account.id.to_s
       end
     end
   end

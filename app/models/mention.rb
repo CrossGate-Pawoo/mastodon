@@ -19,10 +19,17 @@ class Mention < ApplicationRecord
 
   validates :account, uniqueness: { scope: :status }
 
+  scope :active, -> { where(silent: false) }
+  scope :silent, -> { where(silent: true) }
+
   delegate(
     :username,
     :acct,
     to: :account,
     prefix: true
   )
+
+  def active?
+    !silent?
+  end
 end

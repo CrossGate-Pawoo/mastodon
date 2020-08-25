@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Link from '../../../../pawoo/components/wrapped_link';
+import { Link } from 'react-router-dom';
+import Icon from 'mastodon/components/icon';
 
 const ColumnLink = ({ icon, text, to, href, method, badge, ...other }) => {
   const badgeElement = typeof badge !== 'undefined' ? <span className='column-link__badge'>{badge}</span> : null;
@@ -8,7 +9,7 @@ const ColumnLink = ({ icon, text, to, href, method, badge, ...other }) => {
   if (href) {
     return (
       <a href={href} className='column-link' data-method={method} {...other}>
-        <i className={`fa fa-fw fa-${icon} column-link__icon`} />
+        <Icon id={icon} fixedWidth className='column-link__icon' />
         {text}
         {badgeElement}
       </a>
@@ -16,7 +17,7 @@ const ColumnLink = ({ icon, text, to, href, method, badge, ...other }) => {
   } else {
     return (
       <Link to={to} className='column-link'>
-        <i className={`fa fa-fw fa-${icon} column-link__icon`} />
+        <Icon id={icon} fixedWidth className='column-link__icon' />
         {text}
         {badgeElement}
       </Link>

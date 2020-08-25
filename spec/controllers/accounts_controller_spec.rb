@@ -3,8 +3,8 @@ require 'rails_helper'
 RSpec.describe AccountsController, type: :controller do
   render_views
 
-  let(:alice)  { Fabricate(:account, username: 'alice') }
-  let(:eve)  { Fabricate(:user) }
+  let(:alice) { Fabricate(:account, username: 'alice', user: Fabricate(:user)) }
+  let(:eve) { Fabricate(:user) }
 
   describe 'GET #show' do
     let!(:status1) { Status.create!(account: alice, text: 'Hello world') }
@@ -112,7 +112,7 @@ RSpec.describe AccountsController, type: :controller do
 
       context 'with anonymous visitor' do
         context 'without since_id nor max_id' do
-          let(:expected_statuses) { [status4, status3, status2, status1] }
+          let(:expected_statuses) { [status7, status6, status5, status4, status3, status2, status1] }
           let(:expected_pinned_statuses) { [status7, status5, status6] }
 
           include_examples 'responsed statuses'

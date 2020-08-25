@@ -14,7 +14,6 @@ class DropdownMenu extends React.PureComponent {
 
   static contextTypes = {
     router: PropTypes.object,
-    pawooPushHistory: PropTypes.func,
   };
 
   static propTypes = {
@@ -24,6 +23,7 @@ class DropdownMenu extends React.PureComponent {
     placement: PropTypes.string,
     arrowOffsetLeft: PropTypes.string,
     arrowOffsetTop: PropTypes.string,
+    openedViaKeyboard: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -43,13 +43,17 @@ class DropdownMenu extends React.PureComponent {
 
   componentDidMount () {
     document.addEventListener('click', this.handleDocumentClick, false);
+    document.addEventListener('keydown', this.handleKeyDown, false);
     document.addEventListener('touchend', this.handleDocumentClick, listenerOptions);
-    if (this.focusedItem) this.focusedItem.focus();
+    if (this.focusedItem && this.props.openedViaKeyboard) {
+      this.focusedItem.focus();
+    }
     this.setState({ mounted: true });
   }
 
   componentWillUnmount () {
     document.removeEventListener('click', this.handleDocumentClick, false);
+    document.removeEventListener('keydown', this.handleKeyDown, false);
     document.removeEventListener('touchend', this.handleDocumentClick, listenerOptions);
   }
 
@@ -63,13 +67,10 @@ class DropdownMenu extends React.PureComponent {
 
   handleKeyDown = e => {
     const items = Array.from(this.node.getElementsByTagName('a'));
-    const index = items.indexOf(e.currentTarget);
+    const index = items.indexOf(document.activeElement);
     let element;
 
     switch(e.key) {
-    case 'Enter':
-      this.handleClick(e);
-      break;
     case 'ArrowDown':
       element = items[index+1];
       if (element) {
@@ -80,6 +81,18 @@ class DropdownMenu extends React.PureComponent {
       element = items[index-1];
       if (element) {
         element.focus();
+      }
+      break;
+    case 'Tab':
+      if (e.shiftKey) {
+        element = items[index-1] || items[items.length-1];
+      } else {
+        element = items[index+1] || items[0];
+      }
+      if (element) {
+        element.focus();
+        e.preventDefault();
+        e.stopPropagation();
       }
       break;
     case 'Home':
@@ -94,6 +107,15 @@ class DropdownMenu extends React.PureComponent {
         element.focus();
       }
       break;
+    case 'Escape':
+      this.props.onClose();
+      break;
+    }
+  }
+
+  handleItemKeyPress = e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      this.handleClick(e);
     }
   }
 
@@ -108,7 +130,7 @@ class DropdownMenu extends React.PureComponent {
       action(e);
     } else if (to) {
       e.preventDefault();
-      this.context.pawooPushHistory(to);
+      this.context.router.history.push(to);
     }
   }
 
@@ -117,11 +139,11 @@ class DropdownMenu extends React.PureComponent {
       return <li key={`sep-${i}`} className='dropdown-menu__separator' />;
     }
 
-    const { text, href = '#' } = option;
+    const { text, href = '#', target = '_blank', method } = option;
 
     return (
       <li className='dropdown-menu__item' key={`${text}-${i}`}>
-        <a href={href} target='_blank' rel='noopener' role='button' tabIndex='0' ref={i === 0 ? this.setFocusRef : null} onClick={this.handleClick} onKeyDown={this.handleKeyDown} data-index={i}>
+        <a href={href} target={target} data-method={method} rel='noopener' role='button' tabIndex='0' ref={i === 0 ? this.setFocusRef : null} onClick={this.handleClick} onKeyPress={this.handleItemKeyPress} data-index={i}>
           {text}
         </a>
       </li>
@@ -138,7 +160,7 @@ class DropdownMenu extends React.PureComponent {
           // It should not be transformed when mounting because the resulting
           // size will be used to determine the coordinate of the menu by
           // react-overlays
-          <div className='dropdown-menu' style={{ ...style, opacity: opacity, transform: mounted ? `scale(${scaleX}, ${scaleY})` : null }} ref={this.setRef}>
+          <div className={`dropdown-menu ${placement}`} style={{ ...style, opacity: opacity, transform: mounted ? `scale(${scaleX}, ${scaleY})` : null }} ref={this.setRef}>
             <div className={`dropdown-menu__arrow ${placement}`} style={{ left: arrowOffsetLeft, top: arrowOffsetTop }} />
 
             <ul>
@@ -171,6 +193,7 @@ export default class Dropdown extends React.PureComponent {
     onClose: PropTypes.func.isRequired,
     dropdownPlacement: PropTypes.string,
     openDropdownId: PropTypes.number,
+    openedViaKeyboard: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -181,25 +204,46 @@ export default class Dropdown extends React.PureComponent {
     id: id++,
   };
 
-  handleClick = ({ target }) => {
+  handleClick = ({ target, type }) => {
     if (this.state.id === this.props.openDropdownId) {
       this.handleClose();
     } else {
       const { top } = target.getBoundingClientRect();
       const placement = top * 2 < innerHeight ? 'bottom' : 'top';
-
-      this.props.onOpen(this.state.id, this.handleItemClick, placement);
+      this.props.onOpen(this.state.id, this.handleItemClick, placement, type !== 'click');
     }
   }
 
   handleClose = () => {
+    if (this.activeElement) {
+      this.activeElement.focus();
+      this.activeElement = null;
+    }
     this.props.onClose(this.state.id);
   }
 
-  handleKeyDown = e => {
+  handleMouseDown = () => {
+    if (!this.state.open) {
+      this.activeElement = document.activeElement;
+    }
+  }
+
+  handleButtonKeyDown = (e) => {
     switch(e.key) {
-    case 'Escape':
-      this.handleClose();
+    case ' ':
+    case 'Enter':
+      this.handleMouseDown();
+      break;
+    }
+  }
+
+  handleKeyPress = (e) => {
+    switch(e.key) {
+    case ' ':
+    case 'Enter':
+      this.handleClick(e);
+      e.stopPropagation();
+      e.preventDefault();
       break;
     }
   }
@@ -215,7 +259,7 @@ export default class Dropdown extends React.PureComponent {
       action();
     } else if (to) {
       e.preventDefault();
-      this.context.pawooPushHistory(to);
+      this.context.router.history.push(to);
     }
   }
 
@@ -227,12 +271,18 @@ export default class Dropdown extends React.PureComponent {
     return this.target;
   }
 
+  componentWillUnmount = () => {
+    if (this.state.id === this.props.openDropdownId) {
+      this.handleClose();
+    }
+  }
+
   render () {
-    const { icon, items, size, title, disabled, dropdownPlacement, openDropdownId } = this.props;
+    const { icon, items, size, title, disabled, dropdownPlacement, openDropdownId, openedViaKeyboard } = this.props;
     const open = this.state.id === openDropdownId;
 
     return (
-      <div onKeyDown={this.handleKeyDown}>
+      <div>
         <IconButton
           icon={icon}
           title={title}
@@ -241,10 +291,13 @@ export default class Dropdown extends React.PureComponent {
           size={size}
           ref={this.setTargetRef}
           onClick={this.handleClick}
+          onMouseDown={this.handleMouseDown}
+          onKeyDown={this.handleButtonKeyDown}
+          onKeyPress={this.handleKeyPress}
         />
 
         <Overlay show={open} placement={dropdownPlacement} target={this.findTarget}>
-          <DropdownMenu items={items} onClose={this.handleClose} />
+          <DropdownMenu items={items} onClose={this.handleClose} openedViaKeyboard={openedViaKeyboard} />
         </Overlay>
       </div>
     );

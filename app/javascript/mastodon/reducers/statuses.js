@@ -38,22 +38,30 @@ export default function statuses(state = initialState, action) {
   case FAVOURITE_REQUEST:
     return state.setIn([action.status.get('id'), 'favourited'], true);
   case FAVOURITE_FAIL:
-    return state.setIn([action.status.get('id'), 'favourited'], false);
+    return state.get(action.status.get('id')) === undefined ? state : state.setIn([action.status.get('id'), 'favourited'], false);
   case REBLOG_REQUEST:
     return state.setIn([action.status.get('id'), 'reblogged'], true);
   case REBLOG_FAIL:
-    return state.setIn([action.status.get('id'), 'reblogged'], false);
+    return state.get(action.status.get('id')) === undefined ? state : state.setIn([action.status.get('id'), 'reblogged'], false);
   case STATUS_MUTE_SUCCESS:
     return state.setIn([action.id, 'muted'], true);
   case STATUS_UNMUTE_SUCCESS:
     return state.setIn([action.id, 'muted'], false);
   case STATUS_REVEAL:
     return state.withMutations(map => {
-      action.ids.forEach(id => map.setIn([id, 'hidden'], false));
+      action.ids.forEach(id => {
+        if (!(state.get(id) === undefined)) {
+          map.setIn([id, 'hidden'], false);
+        }
+      });
     });
   case STATUS_HIDE:
     return state.withMutations(map => {
-      action.ids.forEach(id => map.setIn([id, 'hidden'], true));
+      action.ids.forEach(id => {
+        if (!(state.get(id) === undefined)) {
+          map.setIn([id, 'hidden'], true);
+        }
+      });
     });
   case TIMELINE_DELETE:
     return deleteStatus(state, action.id, action.references);

@@ -102,7 +102,7 @@ class Pawoo::Form::ReportTargetGroup
     return if report_target_groups.blank?
 
     target_accounts = Account.where(id: extract_account_ids(report_target_groups)).select(:id)
-    target_accounts.update_all(silenced: true)
+    target_accounts.update_all(silenced_at: Time.now.utc)
 
     target_account_ids = target_accounts.map(&:id)
     @additional_resolved_report_targets += Pawoo::ReportTarget.where(state: state_param, target_type: 'Account', target_id: target_account_ids)

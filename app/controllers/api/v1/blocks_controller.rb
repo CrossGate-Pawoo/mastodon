@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Api::V1::BlocksController < Api::BaseController
-  before_action -> { doorkeeper_authorize! :follow }
+  before_action -> { doorkeeper_authorize! :follow, :'read:blocks' }
   before_action :require_user!
   after_action :insert_pagination_headers
 
@@ -19,7 +19,7 @@ class Api::V1::BlocksController < Api::BaseController
   end
 
   def paginated_blocks
-    @paginated_blocks ||= Block.eager_load(:target_account)
+    @paginated_blocks ||= Block.eager_load(target_account: :account_stat)
                                .where(account: current_account)
                                .paginate_by_max_id(
                                  limit_param(DEFAULT_ACCOUNTS_LIMIT),

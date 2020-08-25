@@ -1,16 +1,15 @@
 import React from 'react';
-import ImmutablePropTypes from 'react-immutable-proptypes';
 import { connect } from 'react-redux';
 import { expandHomeTimeline } from '../../actions/timelines';
 import PropTypes from 'prop-types';
 import StatusListContainer from '../ui/containers/status_list_container';
 import Column from '../../components/column';
+import ColumnHeader from '../../components/column_header';
 import { addColumn, removeColumn, moveColumn } from '../../actions/columns';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import ColumnSettingsContainer from './containers/column_settings_container';
-import ColumnHeader from '../../../pawoo/components/animated_timeline_column_header';
-import Link from '../../../pawoo/components/wrapped_link';
-import PawooTimelineBottomBanner from '../../../pawoo/components/timeline_bottom_banner';
+import { Link } from 'react-router-dom';
+import PawooTimelineBottomBanner from 'pawoo/components/timeline_bottom_banner';
 
 const messages = defineMessages({
   title: { id: 'column.home', defaultMessage: 'Home' },
@@ -18,21 +17,21 @@ const messages = defineMessages({
 
 const mapStateToProps = state => ({
   hasUnread: state.getIn(['timelines', 'home', 'unread']) > 0,
-  isPartial: state.getIn(['timelines', 'home', 'items', 0], null) === null,
+  isPartial: state.getIn(['timelines', 'home', 'isPartial']),
 });
 
-@connect(mapStateToProps)
+export default @connect(mapStateToProps)
 @injectIntl
-export default class HomeTimeline extends React.PureComponent {
+class HomeTimeline extends React.PureComponent {
 
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
+    shouldUpdateScroll: PropTypes.func,
     intl: PropTypes.object.isRequired,
     hasUnread: PropTypes.bool,
     isPartial: PropTypes.bool,
     columnId: PropTypes.string,
     multiColumn: PropTypes.bool,
-    pawoo: ImmutablePropTypes.map,
   };
 
   handlePin = () => {
@@ -96,11 +95,11 @@ export default class HomeTimeline extends React.PureComponent {
   }
 
   render () {
-    const { intl, hasUnread, columnId, multiColumn, pawoo } = this.props;
+    const { intl, shouldUpdateScroll, hasUnread, columnId, multiColumn } = this.props;
     const pinned = !!columnId;
 
     return (
-      <Column ref={this.setRef}>
+      <Column ref={this.setRef} label={intl.formatMessage(messages.title)}>
         <ColumnHeader
           icon='home'
           active={hasUnread}
@@ -110,18 +109,17 @@ export default class HomeTimeline extends React.PureComponent {
           onClick={this.handleHeaderClick}
           pinned={pinned}
           multiColumn={multiColumn}
-          pawoo={pawoo}
-          pawooUrl='/timelines/home'
-          timelineId='home'
         >
           <ColumnSettingsContainer />
         </ColumnHeader>
 
         <StatusListContainer
+          trackScroll={!pinned}
           scrollKey={`home_timeline-${columnId}`}
           onLoadMore={this.handleLoadMore}
           timelineId='home'
           emptyMessage={<FormattedMessage id='empty_column.home' defaultMessage='Your home timeline is empty! Visit {public} or use search to get started and meet other users.' values={{ public: <Link to='/suggested_accounts'><FormattedMessage id='pawoo.empty_column.home.suggested_accounts' defaultMessage='the active accounts' /></Link> }} />}
+          shouldUpdateScroll={shouldUpdateScroll}
         />
 
         <PawooTimelineBottomBanner />

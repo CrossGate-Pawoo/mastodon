@@ -3,6 +3,13 @@
   %head
     %meta{ charset: 'utf-8' }/
     %meta{ name: 'viewport', content: 'width=device-width, initial-scale=1' }/
+
+    - if cdn_host?
+      %link{ rel: 'dns-prefetch', href: cdn_host }/
+
+    - if storage_host?
+      %link{ rel: 'dns-prefetch', href: storage_host }/
+
     %link{ rel: 'icon', href: favicon_path, type: 'image/x-icon' }/
     %link{ rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' }/
     %link{ rel: 'mask-icon', href: '/mask-icon.svg', color: '#2B90D9' }/
@@ -10,8 +17,7 @@
     %meta{ name: 'msapplication-config', content: '/browserconfig.xml' }/
     %meta{ name: 'theme-color', content: '#282c37' }/
     %meta{ name: 'apple-mobile-web-app-capable', content: 'yes' }/
-    %script{ 'data-ad-client': 'pub-3050691455323056', async:'', src: 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js'}
-
+    %script{ 'data-ad-client': 'pub-3050691455323056', async:'', src: 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js', nonce: content_security_policy_nonce}
 
     - if current_account
       %meta{ name: 'pawoo-ga-uid', content: current_account.id }/
@@ -24,11 +30,15 @@
     = javascript_pack_tag "locale_#{I18n.locale}", integrity: true, crossorigin: 'anonymous'
     = csrf_meta_tags
 
+    - if Setting.custom_css.present?
+      = stylesheet_link_tag custom_css_path, media: 'all'
+
     = yield :header_tags
 
-  - body_classes ||= @body_classes || ''
-  - body_classes += ' system-font' if current_account&.user&.setting_system_font_ui
-  - body_classes += current_account&.user&.setting_reduce_motion ? ' reduce-motion' : ' no-reduce-motion'
-
-  %body{ class: add_rtl_body_class(body_classes) }
+  %body{ class: body_classes }
     = content_for?(:content) ? yield(:content) : yield
+
+    %div{ style: 'display: none'}
+      = render file: Rails.root.join('app', 'javascript', 'images', 'logo_transparent.svg')
+      = render file: Rails.root.join('app', 'javascript', 'images', 'logo_full.svg')
+      = render file: Rails.root.join('app', 'javascript', 'pawoo', 'images', 'logo_transparent.svg')

@@ -6,7 +6,7 @@ class Pawoo::Sitemap
   SITEMAPINDEX_SIZE = 10_000
 
   def self.page_count
-    (paging_class.maximum(:id) / SITEMAPINDEX_SIZE) + 1
+    raise 'please override'
   end
 
   def initialize(page)
@@ -15,16 +15,6 @@ class Pawoo::Sitemap
 
   def cached?
     Rails.cache.exist?(redis_key)
-  end
-
-  private
-
-  def min_id
-    (page.to_i - 1) * SITEMAPINDEX_SIZE
-  end
-
-  def max_id
-    min_id + SITEMAPINDEX_SIZE
   end
 
   def redis_key
@@ -38,5 +28,4 @@ class Pawoo::Sitemap
   def store_to_cache(ids)
     Rails.cache.write(redis_key, ids, expires_in: 2.days)
   end
-
 end

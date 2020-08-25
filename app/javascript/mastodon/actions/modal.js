@@ -1,4 +1,4 @@
-import PawooGA from '../../pawoo/actions/ga';
+import PawooGA from 'pawoo/actions/ga';
 
 const pawooGaCategory = 'Modal';
 
@@ -15,8 +15,9 @@ export function openModal(type, props) {
   };
 };
 
-export function closeModal() {
+export function closeModal(type) {
   return {
     type: MODAL_CLOSE,
+    modalType: type,
   };
 };

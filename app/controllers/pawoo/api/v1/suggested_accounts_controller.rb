@@ -26,7 +26,7 @@ class Pawoo::Api::V1::SuggestedAccountsController < Api::BaseController
     set_pagination_headers(next_path, prev_path)
 
     media_attachments_of = Pawoo::LoadAccountMediaAttachmentsService.new.call(@accounts, 3)
-    render json: @accounts, each_serializer: REST::SuggestedAccountSerializer, media_attachments_of: media_attachments_of
+    render json: @accounts, each_serializer: Pawoo::REST::SuggestedAccountSerializer, media_attachments_of: media_attachments_of
   end
 
   private
@@ -36,9 +36,9 @@ class Pawoo::Api::V1::SuggestedAccountsController < Api::BaseController
     muted_and_blocked = account.excluded_from_timeline_account_ids
     oauth_authentication = account.oauth_authentications.find_by(provider: 'pixiv')
 
-    SuggestedAccountQuery.new
+    Pawoo::SuggestedAccountQuery.new
       .exclude_ids([account.id] + following + muted_and_blocked)
       .with_pixiv_follows(oauth_authentication, limit: 6)
-      .with_tradic(account, limit: 6)
+      .with_potential_friendship(account, limit: 6)
   end
 end

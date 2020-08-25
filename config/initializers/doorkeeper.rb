@@ -55,7 +55,38 @@ Doorkeeper.configure do
   # For more information go to
   # https://github.com/doorkeeper-gem/doorkeeper/wiki/Using-Scopes
   default_scopes  :read
-  optional_scopes :write, :follow, :push
+  optional_scopes :write,
+                  :'write:accounts',
+                  :'write:blocks',
+                  :'write:conversations',
+                  :'write:favourites',
+                  :'write:filters',
+                  :'write:follows',
+                  :'write:lists',
+                  :'write:media',
+                  :'write:mutes',
+                  :'write:notifications',
+                  :'write:reports',
+                  :'write:statuses',
+                  :read,
+                  :'read:accounts',
+                  :'read:blocks',
+                  :'read:favourites',
+                  :'read:filters',
+                  :'read:follows',
+                  :'read:lists',
+                  :'read:mutes',
+                  :'read:notifications',
+                  :'read:search',
+                  :'read:statuses',
+                  :follow,
+                  :push,
+                  :'admin:read',
+                  :'admin:read:accounts',
+                  :'admin:read:reports',
+                  :'admin:write',
+                  :'admin:write:accounts',
+                  :'admin:write:reports'
 
   # Change the way client credentials are retrieved from the request object.
   # By default it retrieves first from the `HTTP_AUTHORIZATION` header, then

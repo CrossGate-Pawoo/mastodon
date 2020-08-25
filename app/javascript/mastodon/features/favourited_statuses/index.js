@@ -7,7 +7,7 @@ import Column from '../ui/components/column';
 import ColumnHeader from '../../components/column_header';
 import { addColumn, removeColumn, moveColumn } from '../../actions/columns';
 import StatusList from '../../components/status_list';
-import { defineMessages, injectIntl } from 'react-intl';
+import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 import { debounce } from 'lodash';
 
@@ -21,19 +21,19 @@ const mapStateToProps = state => ({
   hasMore: !!state.getIn(['status_lists', 'favourites', 'next']),
 });
 
-@connect(mapStateToProps)
+export default @connect(mapStateToProps)
 @injectIntl
-export default class Favourites extends ImmutablePureComponent {
+class Favourites extends ImmutablePureComponent {
 
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
+    shouldUpdateScroll: PropTypes.func,
     statusIds: ImmutablePropTypes.list.isRequired,
     intl: PropTypes.object.isRequired,
     columnId: PropTypes.string,
     multiColumn: PropTypes.bool,
     hasMore: PropTypes.bool,
     isLoading: PropTypes.bool,
-    pawoo: ImmutablePropTypes.map.isRequired,
   };
 
   componentWillMount () {
@@ -68,11 +68,13 @@ export default class Favourites extends ImmutablePureComponent {
   }, 300, { leading: true })
 
   render () {
-    const { intl, statusIds, columnId, multiColumn, hasMore, isLoading, pawoo } = this.props;
+    const { intl, shouldUpdateScroll, statusIds, columnId, multiColumn, hasMore, isLoading } = this.props;
     const pinned = !!columnId;
 
+    const emptyMessage = <FormattedMessage id='empty_column.favourited_statuses' defaultMessage="You don't have any favourite toots yet. When you favourite one, it will show up here." />;
+
     return (
-      <Column ref={this.setRef}>
+      <Column ref={this.setRef} label={intl.formatMessage(messages.heading)}>
         <ColumnHeader
           icon='star'
           title={intl.formatMessage(messages.heading)}
@@ -82,16 +84,17 @@ export default class Favourites extends ImmutablePureComponent {
           pinned={pinned}
           multiColumn={multiColumn}
           showBackButton
-          pawoo={pawoo}
-          pawooUrl='/favourites'
         />
 
         <StatusList
+          trackScroll={!pinned}
           statusIds={statusIds}
           scrollKey={`favourited_statuses-${columnId}`}
           hasMore={hasMore}
           isLoading={isLoading}
           onLoadMore={this.handleLoadMore}
+          shouldUpdateScroll={shouldUpdateScroll}
+          emptyMessage={emptyMessage}
         />
       </Column>
     );

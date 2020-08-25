@@ -35,7 +35,7 @@ describe StatusThreadingConcern do
     end
 
     it 'does not return conversation history from silenced and not followed users' do
-      jeff.update(silenced: true)
+      jeff.silence!
       expect(reply3.ancestors(4, viewer)).to_not include(reply1)
     end
 
@@ -110,13 +110,23 @@ describe StatusThreadingConcern do
     end
 
     it 'does not return replies from silenced and not followed users' do
-      jeff.update(silenced: true)
+      jeff.silence!
       expect(status.descendants(4, viewer)).to_not include(reply3)
     end
 
     it 'does not return replies from blocked domains' do
       viewer.block_domain!('example.com')
       expect(status.descendants(4, viewer)).to_not include(reply2)
+    end
+
+    it 'promotes self-replies to the top while leaving the rest in order' do
+      a = Fabricate(:status, account: alice)
+      d = Fabricate(:status, account: jeff, thread: a)
+      e = Fabricate(:status, account: bob, thread: d)
+      c = Fabricate(:status, account: alice, thread: a)
+      f = Fabricate(:status, account: bob, thread: c)
+
+      expect(a.descendants(20)).to eq [c, d, e, f]
     end
   end
 end

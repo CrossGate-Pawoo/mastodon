@@ -21,20 +21,22 @@ describe Export do
       target_accounts.each(&account.method(:mute!))
 
       export = Export.new(account).to_muted_accounts_csv
-      results = export.strip.split
+      results = export.strip.split("\n")
 
-      expect(results.size).to eq 2
-      expect(results.first).to eq 'one@local.host'
+      expect(results.size).to eq 3
+      expect(results.first).to eq 'Account address,Hide notifications'
+      expect(results.second).to eq 'one@local.host,true'
     end
 
     it 'returns a csv of the following accounts' do
       target_accounts.each(&account.method(:follow!))
 
       export = Export.new(account).to_following_accounts_csv
-      results = export.strip.split
+      results = export.strip.split("\n")
 
-      expect(results.size).to eq 2
-      expect(results.first).to eq 'one@local.host'
+      expect(results.size).to eq 3
+      expect(results.first).to eq 'Account address,Show boosts'
+      expect(results.second).to eq 'one@local.host,true'
     end
   end
 
@@ -48,17 +50,17 @@ describe Export do
   describe 'total_follows' do
     it 'returns the total number of the followed accounts' do
       target_accounts.each(&account.method(:follow!))
-      expect(Export.new(account).total_follows).to eq 2
+      expect(Export.new(account.reload).total_follows).to eq 2
     end
 
     it 'returns the total number of the blocked accounts' do
       target_accounts.each(&account.method(:block!))
-      expect(Export.new(account).total_blocks).to eq 2
+      expect(Export.new(account.reload).total_blocks).to eq 2
     end
 
     it 'returns the total number of the muted accounts' do
       target_accounts.each(&account.method(:mute!))
-      expect(Export.new(account).total_mutes).to eq 2
+      expect(Export.new(account.reload).total_mutes).to eq 2
     end
   end
 end

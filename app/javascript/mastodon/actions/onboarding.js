@@ -1,19 +1,13 @@
 import { changeSetting, saveSettings } from './settings';
-import { setPage as pawooSetPage } from '../../pawoo/actions/page';
-import PawooGA from '../../pawoo/actions/ga';
+import PawooGA from 'pawoo/actions/ga';
 
 const pawooGaCategory = 'Onboarding';
 
-export function showOnboardingOnce() {
-  return (dispatch, getState) => {
-    const alreadySeen = getState().getIn(['settings', 'onboarded']);
+export const INTRODUCTION_VERSION = 20181216044202;
 
-    if (!alreadySeen) {
-      dispatch(pawooSetPage('ONBOARDING'));
-      dispatch(changeSetting(['onboarded'], true));
-      dispatch(saveSettings());
+export const closeOnboarding = () => dispatch => {
+  dispatch(changeSetting(['introductionVersion'], INTRODUCTION_VERSION));
+  dispatch(saveSettings());
 
-      PawooGA.event({ eventCategory: pawooGaCategory, eventAction: 'Show' });
-    }
-  };
+  PawooGA.event({ eventCategory: pawooGaCategory, eventAction: 'Show' });
 };

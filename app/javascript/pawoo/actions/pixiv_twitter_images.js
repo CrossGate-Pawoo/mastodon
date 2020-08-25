@@ -1,4 +1,4 @@
-import api from '../../mastodon/api';
+import api from 'mastodon/api';
 
 const requestedImageCaches = [];
 export function requestImageCache(url) {

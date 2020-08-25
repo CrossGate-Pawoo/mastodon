@@ -90,18 +90,6 @@ export function FavouritedStatuses () {
   return import(/* webpackChunkName: "features/favourited_statuses" */'../../favourited_statuses');
 }
 
-export function MediaTimeline () {
-  return import(/* webpackChunkName: "features/media_timeline" */'../../media_timeline');
-}
-
-export function SuggestionTags () {
-  return import(/* webpackChunkName: "features/suggestion_tags" */'../../suggestion_tags');
-}
-
-export function AccountMediaTimeline () {
-  return import(/* webpackChunkName: "features/account_media_timeline" */'../../account_media_timeline');
-}
-
 export function Blocks () {
   return import(/* webpackChunkName: "features/blocks" */'../../blocks');
 }
@@ -114,16 +102,16 @@ export function Mutes () {
   return import(/* webpackChunkName: "features/mutes" */'../../mutes');
 }
 
-export function OnboardingModal () {
-  return import(/* webpackChunkName: "modals/onboarding_modal" */'../components/onboarding_modal');
-}
-
 export function MuteModal () {
   return import(/* webpackChunkName: "modals/mute_modal" */'../components/mute_modal');
 }
 
+export function BlockModal () {
+  return import(/* webpackChunkName: "modals/block_modal" */'../components/block_modal');
+}
+
 export function ReportModal () {
-  return import(/* webpackChunkName: "modals/report_modal" */'../../../../pawoo/containers/report_modal_container');
+  return import(/* webpackChunkName: "modals/report_modal" */'../components/report_modal');
 }
 
 export function MediaGallery () {
@@ -140,4 +128,12 @@ export function EmbedModal () {
 
 export function ListEditor () {
   return import(/* webpackChunkName: "features/list_editor" */'../../list_editor');
+}
+
+export function ListAdder () {
+  return import(/*webpackChunkName: "features/list_adder" */'../../list_adder');
+}
+
+export function Search () {
+  return import(/*webpackChunkName: "features/search" */'../../search');
 }

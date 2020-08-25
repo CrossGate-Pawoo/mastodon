@@ -2,13 +2,14 @@ import React from 'react';
 import ReactSwipeableViews from 'react-swipeable-views';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import PropTypes from 'prop-types';
-import Video from '../../video';
-import ExtendedVideoPlayer from '../../../components/extended_video_player';
+import Video from 'mastodon/features/video';
+import ExtendedVideoPlayer from 'mastodon/components/extended_video_player';
 import classNames from 'classnames';
-import { defineMessages, injectIntl } from 'react-intl';
-import IconButton from '../../../components/icon_button';
+import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
+import IconButton from 'mastodon/components/icon_button';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 import ImageLoader from './image_loader';
+import Icon from 'mastodon/components/icon';
 
 const messages = defineMessages({
   close: { id: 'lightbox.close', defaultMessage: 'Close' },
@@ -16,14 +17,21 @@ const messages = defineMessages({
   next: { id: 'lightbox.next', defaultMessage: 'Next' },
 });
 
-@injectIntl
-export default class MediaModal extends ImmutablePureComponent {
+export const previewState = 'previewMediaModal';
+
+export default @injectIntl
+class MediaModal extends ImmutablePureComponent {
 
   static propTypes = {
     media: ImmutablePropTypes.list.isRequired,
+    status: ImmutablePropTypes.map,
     index: PropTypes.number.isRequired,
     onClose: PropTypes.func.isRequired,
     intl: PropTypes.object.isRequired,
+  };
+
+  static contextTypes = {
+    router: PropTypes.object,
   };
 
   state = {
@@ -48,23 +56,45 @@ export default class MediaModal extends ImmutablePureComponent {
     this.setState({ index: index % this.props.media.size });
   }
 
-  handleKeyUp = (e) => {
+  handleKeyDown = (e) => {
     switch(e.key) {
     case 'ArrowLeft':
       this.handlePrevClick();
+      e.preventDefault();
+      e.stopPropagation();
       break;
     case 'ArrowRight':
       this.handleNextClick();
+      e.preventDefault();
+      e.stopPropagation();
       break;
     }
   }
 
   componentDidMount () {
-    window.addEventListener('keyup', this.handleKeyUp, false);
+    window.addEventListener('keydown', this.handleKeyDown, false);
+
+    if (this.context.router) {
+      const history = this.context.router.history;
+
+      history.push(history.location.pathname, previewState);
+
+      this.unlistenHistory = history.listen(() => {
+        this.props.onClose();
+      });
+    }
   }
 
   componentWillUnmount () {
-    window.removeEventListener('keyup', this.handleKeyUp);
+    window.removeEventListener('keydown', this.handleKeyDown);
+
+    if (this.context.router) {
+      this.unlistenHistory();
+
+      if (this.context.router.history.location.state === previewState) {
+        this.context.router.history.goBack();
+      }
+    }
   }
 
   getIndex () {
@@ -77,15 +107,22 @@ export default class MediaModal extends ImmutablePureComponent {
     }));
   };
 
+  handleStatusClick = e => {
+    if (e.button === 0 && !(e.ctrlKey || e.metaKey)) {
+      e.preventDefault();
+      this.context.router.history.push(`/statuses/${this.props.status.get('id')}`);
+    }
+  }
+
   render () {
-    const { media, intl, onClose } = this.props;
+    const { media, status, intl, onClose } = this.props;
     const { navigationHidden } = this.state;
 
     const index = this.getIndex();
     let pagination = [];
 
-    const leftNav  = media.size > 1 && <button tabIndex='0' className='media-modal__nav media-modal__nav--left' onClick={this.handlePrevClick} aria-label={intl.formatMessage(messages.previous)}><i className='fa fa-fw fa-chevron-left' /></button>;
-    const rightNav = media.size > 1 && <button tabIndex='0' className='media-modal__nav  media-modal__nav--right' onClick={this.handleNextClick} aria-label={intl.formatMessage(messages.next)}><i className='fa fa-fw fa-chevron-right' /></button>;
+    const leftNav  = media.size > 1 && <button tabIndex='0' className='media-modal__nav media-modal__nav--left' onClick={this.handlePrevClick} aria-label={intl.formatMessage(messages.previous)}><Icon id='chevron-left' fixedWidth /></button>;
+    const rightNav = media.size > 1 && <button tabIndex='0' className='media-modal__nav  media-modal__nav--right' onClick={this.handleNextClick} aria-label={intl.formatMessage(messages.next)}><Icon id='chevron-right' fixedWidth /></button>;
 
     if (media.size > 1) {
       pagination = media.map((item, i) => {
@@ -119,13 +156,14 @@ export default class MediaModal extends ImmutablePureComponent {
         return (
           <Video
             preview={image.get('preview_url')}
+            blurhash={image.get('blurhash')}
             src={image.get('url')}
             width={image.get('width')}
             height={image.get('height')}
             startTime={time || 0}
             onCloseVideo={onClose}
             detailed
-            description={image.get('description')}
+            alt={image.get('description')}
             key={image.get('url')}
           />
         );
@@ -181,10 +219,19 @@ export default class MediaModal extends ImmutablePureComponent {
             {content}
           </ReactSwipeableViews>
         </div>
+
         <div className={navigationClassName}>
           <IconButton className='media-modal__close' title={intl.formatMessage(messages.close)} icon='times' onClick={onClose} size={40} />
+
           {leftNav}
           {rightNav}
+
+          {status && (
+            <div className={classNames('media-modal__meta', { 'media-modal__meta--shifted': media.size > 1 })}>
+              <a href={status.get('url')} onClick={this.handleStatusClick}><FormattedMessage id='lightbox.view_context' defaultMessage='View context' /></a>
+            </div>
+          )}
+
           <ul className='media-modal__pagination'>
             {pagination}
           </ul>

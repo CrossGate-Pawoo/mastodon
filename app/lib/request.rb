@@ -33,10 +33,11 @@ class Request
     set_digest! if options.key?(:body)
   end
 
-  def on_behalf_of(account, key_id_format = :acct)
+  def on_behalf_of(account, key_id_format = :acct, sign_with: nil)
     raise ArgumentError unless account.local?
 
     @account       = account
+    @keypair       = sign_with.present? ? OpenSSL::PKey::RSA.new(sign_with) : @account.keypair
     @key_id_format = key_id_format
 
     self
@@ -65,6 +66,18 @@ class Request
     (@account ? @headers.merge('Signature' => signature) : @headers).without(REQUEST_TARGET)
   end
 
+  class << self
+    def valid_url?(url)
+      begin
+        parsed_url = Addressable::URI.parse(url)
+      rescue Addressable::URI::InvalidURIError
+        return false
+      end
+
+      %w(http https).include?(parsed_url.scheme) && parsed_url.host.present?
+    end
+  end
+
   private
 
   def set_common_headers!
@@ -81,17 +94,17 @@ class Request
 
   def signature
     algorithm = 'rsa-sha256'
-    signature = Base64.strict_encode64(@account.keypair.sign(OpenSSL::Digest::SHA256.new, signed_string))
+    signature = Base64.strict_encode64(@keypair.sign(OpenSSL::Digest::SHA256.new, signed_string))
 
-    "keyId=\"#{key_id}\",algorithm=\"#{algorithm}\",headers=\"#{signed_headers}\",signature=\"#{signature}\""
+    "keyId=\"#{key_id}\",algorithm=\"#{algorithm}\",headers=\"#{signed_headers.keys.join(' ').downcase}\",signature=\"#{signature}\""
   end
 
   def signed_string
-    @headers.map { |key, value| "#{key.downcase}: #{value}" }.join("\n")
+    signed_headers.map { |key, value| "#{key.downcase}: #{value}" }.join("\n")
   end
 
   def signed_headers
-    @headers.keys.join(' ').downcase
+    @headers.without('User-Agent', 'Accept-Encoding')
   end
 
   def key_id
@@ -186,7 +199,7 @@ class Request
       alias new open
 
       def thru_hidden_service?(host)
-        Rails.configuration.x.hidden_service_via_transparent_proxy && /\.(onion|i2p)$/.match(host)
+        Rails.configuration.x.access_to_hidden_service && /\.(onion|i2p)$/.match(host)
       end
     end
   end

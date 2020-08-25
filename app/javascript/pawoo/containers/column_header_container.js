@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import ColumnHeader from '../../mastodon/components/column_header';
+import ColumnHeader from 'mastodon/components/column_header';
 
 const mapStateToProps = state => ({
   pawooExpanded: state.getIn(['settings', 'pawoo', 'expanded']),

@@ -1,8 +1,14 @@
 # frozen_string_literal: true
 
 module ApplicationHelper
-  def active_nav_class(path)
-    current_page?(path) ? 'active' : ''
+  DANGEROUS_SCOPES = %w(
+    read
+    write
+    follow
+  ).freeze
+
+  def active_nav_class(*paths)
+    paths.any? { |path| current_page?(path) } ? 'active' : ''
   end
 
   def active_link_to(label, path, **options)
@@ -14,16 +20,27 @@ module ApplicationHelper
   end
 
   def open_registrations?
-    Setting.open_registrations
+    Setting.registrations_mode == 'open'
+  end
+
+  def approved_registrations?
+    Setting.registrations_mode == 'approved'
+  end
+
+  def closed_registrations?
+    Setting.registrations_mode == 'none'
+  end
+
+  def available_sign_up_path
+    if closed_registrations?
+      'https://joinmastodon.org/#getting-started'
+    else
+      new_user_registration_path
+    end
   end
 
   def open_deletion?
     Setting.open_deletion
-  end
-
-  def add_rtl_body_class(other_classes)
-    other_classes = "#{other_classes} rtl" if locale_direction == 'rtl'
-    other_classes
   end
 
   def locale_direction
@@ -49,6 +66,10 @@ module ApplicationHelper
     end
   end
 
+  def class_for_scope(scope)
+    'scope-danger' if DANGEROUS_SCOPES.include?(scope.to_s)
+  end
+
   def can?(action, record)
     return false if record.nil?
     policy(record).public_send("#{action}?")
@@ -70,7 +91,41 @@ module ApplicationHelper
     tag(:meta, content: content, property: property)
   end
 
-  def react_component(name, props = {})
-    content_tag(:div, nil, data: { component: name.to_s.camelcase, props: Oj.dump(props) })
+  def react_component(name, props = {}, &block)
+    if block.nil?
+      content_tag(:div, nil, data: { component: name.to_s.camelcase, props: Oj.dump(props) })
+    else
+      content_tag(:div, data: { component: name.to_s.camelcase, props: Oj.dump(props) }, &block)
+    end
+  end
+
+  def body_classes
+    output = (@body_classes || '').split(' ')
+    output << "theme-#{current_theme.parameterize}"
+    output << 'system-font' if current_account&.user&.setting_system_font_ui
+    output << (current_account&.user&.setting_reduce_motion ? 'reduce-motion' : 'no-reduce-motion')
+    output << 'rtl' if locale_direction == 'rtl'
+    output.reject(&:blank?).join(' ')
+  end
+
+  def cdn_host
+    Rails.configuration.action_controller.asset_host
+  end
+
+  def cdn_host?
+    cdn_host.present?
+  end
+
+  def storage_host
+    "https://#{ENV['S3_ALIAS_HOST'].presence || ENV['S3_CLOUDFRONT_HOST']}"
+  end
+
+  def storage_host?
+    ENV['S3_ALIAS_HOST'].present? || ENV['S3_CLOUDFRONT_HOST'].present?
+  end
+
+  def quote_wrap(text, line_width: 80, break_sequence: "\n")
+    text = word_wrap(text, line_width: line_width - 2, break_sequence: break_sequence)
+    text.split("\n").map { |line| '> ' + line }.join("\n")
   end
 end

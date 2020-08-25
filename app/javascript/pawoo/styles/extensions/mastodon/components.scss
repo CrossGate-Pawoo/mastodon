@@ -1,82 +1,19 @@
-#mastodon {
-  background: darken($ui-base-color, 7%);
-}
-
 .column {
-  flex: 1 0 330px;
-}
-
-.ui {
-  &.pawoo-extension-ui--multi-column {
-    max-width: 1920px;
-  }
-
-  &:not(.pawoo-extension-ui--multi-column) .column {
-    max-width: 700px;
-  }
-}
-
-.getting-started {
-  display: flex;
-  flex-direction: column;
-
-  .pawoo-extension-getting-started__column-toggle {
-    display: flex;
-    align-items: end;
-    flex: 1;
-  }
-}
-
-.report-modal__comment {
-  display: flex;
-  flex-direction: column;
-}
-
-.report-modal__container {
-  min-height: 0;
-}
-
-.pawoo-extension-report-modal__type {
-  overflow: auto;
-  margin: -20px -20px 20px;
-  padding: 20px 20px 0;
-}
-
-.pawoo-extension-drawer__tab--unread,
-.pawoo-extension-tabs-bar__link--unread {
-  border-bottom: 2px solid $gold-star;
-  color: $gold-star;
-}
-
-.pawoo-extension-media-gallery__background {
-  cursor: pointer;
-  position: absolute;
-  width: 100%;
-  height: 100%;
+  flex: 1 0 350px;
+  max-width: 600px;
 }
 
 .pawoo-extension-standalone-community {
   display: inline-block;
 
-  > img {
-    margin-right: 16px;
+  svg.pawoo-svg-logo {
+    fill: currentColor;
+    margin-right: 8px;
     vertical-align: bottom;
-    width: 32px;
+    height: 34px;
+    margin-top: -8px;
+    margin-bottom: -6px;
   }
-}
-
-.dropdown-menu {
-  z-index: 2; // .column-headerのz-indexで隠れてしまう
-}
-
-.pawoo-extension-column-header__icon--animation {
-  animation: pawoo-extension-column-header__icon--animation-keyframes 0.5s;
-}
-
-@keyframes pawoo-extension-column-header__icon--animation-keyframes {
-  0% { transform: translateY(0); }
-  50% { transform: translateY(-100%); }
-  100% { transform: translateY(0); }
 }
 
 .pawoo-extension-drawer__inner__mastodon--animation {
@@ -97,3 +34,17 @@
     transform: scale(0.5);
   }
 }
+
+.drawer__inner__mastodon {
+  background: none; // 象の上のギザギザ無効
+}
+
+.account__header__tabs__name {
+  display: flex;
+  align-items: center;
+
+  .pawoo-account__header__oauth-authentications {
+    margin-left: auto;
+  }
+}
+

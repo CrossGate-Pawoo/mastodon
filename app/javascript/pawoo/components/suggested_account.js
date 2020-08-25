@@ -1,12 +1,12 @@
 import React from 'react';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import PropTypes from 'prop-types';
-import Avatar from '../../mastodon/components/avatar';
-import DisplayName from '../../mastodon/components/display_name';
-import Permalink from '../../mastodon/components/permalink';
-import IconButton from '../../mastodon/components/icon_button';
+import Avatar from 'mastodon/components/avatar';
+import DisplayName from 'mastodon/components/display_name';
+import Permalink from 'mastodon/components/permalink';
+import IconButton from 'mastodon/components/icon_button';
 import { defineMessages, injectIntl } from 'react-intl';
-import { me } from '../../mastodon/initial_state';
+import { me } from 'mastodon/initial_state';
 import SuggestedAccountMedia from './suggested_account_media';
 import ga from '../actions/ga';
 
@@ -20,8 +20,8 @@ const messages = defineMessages({
   unmute: { id: 'account.unmute', defaultMessage: 'Unmute @{name}' },
 });
 
-@injectIntl
-export default class SuggestedAccount extends React.PureComponent {
+export default @injectIntl
+class SuggestedAccount extends React.PureComponent {
 
   static propTypes = {
     account: ImmutablePropTypes.map.isRequired,
@@ -50,7 +50,7 @@ export default class SuggestedAccount extends React.PureComponent {
   }
 
   renderLoadingVideoPlayer = () => {
-    return <div className='media-spoiler-video' style={{ height: 132 }} />;
+    return <div className='media-spoiler-video' style={{ height: '110px' }} />;
   }
 
   render () {

@@ -4,6 +4,7 @@ import Immutable from 'immutable';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import punycode from 'punycode';
 import classnames from 'classnames';
+import Icon from 'mastodon/components/icon';
 
 const IDNA_PREFIX = 'xn--';
 
@@ -59,19 +60,23 @@ export default class Card extends React.PureComponent {
     card: ImmutablePropTypes.map,
     maxDescription: PropTypes.number,
     onOpenMedia: PropTypes.func.isRequired,
+    compact: PropTypes.bool,
+    defaultWidth: PropTypes.number,
+    cacheWidth: PropTypes.func,
   };
 
   static defaultProps = {
     maxDescription: 50,
+    compact: false,
   };
 
   state = {
-    width: 280,
+    width: this.props.defaultWidth || 280,
     embedded: false,
   };
 
   componentWillReceiveProps (nextProps) {
-    if (this.props.card !== nextProps.card) {
+    if (!Immutable.is(this.props.card, nextProps.card)) {
       this.setState({ embedded: false });
     }
   }
@@ -109,6 +114,7 @@ export default class Card extends React.PureComponent {
 
   setRef = c => {
     if (c) {
+      if (this.props.cacheWidth) this.props.cacheWidth(c.offsetWidth);
       this.setState({ width: c.offsetWidth });
     }
   }
@@ -118,7 +124,7 @@ export default class Card extends React.PureComponent {
     const content   = { __html: addAutoPlay(card.get('html')) };
     const { width } = this.state;
     const ratio     = card.get('width') / card.get('height');
-    const height    = card.get('width') > card.get('height') ? (width / ratio) : (width * ratio);
+    const height    = width / ratio;
 
     return (
       <div
@@ -131,25 +137,25 @@ export default class Card extends React.PureComponent {
   }
 
   render () {
-    const { card, maxDescription } = this.props;
-    const { width, embedded }      = this.state;
+    const { card, maxDescription, compact } = this.props;
+    const { width, embedded } = this.state;
 
     if (card === null) {
       return null;
     }
 
     const provider    = card.get('provider_name').length === 0 ? decodeIDNA(getHostname(card.get('url'))) : card.get('provider_name');
-    const horizontal  = card.get('width') > card.get('height') && (card.get('width') + 100 >= width) || card.get('type') !== 'link';
-    const className   = classnames('status-card', { horizontal });
+    const horizontal  = (!compact && card.get('width') > card.get('height') && (card.get('width') + 100 >= width)) || card.get('type') !== 'link' || embedded;
     const interactive = card.get('type') !== 'link';
+    const className   = classnames('status-card', { horizontal, compact, interactive });
     const title       = interactive ? <a className='status-card__title' href={card.get('url')} title={card.get('title')} rel='noopener' target='_blank'><strong>{card.get('title')}</strong></a> : <strong className='status-card__title' title={card.get('title')}>{card.get('title')}</strong>;
     const ratio       = card.get('width') / card.get('height');
-    const height      = card.get('width') > card.get('height') ? (width / ratio) : (width * ratio);
+    const height      = (compact && !embedded) ? (width / (16 / 9)) : (width / ratio);
 
     const description = (
       <div className='status-card__content'>
         {title}
-        {!horizontal && <p className='status-card__description'>{trim(card.get('description') || '', maxDescription)}</p>}
+        {!(horizontal || compact) && <p className='status-card__description'>{trim(card.get('description') || '', maxDescription)}</p>}
         <span className='status-card__host'>{provider}</span>
       </div>
     );
@@ -173,8 +179,8 @@ export default class Card extends React.PureComponent {
 
             <div className='status-card__actions'>
               <div>
-                <button onClick={this.handleEmbedClick}><i className={`fa fa-${iconVariant}`} /></button>
-                <a href={card.get('url')} target='_blank' rel='noopener'><i className='fa fa-external-link' /></a>
+                <button onClick={this.handleEmbedClick}><Icon id={iconVariant} /></button>
+                {horizontal && <a href={card.get('url')} target='_blank' rel='noopener'><Icon id='external-link' /></a>}
               </div>
             </div>
           </div>
@@ -184,13 +190,19 @@ export default class Card extends React.PureComponent {
       return (
         <div className={className} ref={this.setRef}>
           {embed}
-          {description}
+          {!compact && description}
         </div>
       );
     } else if (card.get('image')) {
       embed = (
         <div className='status-card__image'>
           {thumbnail}
+        </div>
+      );
+    } else {
+      embed = (
+        <div className='status-card__image'>
+          <Icon id='file-text' />
         </div>
       );
     }

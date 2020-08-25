@@ -1,4 +1,24 @@
 # Use this setup block to configure all options available in SimpleForm.
+
+module AppendComponent
+  def append(wrapper_options = nil)
+    @append ||= begin
+      options[:append].to_s.html_safe if options[:append].present?
+    end
+  end
+end
+
+module RecommendedComponent
+  def recommended(wrapper_options = nil)
+    return unless options[:recommended]
+    options[:label_text] = ->(raw_label_text, _required_label_text, _label_present) { safe_join([raw_label_text, ' ', content_tag(:span, I18n.t('simple_form.recommended'), class: 'recommended')]) }
+    nil
+  end
+end
+
+SimpleForm.include_component(AppendComponent)
+SimpleForm.include_component(RecommendedComponent)
+
 SimpleForm.setup do |config|
   # Wrappers are used by the form builder to generate a
   # complete input. You can remove any component from the
@@ -51,6 +71,23 @@ SimpleForm.setup do |config|
   end
 
   config.wrappers :with_label, class: [:input, :with_label], hint_class: :field_with_hint, error_class: :field_with_errors do |b|
+    b.use :html5
+
+    b.wrapper tag: :div, class: :label_input do |ba|
+      ba.optional :recommended
+      ba.use :label
+
+      ba.wrapper tag: :div, class: :label_input__wrapper do |bb|
+        bb.use :input
+        bb.optional :append, wrap_with: { tag: :div, class: 'label_input__append' }
+      end
+    end
+
+    b.use :hint,  wrap_with: { tag: :span, class: :hint }
+    b.use :error, wrap_with: { tag: :span, class: :error }
+  end
+
+  config.wrappers :with_floating_label, class: [:input, :with_floating_label], hint_class: :field_with_hint, error_class: :field_with_errors do |b|
     b.use :html5
     b.use :label_input, wrap_with: { tag: :div, class: :label_input }
     b.use :hint,  wrap_with: { tag: :span, class: :hint }
@@ -111,12 +148,12 @@ SimpleForm.setup do |config|
   # config.item_wrapper_class = nil
 
   # How the label text should be generated altogether with the required text.
-  # config.label_text = lambda { |label, required, explicit_label| "#{required} #{label}" }
+  config.label_text = lambda { |label, required, explicit_label| "#{label} #{required}" }
 
   # You can define the class to use on all labels. Default is nil.
   # config.label_class = nil
 
-  # You can define the default class to be used on forms. Can be overriden
+  # You can define the default class to be used on forms. Can be overridden
   # with `html: { :class }`. Defaulting to none.
   # config.default_form_class = nil
 

@@ -1,23 +1,17 @@
 # frozen_string_literal: true
 
 class Api::V1::ReportsController < Api::BaseController
-  before_action -> { doorkeeper_authorize! :read }, except: [:create]
-  before_action -> { doorkeeper_authorize! :write }, only:  [:create]
+  before_action -> { doorkeeper_authorize! :write, :'write:reports' }, only: [:create]
   before_action :require_user!
 
   respond_to :json
-
-  def index
-    @reports = current_account.reports
-    render json: @reports, each_serializer: REST::ReportSerializer
-  end
 
   def create
     @report = ReportService.new.call(
       current_account,
       reported_account,
       status_ids: reported_status_ids,
-      pawoo_report_type: report_params[:pawoo_report_type].presence || 'other',
+      pawoo_report_type: report_params[:pawoo_report_type],
       comment: report_params[:comment],
       forward: report_params[:forward]
     )
@@ -28,7 +22,7 @@ class Api::V1::ReportsController < Api::BaseController
   private
 
   def reported_status_ids
-    @reported_status_ids ||= Status.find(status_ids).pluck(:id)
+    @reported_status_ids ||= reported_account.statuses.find(status_ids).pluck(:id)
   end
 
   def status_ids

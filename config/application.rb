@@ -10,6 +10,7 @@ require_relative '../app/lib/exceptions'
 require_relative '../lib/paperclip/lazy_thumbnail'
 require_relative '../lib/paperclip/gif_transcoder'
 require_relative '../lib/paperclip/video_transcoder'
+require_relative '../lib/paperclip/type_corrector'
 require_relative '../lib/mastodon/snowflake'
 require_relative '../lib/mastodon/version'
 require_relative '../lib/devise/ldap_authenticatable'
@@ -38,9 +39,14 @@ module Mastodon
     config.i18n.available_locales = [
       :en,
       :ar,
+      :ast,
       :bg,
+      :bn,
       :ca,
       :co,
+      :cs,
+      :cy,
+      :da,
       :de,
       :el,
       :eo,
@@ -49,8 +55,10 @@ module Mastodon
       :fa,
       :fi,
       :fr,
+      :ga,
       :gl,
       :he,
+      :hi,
       :hr,
       :hu,
       :hy,
@@ -58,19 +66,27 @@ module Mastodon
       :io,
       :it,
       :ja,
+      :ka,
+      :kk,
       :ko,
+      :lt,
+      :lv,
+      :ms,
       :nl,
       :no,
       :oc,
       :pl,
       :pt,
       :'pt-BR',
+      :ro,
       :ru,
       :sk,
       :sl,
+      :sq,
       :sr,
       :'sr-Latn',
       :sv,
+      :ta,
       :te,
       :th,
       :tr,
@@ -81,6 +97,7 @@ module Mastodon
     ]
 
     config.i18n.default_locale = ENV['DEFAULT_LOCALE']&.to_sym
+
     unless config.i18n.available_locales.include?(config.i18n.default_locale)
       config.i18n.default_locale = :en
     end
@@ -97,6 +114,9 @@ module Mastodon
       Doorkeeper::AuthorizationsController.layout 'modal'
       Doorkeeper::AuthorizedApplicationsController.layout 'admin'
       Doorkeeper::Application.send :include, ApplicationExtension
+      Devise::FailureApp.send :include, AbstractController::Callbacks
+      Devise::FailureApp.send :include, HttpAcceptLanguage::EasyAccess
+      Devise::FailureApp.send :include, Localized
     end
 
     config.x.tap do |x|

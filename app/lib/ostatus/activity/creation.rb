@@ -57,7 +57,7 @@ class OStatus::Activity::Creation < OStatus::Activity::Base
       save_emojis(status)
     end
 
-    if thread? && status.thread.nil?
+    if thread? && status.thread.nil? && Request.valid_url?(thread.second)
       Rails.logger.debug "Trying to attach #{status.id} (#{id}) to #{thread.first}"
       ThreadResolveWorker.perform_async(status.id, thread.second)
     end
@@ -148,7 +148,7 @@ class OStatus::Activity::Creation < OStatus::Activity::Base
   end
 
   def save_media
-    do_not_download = DomainBlock.find_by(domain: @account.domain)&.reject_media?
+    do_not_download = DomainBlock.reject_media?(@account.domain)
     media_attachments = []
 
     @xml.xpath('./xmlns:link[@rel="enclosure"]', xmlns: OStatus::TagManager::XMLNS).each do |link|
@@ -176,7 +176,7 @@ class OStatus::Activity::Creation < OStatus::Activity::Base
   end
 
   def save_emojis(parent)
-    do_not_download = DomainBlock.find_by(domain: parent.account.domain)&.reject_media?
+    do_not_download = DomainBlock.reject_media?(parent.account.domain)
 
     return if do_not_download
 

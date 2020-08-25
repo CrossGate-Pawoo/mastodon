@@ -1,6 +1,6 @@
 import React from 'react';
-import banner from '../../pawoo/images/about/banner.png';
-import PawooGA from '../actions/ga';
+import banner from 'pawoo/images/about/banner.png';
+import PawooGA from 'pawoo/actions/ga';
 
 const pawooGaCategory = 'TimelineBottomBanner';
 

@@ -1,0 +1,185 @@
+.pawoo-about-body {
+  background-color: #191b22;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
+  @media screen and (max-height: 600px) {
+    .hide_on_short_display {
+      display: none;
+    }
+  }
+
+  .info {
+    display: flex;
+    line-height: 36px;
+    justify-content: space-between;
+    margin: 0 10px;
+    color: #ffffff;
+
+    a {
+      color: #9baec8;
+    }
+
+    img {
+      vertical-align: middle;
+    }
+
+    svg {
+      height: 20px;
+      margin-bottom: 4px;
+      vertical-align: bottom;
+      fill: white;
+    }
+  }
+
+  .about-cols {
+    align-items: top;
+    display: flex;
+    flex: 1;
+    margin: -1px;
+    overflow-x: hidden;
+    width: 100%;
+
+    a {
+      text-decoration: none;
+    }
+
+    > * {
+      flex: 0 0 auto;
+      box-sizing: border-box;
+      width: 330px;
+      background-color: #282c37;
+      border-left: 1px solid lighten(#282c37, 4%);
+    }
+
+    > .main {
+      display: flex;
+      flex-direction: column;
+      max-width: 100%;
+      color: #ffffff;
+
+      flex: 1.1;
+      background-position: center -640px;
+      background-repeat: no-repeat;
+      background-image: url('data:image/svg+xml;utf8,<svg width="1600" height="1599" viewBox="0 0 1600 1599" xmlns="http://www.w3.org/2000/svg"><title>backlight</title><defs><radialGradient fx="50%" fy="50%" gradientTransform="matrix(0 1 -1 0 1 0)" id="a"><stop stop-color="%23FFF" offset="0%"/><stop stop-color="%23FFF" stop-opacity="0" offset="100%"/></radialGradient></defs><path d="M1594.354 894.072a805.008 805.008 0 0 0 5.649-95.274c0-12.105-.272-24.179-.813-36.208l-786.225 35.32c-.05-.582 776.236-130.556 776.236-130.556a798.086 798.086 0 0 0-21.438-93.819L812.379 794.978c-.122-.378 722.778-312.053 722.778-312.053a798.653 798.653 0 0 0-43.159-85.817L811.355 792.632c-.266-.474 627.638-475.364 627.638-475.364a802.308 802.308 0 0 0-62.035-72.835L809.352 789.878c-.425-.434 497.356-610.365 497.356-610.365a800.722 800.722 0 0 0-77.604-56.173l-422.53 664.414c-.416-.244 338.548-711.018 338.548-711.018a797.63 797.63 0 0 0-89.195-36.255L804.143 786.654C803.77 786.53 962.96 15.24 962.96 15.24a799.777 799.777 0 0 0-94.944-13.823l-66.484 784.657C799.768 785.921 772.831-1 772.831-1a801.458 801.458 0 0 0-95.24 8.908l119.964 778.26c-.421.078-213.968-757.892-213.968-757.892a796.913 796.913 0 0 0-90.958 31.578l302.578 727.002c-.42.166-388.87-684.801-388.87-684.801a800.515 800.515 0 0 0-80.433 52.118L792.61 788.22c-.488.336-540.217-572.814-540.217-572.814a802.552 802.552 0 0 0-65.686 69.531l603.287 505.74c-.366.439-660.306-428.77-660.306-428.77a799.52 799.52 0 0 0-47.532 83.447l706.105 347.99c-.182.379-743.361-259.204-743.361-259.204a798.453 798.453 0 0 0-26.305 92.708l768.822 168.798c-.125.469-783.725-73.935-783.725-73.935A805.712 805.712 0 0 0 .203 816.94l786.75-17.676c.014.637-778.934 112.928-778.934 112.928a798.172 798.172 0 0 0 19.273 94.234l760.145-204.004c.106.39-729.624 295.351-729.624 295.351a800.178 800.178 0 0 0 41.202 86.822l689.33-379.789c.238.48-638.137 460.843-638.137 460.843a802.384 802.384 0 0 0 60.38 74.242L790.239 807.62c.412.466-510.897 598.76-510.897 598.76a802.516 802.516 0 0 0 76.272 57.902l437.35-654.293c.43.277-354.5 702.777-354.5 702.777a798.013 798.013 0 0 0 88.306 38.279l268.746-739.81c.38.14-176.372 767.185-176.372 767.185a799.362 799.362 0 0 0 94.701 16.01L798.1 811.884c1.985.191 10.963 787.112 10.963 787.112a801.09 801.09 0 0 0 95.242-6.737L802.215 811.852c.459-.077 196.475 762.22 196.475 762.22a797.548 797.548 0 0 0 91.667-29.479L804.71 811.165c.42-.161 372.923 693.205 372.923 693.205a799.305 799.305 0 0 0 81.633-50.29L807.317 809.837c.498-.336 526.853 584.688 526.853 584.688a801.245 801.245 0 0 0 67.245-68.015L809.983 807.35c.381-.454 650.168 443.544 650.168 443.544a798.977 798.977 0 0 0 49.403-82.301L811.79 804.564c.187-.396 737.034 276.164 737.034 276.164a795.967 795.967 0 0 0 28.435-92.082L812.632 802.202c.115-.445 781.722 91.87 781.722 91.87z" fill="url(%23a)" fill-rule="evenodd" opacity=".2"/></svg>');
+
+      h1 {
+        padding-top: 80px;
+
+        img {
+          display: block;
+          margin: 0 auto 10px;
+          max-width: 80%;
+        }
+      }
+
+      p, li {
+        font: 16px/28px 'Montserrat', sans-serif;
+        font-weight: 400;
+      }
+    }
+
+    > .timeline {
+      display: flex;
+      flex: 1;
+      position: relative;
+      background-color: $ui-base-color;
+      max-width: 450px;
+
+      &:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 30px;
+        background: linear-gradient(rgba($ui-base-color, 0) 0%, $ui-base-color 60%);
+      }
+
+      > * {
+        padding: 0;
+
+        .scrollable {
+          height: 0;
+          min-height: 50vh;
+        }
+      }
+
+      @media screen and (max-width: 900px) {
+        display: none;
+      }
+    }
+
+    .about-col-body {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      margin: auto;
+      max-width: 700px;
+      width: 100%;
+
+      .about-col-body-spacer {
+        flex: 1;
+
+        &.top {
+          max-height: 40px;
+        }
+      }
+
+      p {
+        margin-bottom: 10px;
+        padding: 0 60px;
+        color: #ffffff;
+      }
+
+      .start-pawoo {
+        display: flex;
+        justify-content: space-around;
+        padding: 0 60px;
+        width: 100%;
+        box-sizing: border-box;
+
+        @media screen and (max-width: 650px) {
+          flex-direction: column;
+
+          a.button {
+            margin-bottom: 20px;
+          }
+        }
+
+        a.button {
+          min-width: 200px;
+          box-sizing: border-box;
+        }
+      }
+
+      .pawoo-kyoa {
+        display: flex;
+        justify-content: space-around;
+        padding: 0 60px;
+        width: 100%;
+        box-sizing: border-box;
+
+        @media screen and (max-width: 650px) {
+          flex-direction: column;
+        }
+
+        img {
+          width: 100%;
+        }
+      }
+
+      @media screen and (min-width: 650px) {
+        .about-col-body-spacer.bottom {
+          min-height: 20px;
+        }
+
+        .about-col-body-apps {
+          border-radius: 16px;
+          width: 560px;
+        }
+      }
+    }
+  }
+}

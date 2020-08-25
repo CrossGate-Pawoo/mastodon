@@ -11,25 +11,27 @@ import BoostModal from './boost_modal';
 import ConfirmationModal from './confirmation_modal';
 import FocalPointModal from './focal_point_modal';
 import {
-  OnboardingModal,
   MuteModal,
+  BlockModal,
   ReportModal,
   EmbedModal,
   ListEditor,
+  ListAdder,
 } from '../../../features/ui/util/async-components';
 
 const MODAL_COMPONENTS = {
   'MEDIA': () => Promise.resolve({ default: MediaModal }),
-  'ONBOARDING': OnboardingModal,
   'VIDEO': () => Promise.resolve({ default: VideoModal }),
   'BOOST': () => Promise.resolve({ default: BoostModal }),
   'CONFIRM': () => Promise.resolve({ default: ConfirmationModal }),
   'MUTE': MuteModal,
+  'BLOCK': BlockModal,
   'REPORT': ReportModal,
   'ACTIONS': () => Promise.resolve({ default: ActionsModal }),
   'EMBED': EmbedModal,
   'LIST_EDITOR': ListEditor,
   'FOCAL_POINT': () => Promise.resolve({ default: FocalPointModal }),
+  'LIST_ADDER':ListAdder,
 };
 
 export default class ModalRoot extends React.PureComponent {
@@ -41,14 +43,15 @@ export default class ModalRoot extends React.PureComponent {
   };
 
   getSnapshotBeforeUpdate () {
-    const visible = !!this.props.type;
-    return {
-      overflowY: visible ? 'hidden' : null,
-    };
+    return { visible: !!this.props.type };
   }
 
-  componentDidUpdate (prevProps, prevState, { overflowY }) {
-    document.body.style.overflowY = overflowY;
+  componentDidUpdate (prevProps, prevState, { visible }) {
+    if (visible) {
+      document.body.classList.add('with-modals--active');
+    } else {
+      document.body.classList.remove('with-modals--active');
+    }
   }
 
   renderLoading = modalId => () => {

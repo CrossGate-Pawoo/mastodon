@@ -7,7 +7,11 @@ describe Pawoo::Sitemap::StatusIndexesController, type: :controller do
     stub_const 'Pawoo::Sitemap::SITEMAPINDEX_SIZE', 1
   end
 
-  let!(:status) { Fabricate(:status, reblogs_count: 5) }
+  let!(:status) do
+    Fabricate(:status).tap do |status|
+      Fabricate(:status_stat, status: status, reblogs_count: 5, favourites_count: 0, replies_count: 0)
+    end
+  end
 
   describe 'GET #index' do
     it 'renders sitemap' do

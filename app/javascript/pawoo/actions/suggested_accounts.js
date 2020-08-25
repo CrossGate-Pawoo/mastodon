@@ -1,6 +1,6 @@
-import api, { getLinks } from '../../mastodon/api';
-import { fetchRelationships } from '../../mastodon/actions/accounts';
-import { importFetchedAccounts } from '../../mastodon/actions/importer';
+import api, { getLinks } from 'mastodon/api';
+import { fetchRelationships } from 'mastodon/actions/accounts';
+import { importFetchedAccounts } from 'mastodon/actions/importer';
 
 export const SUGGESTED_ACCOUNTS_FETCH_REQUEST = 'SUGGESTED_ACCOUNTS_FETCH_REQUEST';
 export const SUGGESTED_ACCOUNTS_FETCH_SUCCESS = 'SUGGESTED_ACCOUNTS_FETCH_SUCCESS';
@@ -15,6 +15,7 @@ export function fetchSuggestedAccounts() {
 
     api(getState).get('/api/v1/suggested_accounts').then(response => {
       const next = getLinks(response).refs.find(link => link.rel === 'next');
+
       dispatch(importFetchedAccounts(response.data));
       dispatch(fetchSuggestedAccountsSuccess(response.data, next ? next.uri : null));
       dispatch(fetchRelationships(response.data.map(item => item.id)));

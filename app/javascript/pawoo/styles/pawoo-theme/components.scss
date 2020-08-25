@@ -1,0 +1,507 @@
+
+.pawoo-announcements {
+  li {
+    display: flex;
+    padding: 10px;
+    color: $ui-base-color;
+    background: darken($primary-text-color, 8%);
+    border-radius: 4px;
+
+    & + li {
+      margin-top: 10px;
+    }
+  }
+
+  .pawoo-announcements__icon {
+    flex: 0 0 auto;
+    border-radius: 50%;
+    display: inline-block;
+    overflow: hidden;
+    width: 30px;
+    height: 30px;
+    border: solid 1px #929292;
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .pawoo-announcements__body {
+    width: 100%;
+
+    p {
+      padding-left: 5px;
+      font-size: 12px;
+      white-space: pre-line;
+    }
+  }
+
+  .pawoo-announcements__link {
+    display: inline-block;
+    color: $ui-base-color;
+    text-decoration: none;
+    padding: 1px 10px 0;
+    border: solid 1px $ui-base-color;
+    font-size: 10px;
+    font-weight: 600;
+    border-radius: 4px;
+    margin-top: 5px;
+    margin-right: 3px;
+  }
+
+  .pawoo-announcements__body__dismiss {
+    float: right;
+    margin-top: -4px;
+    margin-right: -4px;
+  }
+}
+
+.pawoo-trend-tags {
+  display: flex;
+  background: lighten($ui-base-color, 8%);
+  color: $primary-text-color;
+  flex-direction: column;
+  min-height: 0;
+
+  .pawoo-trend-tags__header {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    padding: 15px;
+    background: $ui-base-color;
+    font-size: 16px;
+  }
+
+  .pawoo-trend-tags__header__icon {
+    width: 20px;
+    margin-right: 7px;
+  }
+
+  .pawoo-trend-tags__header__name {
+    flex: 1;
+  }
+
+  .suggestion-tags__name {
+    font-size: 14px;
+  }
+  .suggestion-tags__description {
+    font-size: 12px;
+  }
+}
+
+// TODO: suggestion_tags_containerを廃止して統合
+.suggestion-tags__body li {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid lighten($ui-base-color, 13%);
+}
+
+.suggestion-tags__content {
+  flex: 1;
+}
+
+.suggestion-tags__name * {
+  font-size: 15px;
+  color: $primary-text-color;
+  text-decoration: none;
+
+  &:hover {
+    color: rgba($primary-text-color, 0.9);
+    text-decoration: underline;
+  }
+}
+
+.suggestion-tags__description {
+  position: relative;
+  font-size: 14px;
+  color: $darker-text-color;
+}
+
+.suggestion-tags__button {
+  color: lighten($ui-base-color, 13%);
+  background: lighten($ui-base-color, 33%);
+  border: 0;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 0 10px;
+  height: 35px;
+  margin-left: 6px;
+
+  &:hover,
+  &:focus {
+    color: lighten($ui-base-color, 8%);
+    background: lighten($ui-base-color, 26%);
+  }
+}
+
+.account.suggested_account {
+  padding: 15px;
+
+  .account__avatar-wrapper {
+    margin-left: 0;
+  }
+
+  .account__relationship {
+    padding-right: 0;
+  }
+}
+
+.suggested_account_media {
+  display: flex;
+  margin-top: 10px;
+  height: 100px;
+
+  .pawoo-video-thumbnail {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    > img {
+      position: absolute;
+    }
+
+    > .fa {
+      position: absolute;
+      font-size: 50px;
+      color: lighten($ui-base-color, 13%);
+      background-color: $white;
+      border-radius: 50%;
+      height: 50px;
+      width: 50px;
+      opacity: 0.8;
+    }
+  }
+
+  > .media-gallery__item {
+    width: 100%;
+    margin-right: 4px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+.pawoo-drawer-block {
+  margin-bottom: 10px;
+
+  .pawoo-announcements {
+    margin: 0 10px;
+  }
+}
+
+.pawoo-hashtag-editor {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+
+  border: none;
+  border-top: 1px solid darken($primary-text-color, 8%);
+
+  .autosuggest-input {
+    width: 100%;
+  }
+
+  .pawoo-hastag-editor__input {
+    width: 100%;
+    padding-left: 20px;
+  }
+
+  .pawoo-hashtag-editor__icon {
+    position: absolute;
+    color: #606984;
+    padding-left: 5px;
+  }
+}
+
+.time-limit-dropdown {
+  position: absolute;
+  right: 3px;
+  top: 30px;
+}
+
+.time-limit-dropdown__dropdown {
+  position: absolute;
+  background: $simple-background-color;
+  box-shadow: 2px 4px 15px rgba($base-shadow-color, 0.4);
+  border-radius: 4px;
+  margin-left: 0;
+  overflow: hidden;
+}
+
+.time-limit-dropdown__header {
+  padding: 10px;
+  color: $ui-base-color;
+  border-bottom: 1px solid lighten($ui-secondary-color, 4%);
+}
+
+.time-limit-dropdown__header_note {
+  font-size: 10px;
+  color: lighten($ui-base-color, 50%);
+}
+
+.pawoo-report-type-list {
+  margin-bottom: 20px;
+
+  .pawoo-report-type-list__items {
+    @media screen and (max-width: 480px) {
+      max-height: 10vh;
+      overflow: auto;
+    }
+  }
+
+  .pawoo-report-type-list__item {
+    display: flex;
+    margin-bottom: 12px;
+  }
+
+  .pawoo-report-type-list__type-name {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+  }
+
+  .pawoo-report-type-list__toggle {
+    flex: 0 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.pawoo-kyoa-home {
+  text-align: center;
+  img {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+.pawoo-suggested-accounts {
+  height: 100%;
+
+  > .scrollable {
+    height: 100%;
+    background: $ui-base-color;
+
+    .item-list {
+      display: flex;
+      flex-wrap: wrap;
+      margin: -1px 0 0 -1px;
+      overflow: hidden;
+
+      > * {
+        flex: 1 330px;
+      }
+
+      .account {
+        border: 0 solid lighten($ui-base-color, 8%);
+        border-left-width: 1px;
+        border-top-width: 1px;
+        height: 100%;
+        box-sizing: border-box;
+      }
+
+      > .load-more {
+        flex: 100%;
+      }
+
+      > .mastodon_bridge {
+        background: $ui-highlight-color;
+        margin: 10px;
+        border-radius: 4px;
+        transition: all 100ms ease-in;
+        flex: 100%;
+
+        a {
+          text-align: left;
+          background: transparent;
+          font-size: 15px;
+          padding: 10px;
+
+          &:hover {
+            background: transparent;
+          }
+        }
+
+        &:hover {
+          background: lighten($ui-highlight-color, 20%);
+          margin-right: 5px;
+          border-radius: 4px;
+          transition: all 200ms ease-out;
+        }
+      }
+    }
+  }
+}
+
+.pawoo-suggested-accounts-column {
+  display: flex;
+  flex: 1;
+
+  // The below is required by:
+  // Mozilla/5.0 (X11; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0
+  min-height: 0;
+
+  > * {
+    flex: 1;
+  }
+}
+
+.pawoo-suggested-accounts-column--page {
+  display: flex;
+  flex-direction: column;
+
+  .column-back-button {
+    background: transparent;
+    text-align: right;
+  }
+
+  > img {
+    object-fit: scale-down;
+    object-position: bottom left;
+    transform: scale(-1, 1);
+  }
+}
+
+.pawoo-suggested-accounts-page {
+  flex: 1;
+  max-width: none;
+
+  .pawoo-suggested-accounts-page__suggested-accounts {
+    flex: 1;
+
+    // The below is required by:
+    // Mozilla/5.0 (X11; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0
+    min-height: 0;
+  }
+}
+
+.pawoo-followers-you-follow {
+  padding: 10px 10px;
+
+  .pawoo-followers-you-follow__account-list {
+    display: flex;
+    justify-content: left;
+    flex-wrap: wrap;
+    position: relative;
+    max-height: 88px;
+    overflow: hidden;
+
+    .multi-column {
+      padding: 4px 4px 0 0;
+
+      .account__avatar-wrapper {
+        padding: 0;
+        margin: 0;
+      }
+    }
+  }
+
+  p {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: $darker-text-color;
+  }
+}
+
+.pawoo-gallery-index {
+  h1 {
+    font-size: 30px;
+    margin-bottom: 30px;
+  }
+
+  li {
+    font-size: 16px;
+    margin-top: 10px;
+  }
+
+  p {
+    margin-bottom: 5px;
+  }
+
+  a {
+    color: $highlight-text-color;
+    font-weight: 500;
+
+    &:hover,
+    &:active,
+    &:focus {
+      color: $highlight-text-color;
+    }
+  }
+
+  &__header-image {
+    max-height: 250px;
+    max-width: 100%;
+  }
+}
+
+.pawoo-gallery {
+  &__breadcrumb {
+    margin-bottom: 10px;
+  }
+
+  &__header-image {
+    max-height: 250px;
+    max-width: 50%;
+    margin-bottom: 10px;
+
+    @media screen and (max-width: 620px) {
+      max-width: 100%;
+    }
+  }
+
+  &__description {
+    display: flex;
+    align-items: flex-start;
+    padding: 10px;
+    font-size: 14px;
+    border-bottom: 1px solid rgba($ui-base-lighter-color, .6);
+    margin-bottom: 10px;
+
+    @media screen and (max-width: 620px) {
+      flex-flow: column nowrap;
+    }
+
+    &-text {
+      margin-left: 20px;
+      margin-bottom: 10px;
+
+      @media screen and (max-width: 620px) {
+        margin-top: 10px;
+        margin-left: 0;
+      }
+
+      p {
+        margin-bottom: 10px;
+      }
+    }
+
+    a {
+      color: $highlight-text-color;
+      font-weight: 500;
+
+      &:hover,
+      &:active,
+      &:focus {
+        color: $highlight-text-color;
+      }
+    }
+  }
+
+  .pawoo-blacklist-icon {
+    margin-right: 14px;
+    margin-top: -34px;
+    float: right;
+  }
+}
+
+.pawoo-sensitive-guide {
+  padding: 0 10px 10px;
+  font-size: 12px;
+  color: gray;
+}

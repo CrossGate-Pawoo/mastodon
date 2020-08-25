@@ -21,13 +21,13 @@ class Api::V1::Timelines::PublicController < Api::BaseController
   end
 
   def public_statuses
-    statuses = public_timeline_statuses.paginate_by_max_id(
+    statuses = public_timeline_statuses.paginate_by_id(
       limit_param(DEFAULT_STATUSES_LIMIT),
-      params[:max_id],
-      params[:since_id]
+      params_slice(:max_id, :since_id, :min_id)
     )
 
-    if params[:media] || truthy_param?(:only_media)
+    # mediaはPawooアプリがまだ使っている。サポートは終了しているので消すことも可能。
+    if truthy_param?(:media) || truthy_param?(:only_media)
       # `SELECT DISTINCT id, updated_at` is too slow, so pluck ids at first, and then select id, updated_at with ids.
       status_ids = statuses.joins(:media_attachments).distinct(:id).pluck(:id)
       statuses.where(id: status_ids)
@@ -45,15 +45,15 @@ class Api::V1::Timelines::PublicController < Api::BaseController
   end
 
   def pagination_params(core_params)
-    params.slice(:local, :limit, :only_media).permit(:local, :limit, :only_media).merge(core_params)
+    params.slice(:local, :limit, :only_media, :media).permit(:local, :limit, :only_media, :media).merge(core_params)
   end
 
   def next_path
-    api_v1_timelines_public_url pagination_params(max_id: pagination_max_id, media: params[:media])
+    api_v1_timelines_public_url pagination_params(max_id: pagination_max_id)
   end
 
   def prev_path
-    api_v1_timelines_public_url pagination_params(since_id: pagination_since_id, media: params[:media])
+    api_v1_timelines_public_url pagination_params(min_id: pagination_since_id)
   end
 
   def pagination_max_id

@@ -1,21 +1,19 @@
-import classNames from 'classnames';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { NavLink, withRouter } from 'react-router-dom';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { debounce } from 'lodash';
 import { isUserTouching } from '../../../is_mobile';
+import Icon from 'mastodon/components/icon';
+import NotificationsCounterIcon from './notifications_counter_icon';
 
 export const links = [
-  <NavLink className='tabs-bar__link primary' to='/timelines/home' data-preview-title-id='column.home' data-preview-icon='home' ><i className='fa fa-fw fa-home' /><FormattedMessage id='tabs_bar.home' defaultMessage='Home' /></NavLink>,
-  <NavLink className='tabs-bar__link primary' to='/notifications' data-preview-title-id='column.notifications' data-preview-icon='bell' ><i className='fa fa-fw fa-bell' /><FormattedMessage id='tabs_bar.notifications' defaultMessage='Notifications' /></NavLink>,
-  <NavLink className='tabs-bar__link primary' to='/search' data-preview-title-id='tabs_bar.search' data-preview-icon='bell' ><i className='fa fa-fw fa-search' /><FormattedMessage id='tabs_bar.search' defaultMessage='Search' /></NavLink>,
-
-  <NavLink className='tabs-bar__link secondary' to='/timelines/public/local' data-preview-title-id='column.community' data-preview-icon='users' ><i className='fa fa-fw fa-users' /><FormattedMessage id='tabs_bar.local_timeline' defaultMessage='Local' /></NavLink>,
-  <NavLink className='tabs-bar__link secondary' to='/timelines/public/media' data-preview-title-id='pawoo.column.media' data-preview-icon='image' ><i className='fa fa-fw fa-image' /><FormattedMessage id='pawoo.tabs_bar.media_timeline' defaultMessage='Media' /></NavLink>,
-  <NavLink className='tabs-bar__link secondary' to='/suggested_accounts' data-preview-title-id='pawoo.column.suggested_accounts' data-preview-icon='user-plus' ><i className='fa fa-fw fa-user-plus' /><FormattedMessage id='pawoo.tabs_bar.suggested_accounts' defaultMessage='Active' /></NavLink>,
-
-  <NavLink className='tabs-bar__link primary' style={{ flexGrow: '0', flexBasis: '30px' }} to='/getting-started' data-preview-title-id='getting_started.heading' data-preview-icon='bars' ><i className='fa fa-fw fa-bars' /></NavLink>,
+  <NavLink className='tabs-bar__link' to='/timelines/home' data-preview-title-id='column.home' data-preview-icon='home' ><Icon id='home' fixedWidth /><FormattedMessage id='tabs_bar.home' defaultMessage='Home' /></NavLink>,
+  <NavLink className='tabs-bar__link' to='/notifications' data-preview-title-id='column.notifications' data-preview-icon='bell' ><NotificationsCounterIcon /><FormattedMessage id='tabs_bar.notifications' defaultMessage='Notifications' /></NavLink>,
+  <NavLink className='tabs-bar__link' to='/timelines/public/local' data-preview-title-id='column.community' data-preview-icon='users' ><Icon id='users' fixedWidth /><FormattedMessage id='tabs_bar.local_timeline' defaultMessage='Local' /></NavLink>,
+  <NavLink className='tabs-bar__link' to='/timelines/public/media' data-preview-title-id='pawoo.column.media' data-preview-icon='image' ><Icon id='image' fixedWidth /><FormattedMessage id='pawoo.tabs_bar.media_timeline' defaultMessage='Media' /></NavLink>,
+  <NavLink className='tabs-bar__link optional' to='/search' data-preview-title-id='tabs_bar.search' data-preview-icon='bell' ><Icon id='search' fixedWidth /><FormattedMessage id='tabs_bar.search' defaultMessage='Search' /></NavLink>,
+  <NavLink className='tabs-bar__link' style={{ flexGrow: '0', flexBasis: '30px' }} to='/getting-started' data-preview-title-id='getting_started.heading' data-preview-icon='bars' ><Icon id='bars' fixedWidth /></NavLink>,
 ];
 
 export function getIndex (path) {
@@ -26,14 +24,13 @@ export function getLink (index) {
   return links[index].props.to;
 }
 
-@injectIntl
+export default @injectIntl
 @withRouter
-export default class TabsBar extends React.PureComponent {
+class TabsBar extends React.PureComponent {
 
   static propTypes = {
     intl: PropTypes.object.isRequired,
     history: PropTypes.object.isRequired,
-    pawooHasUnreadNotifications: PropTypes.bool,
   }
 
   setRef = ref => {
@@ -73,11 +70,11 @@ export default class TabsBar extends React.PureComponent {
   }
 
   render () {
-    const { intl: { formatMessage }, pawooHasUnreadNotifications } = this.props;
+    const { intl: { formatMessage } } = this.props;
 
     return (
       <nav className='tabs-bar' ref={this.setRef}>
-        {links.map(link => React.cloneElement(link, { key: link.props.to, onClick: this.handleClick, 'aria-label': formatMessage({ id: link.props['data-preview-title-id'] }), className: classNames(link.props.className, { 'pawoo-extension-tabs-bar__link--unread': pawooHasUnreadNotifications && link.props.to === '/notifications' }) }))}
+        {links.map(link => React.cloneElement(link, { key: link.props.to, onClick: this.handleClick, 'aria-label': formatMessage({ id: link.props['data-preview-title-id'] }) }))}
       </nav>
     );
   }

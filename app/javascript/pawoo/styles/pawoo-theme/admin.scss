@@ -1,0 +1,32 @@
+.pawoo_report_target {
+  .activity-stream {
+    width: 490px;
+  }
+
+  .report_target_infomations {
+    padding: 10px;
+
+    .report_target_info {
+      margin-bottom: 15px;
+    }
+
+    .report_target_detail {
+      th, td {
+        padding: 4px;
+      }
+
+      .report_target_type {
+        white-space: nowrap;
+      }
+    }
+  }
+
+  .report_target_actions {
+    white-space: nowrap;
+    vertical-align: middle;
+
+    label {
+      display: block;
+    }
+  }
+}

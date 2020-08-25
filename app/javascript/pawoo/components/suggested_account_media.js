@@ -2,8 +2,8 @@ import React from 'react';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { autoPlayGif } from '../../mastodon/initial_state';
-import { isIOS } from '../../mastodon/is_mobile';
+import { autoPlayGif } from 'mastodon/initial_state';
+import { isIOS } from 'mastodon/is_mobile';
 import ga from '../actions/ga';
 
 const gaCategory = 'SuggestedAccount';
@@ -50,7 +50,7 @@ class Item extends React.PureComponent {
 
     ga.event({
       eventCategory: gaCategory,
-      eventAction: attachment.get('type') === 'video' ? 'OpenVideo' : 'OpenMedia',
+      eventAction: ['video', 'audio'].includes(attachment.get('type')) ? 'OpenVideo' : 'OpenMedia',
       eventLabel: account.get('id'),
     });
 
@@ -63,14 +63,9 @@ class Item extends React.PureComponent {
   }
 
   render () {
-    const { attachment, index, size } = this.props;
+    const { attachment, size } = this.props;
 
     let width  = (100 - (size - 1)) / size;
-    let height = 100;
-    let top    = 'auto';
-    let left   = `${index}%`;
-    let bottom = 'auto';
-    let right  = 'auto';
     let thumbnail = '';
 
     if (attachment.get('type') === 'image') {
@@ -134,11 +129,25 @@ class Item extends React.PureComponent {
           <i className='fa fa-fw fa-play-circle' />
         </a>
       );
+    } else if (attachment.get('type') === 'audio') {
+      thumbnail = (
+        <a
+          className={'media-gallery__item-thumbnail pawoo-video-thumbnail'}
+          href={attachment.get('url')}
+          onClick={this.handleOpenMedia}
+          target='_blank'
+          alt={attachment.get('description')}
+          title={attachment.get('description')}
+        >
+          <i className='fa fa-fw fa-play-circle' />
+        </a>
+      );
     }
 
-
     return (
-      <div className='media-gallery__item' key={attachment.get('id')} style={{ left: left, top: top, right: right, bottom: bottom, width: `${width}%`, height: `${height}%` }}>
+      <div
+        className='media-gallery__item' key={attachment.get('id')}
+      >
         {thumbnail}
       </div>
     );
@@ -156,6 +165,10 @@ export default class SuggestedAccountMedia extends React.PureComponent {
   render () {
     const { account, onOpenMedia } = this.props;
     const mediaAttachments = account.get('media_attachments');
+
+    if (mediaAttachments.size === 0) {
+      return null;
+    }
 
     return (
       <div className='suggested_account_media'>

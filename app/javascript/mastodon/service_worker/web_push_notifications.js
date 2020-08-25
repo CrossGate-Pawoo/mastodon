@@ -25,7 +25,7 @@ const notify = options =>
 
       return self.registration.showNotification(group.title, group);
     } else if (notifications.length === 1 && notifications[0].tag === GROUP_TAG) { // Already grouped, proceed with appending the notification to the group
-      const group = { ...notifications[0] };
+      const group = cloneNotification(notifications[0]);
 
       group.title = formatMessage('notifications.group', options.data.preferred_locale, { count: group.data.count + 1 });
       group.body  = `${options.title}\n${group.body}`;
@@ -57,6 +57,18 @@ const fetchFromApi = (path, method, accessToken) => {
   }).then(res => res.json());
 };
 
+const cloneNotification = notification => {
+  const clone = {};
+  let k;
+
+  // Object.assign() does not work with notifications
+  for(k in notification) {
+    clone[k] = notification[k];
+  }
+
+  return clone;
+};
+
 const formatMessage = (messageId, locale, values = {}) =>
   (new IntlMessageFormat(locales[locale][messageId], locale)).format(values);
 
@@ -68,15 +80,7 @@ const handlePush = (event) => {
 
   // Placeholder until more information can be loaded
   event.waitUntil(
-    notify({
-      title,
-      body,
-      icon,
-      tag: notification_id,
-      timestamp: new Date(),
-      badge: '/badge.png',
-      data: { access_token, preferred_locale, url: '/web/notifications' },
-    }).then(() => fetchFromApi(`/api/v1/notifications/${notification_id}`, 'get', access_token)).then(notification => {
+    fetchFromApi(`/api/v1/notifications/${notification_id}`, 'get', access_token).then(notification => {
       const options = {};
 
       options.title     = formatMessage(`notification.${notification.type}`, preferred_locale, { name: notification.account.display_name.length > 0 ? notification.account.display_name : notification.account.username });
@@ -88,18 +92,31 @@ const handlePush = (event) => {
       options.image     = notification.status && notification.status.media_attachments.length > 0 && notification.status.media_attachments[0].preview_url || undefined;
       options.data      = { access_token, preferred_locale, id: notification.status ? notification.status.id : notification.account.id, url: notification.status ? `/web/statuses/${notification.status.id}` : `/web/accounts/${notification.account.id}` };
 
-      if (notification.status && notification.status.sensitive) {
+      if (notification.status && notification.status.spoiler_text || notification.status.sensitive) {
         options.data.hiddenBody  = htmlToPlainText(notification.status.content);
         options.data.hiddenImage = notification.status.media_attachments.length > 0 && notification.status.media_attachments[0].preview_url;
 
-        options.body    = notification.status.spoiler_text;
+        if (notification.status.spoiler_text) {
+          options.body    = notification.status.spoiler_text;
+        }
+
         options.image   = undefined;
         options.actions = [actionExpand(preferred_locale)];
-      } else if (notification.status) {
+      } else if (notification.type === 'mention') {
         options.actions = [actionReblog(preferred_locale), actionFavourite(preferred_locale)];
       }
 
       return notify(options);
+    }).catch(() => {
+      return notify({
+        title,
+        body,
+        icon,
+        tag: notification_id,
+        timestamp: new Date(),
+        badge: '/badge.png',
+        data: { access_token, preferred_locale, url: '/web/notifications' },
+      });
     })
   );
 };
@@ -130,7 +147,7 @@ const findBestClient = clients => {
 };
 
 const expandNotification = notification => {
-  const newNotification = { ...notification };
+  const newNotification = cloneNotification(notification);
 
   newNotification.body    = newNotification.data.hiddenBody;
   newNotification.image   = newNotification.data.hiddenImage;
@@ -140,7 +157,7 @@ const expandNotification = notification => {
 };
 
 const removeActionFromNotification = (notification, action) => {
-  const newNotification = { ...notification };
+  const newNotification = cloneNotification(notification);
 
   newNotification.actions = newNotification.actions.filter(item => item.action !== action);
 
@@ -154,7 +171,7 @@ const openUrl = url =>
 
       if (webClients.length !== 0) {
         const client       = findBestClient(webClients);
-        const { pathname } = new URL(url);
+        const { pathname } = new URL(url, self.location);
 
         if (pathname.startsWith('/web/')) {
           return client.focus().then(client => client.postMessage({

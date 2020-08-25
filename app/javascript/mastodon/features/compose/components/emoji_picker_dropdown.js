@@ -28,7 +28,7 @@ const messages = defineMessages({
 const assetHost = process.env.CDN_HOST || '';
 let EmojiPicker, Emoji; // load asynchronously
 
-const backgroundImageFn = () => `${assetHost}/emoji/sheet.png`;
+const backgroundImageFn = () => `${assetHost}/emoji/sheet_10.png`;
 const listenerOptions = detectPassiveEvents.hasSupport ? { passive: true } : false;
 
 const categoriesSort = [
@@ -261,6 +261,7 @@ class EmojiPickerMenu extends React.PureComponent {
           skin={skinTone}
           showPreview={false}
           backgroundImageFn={backgroundImageFn}
+          autoFocus
           emojiTooltip
         />
 
@@ -277,8 +278,8 @@ class EmojiPickerMenu extends React.PureComponent {
 
 }
 
-@injectIntl
-export default class EmojiPickerDropdown extends React.PureComponent {
+export default @injectIntl
+class EmojiPickerDropdown extends React.PureComponent {
 
   static propTypes = {
     custom_emojis: ImmutablePropTypes.list,

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
-import Column from '../../mastodon/features/ui/components/column';
+import Column from 'mastodon/features/ui/components/column';
 import SuggestedAccountsContainer from '../containers/suggested_accounts_container';
 
 const messages = defineMessages({

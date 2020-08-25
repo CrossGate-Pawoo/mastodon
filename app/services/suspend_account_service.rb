@@ -1,69 +1,146 @@
 # frozen_string_literal: true
 
 class SuspendAccountService < BaseService
+  include Payloadable
+
+  ASSOCIATIONS_ON_SUSPEND = %w(
+    account_pins
+    active_relationships
+    block_relationships
+    blocked_by_relationships
+    conversation_mutes
+    conversations
+    custom_filters
+    domain_blocks
+    favourites
+    follow_requests
+    list_accounts
+    media_attachments
+    mute_relationships
+    muted_by_relationships
+    notifications
+    owned_lists
+    passive_relationships
+    report_notes
+    scheduled_statuses
+    status_pins
+    stream_entries
+    subscriptions
+  ).freeze
+
+  ASSOCIATIONS_ON_DESTROY = %w(
+    reports
+    targeted_moderation_notes
+    targeted_reports
+  ).freeze
+
+  # Suspend an account and remove as much of its data as possible
+  # @param [Account]
+  # @param [Hash] options
+  # @option [Boolean] :including_user Remove the user record as well
+  # @option [Boolean] :destroy Remove the account record instead of suspending
   def call(account, **options)
     @account = account
     @options = options
 
+    reject_follows!
     purge_user!
     purge_profile!
     purge_content!
-    unsubscribe_push_subscribers!
   end
 
   private
 
+  def reject_follows!
+    return if @account.local? || !@account.activitypub?
+
+    ActivityPub::DeliveryWorker.push_bulk(Follow.where(account: @account)) do |follow|
+      [build_reject_json(follow), follow.target_account_id, follow.account.inbox_url]
+    end
+  end
+
   def purge_user!
-    if @options[:remove_user]
-      @account.user&.destroy
+    return if !@account.local? || @account.user.nil?
+
+    if @options[:including_user]
+      @account.user.destroy
     else
-      @account.user&.disable!
+      @account.user.disable!
+      @account.user.invites.where(uses: 0).destroy_all
     end
   end
 
   def purge_content!
-    ActivityPub::RawDistributionWorker.perform_async(delete_actor_json, @account.id) if @account.local?
+    distribute_delete_actor! if @account.local? && !@options[:skip_distribution]
 
     @account.statuses.reorder(nil).find_in_batches(batch_size: 100).with_index(1) do |statuses, batch_index|
-      BatchedRemoveStatusService.new.call(statuses, batch_index)
+      BatchedRemoveStatusService.new.call(statuses, skip_side_effects: @options[:destroy], pawoo_batch_index: batch_index)
     end
 
-    [
-      @account.media_attachments,
-      @account.stream_entries,
-      @account.notifications,
-      @account.favourites,
-      @account.active_relationships,
-      @account.passive_relationships,
-    ].each do |association|
-      destroy_all(association)
+    associations_for_destruction.each do |association_name|
+      destroy_all(@account.public_send(association_name))
     end
+
+    @account.destroy if @options[:destroy]
   end
 
   def purge_profile!
-    @account.suspended    = true
-    @account.display_name = ''
-    @account.note         = ''
+    # If the account is going to be destroyed
+    # there is no point wasting time updating
+    # its values first
+
+    return if @options[:destroy]
+
+    @account.silenced_at      = nil
+    @account.suspended_at     = @options[:suspended_at] || Time.now.utc
+    @account.locked           = false
+    @account.display_name     = ''
+    @account.note             = ''
+    @account.fields           = []
+    @account.statuses_count   = 0
+    @account.followers_count  = 0
+    @account.following_count  = 0
+    @account.moved_to_account = nil
     @account.avatar.destroy
     @account.header.destroy
     @account.save!
-  end
-
-  def unsubscribe_push_subscribers!
-    destroy_all(@account.subscriptions)
   end
 
   def destroy_all(association)
     association.in_batches.destroy_all
   end
 
-  def delete_actor_json
-    payload = ActiveModelSerializers::SerializableResource.new(
-      @account,
-      serializer: ActivityPub::DeleteActorSerializer,
-      adapter: ActivityPub::Adapter
-    ).as_json
+  def distribute_delete_actor!
+    ActivityPub::DeliveryWorker.push_bulk(delivery_inboxes) do |inbox_url|
+      [delete_actor_json, @account.id, inbox_url]
+    end
 
-    Oj.dump(ActivityPub::LinkedDataSignature.new(payload).sign!(@account))
+    ActivityPub::LowPriorityDeliveryWorker.push_bulk(low_priority_delivery_inboxes) do |inbox_url|
+      [delete_actor_json, @account.id, inbox_url]
+    end
+  end
+
+  def delete_actor_json
+    @delete_actor_json ||= Oj.dump(serialize_payload(@account, ActivityPub::DeleteActorSerializer, signer: @account))
+  end
+
+  def build_reject_json(follow)
+    Oj.dump(serialize_payload(follow, ActivityPub::RejectFollowSerializer))
+  end
+
+  def delivery_inboxes
+    @delivery_inboxes ||= @account.followers.inboxes + Relay.enabled.pluck(:inbox_url)
+  end
+
+  def low_priority_delivery_inboxes
+    Account.inboxes - delivery_inboxes
+  end
+
+  def associations_for_destruction
+    if @options[:destroy]
+      ASSOCIATIONS_ON_SUSPEND + ASSOCIATIONS_ON_DESTROY
+    else
+      ASSOCIATIONS_ON_SUSPEND
+    end
   end
 end

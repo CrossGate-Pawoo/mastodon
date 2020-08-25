@@ -2,3 +2,10 @@
 .activity-stream .media-spoiler {
   max-height: calc(100vw - 100px);
 }
+
+// Pawooロゴの調整
+.button.logo-button svg.pawoo-svg-logo {
+  width: 28px;
+  margin-top: -4px;
+  margin-left: -4px;
+}

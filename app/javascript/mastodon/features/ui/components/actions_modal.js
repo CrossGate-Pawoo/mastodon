@@ -43,7 +43,7 @@ export default class ActionsModal extends ImmutablePureComponent {
       <div className='status light'>
         <div className='boost-modal__status-header'>
           <div className='boost-modal__status-time'>
-            <a href={this.props.status.get('url')} className='status__time' target='_blank' rel='noopener'>
+            <a href={this.props.status.get('url')} className='status__relative-time' target='_blank' rel='noopener'>
               <RelativeTimestamp timestamp={this.props.status.get('created_at')} />
             </a>
           </div>
@@ -66,7 +66,7 @@ export default class ActionsModal extends ImmutablePureComponent {
         {this.props.header}
         {status}
 
-        <ul>
+        <ul className={classNames({ 'with-status': !!status })}>
           {this.props.actions.map(this.renderAction)}
         </ul>
       </div>

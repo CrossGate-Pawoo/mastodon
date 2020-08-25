@@ -2,11 +2,15 @@
 
 module Settings
   class ScopedSettings
+    DEFAULTING_TO_UNSCOPED = %w(
+      theme
+    ).freeze
+
     def initialize(object)
       @object = object
     end
 
-    # rubocop:disable Style/MethodMissing
+    # rubocop:disable Style/MethodMissingSuper
     def method_missing(method, *args)
       method_name = method.to_s
       # set a value for a variable
@@ -19,7 +23,7 @@ module Settings
         self[method_name]
       end
     end
-    # rubocop:enable Style/MethodMissing
+    # rubocop:enable Style/MethodMissingSuper
 
     def respond_to_missing?(*)
       true
@@ -27,7 +31,7 @@ module Settings
 
     def all_as_records
       vars = thing_scoped
-      records = vars.map { |r| [r.var, r] }.to_h
+      records = vars.each_with_object({}) { |r, h| h[r.var] = r }
 
       Setting.default_settings.each do |key, default_value|
         next if records.key?(key) || default_value.is_a?(Hash)
@@ -43,19 +47,25 @@ module Settings
       record.update!(value: value)
 
       Rails.cache.write(Setting.cache_key(key, @object), value)
-      value
     end
 
     def [](key)
       Rails.cache.fetch(Setting.cache_key(key, @object)) do
         db_val = thing_scoped.find_by(var: key.to_s)
         if db_val
-          default_value = Setting.default_settings[key]
+          default_value = ScopedSettings.default_settings[key]
           return default_value.with_indifferent_access.merge!(db_val.value) if default_value.is_a?(Hash)
           db_val.value
         else
-          Setting.default_settings[key]
+          ScopedSettings.default_settings[key]
         end
+      end
+    end
+
+    class << self
+      def default_settings
+        defaulting = DEFAULTING_TO_UNSCOPED.each_with_object({}) { |k, h| h[k] = Setting[k] }
+        Setting.default_settings.merge!(defaulting)
       end
     end
 

@@ -3,7 +3,7 @@ import Immutable from 'immutable';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
-import IconButton from '../../mastodon/components/icon_button';
+import IconButton from 'mastodon/components/icon_button';
 import PawooGA from '../actions/ga';
 
 import icon from '../images/announcement_icon.png';
@@ -73,20 +73,20 @@ class Announcements extends React.PureComponent {
     const { intl } = this.props;
 
     return (
-      <ul className='announcements'>
+      <ul className='pawoo-announcements'>
         {this.announcements.map(announcement => this.state.dismissed.indexOf(announcement.get('id')) === -1 && (
           <li key={announcement.get('id')}>
-            <div className='announcements__icon'>
+            <div className='pawoo-announcements__icon'>
               <img src={announcement.get('icon')} alt='' />
             </div>
-            <div className='announcements__body'>
-              <div className='announcements__body__dismiss'>
-                <IconButton icon='close' value={`${announcement.get('id')}`} title={intl.formatMessage(messages.dismiss)} onClick={this.handleDismiss} />
+            <div className='pawoo-announcements__body'>
+              <div className='pawoo-announcements__body__dismiss'>
+                <IconButton icon='close' inverted value={`${announcement.get('id')}`} title={intl.formatMessage(messages.dismiss)} onClick={this.handleDismiss} />
               </div>
               <p>{announcement.get('body')}</p>
               <p>
                 {announcement.get('link').map((link, index) => {
-                  const classNames = ['announcements__link'];
+                  const classNames = ['pawoo-announcements__link'];
                   const handleClick = event => {
                     PawooGA.event({ eventCategory: pawooGaCategory, eventAction: 'ClickButton', eventLabel: `${announcement.get('id')}-${index}` });
 
@@ -97,7 +97,7 @@ class Announcements extends React.PureComponent {
                   };
 
                   if (link.get('inline')) {
-                    classNames.push('announcements__link-inline');
+                    classNames.push('pawoo-announcements__link-inline');
                   }
 
                   /* eslint-disable react/jsx-no-bind */

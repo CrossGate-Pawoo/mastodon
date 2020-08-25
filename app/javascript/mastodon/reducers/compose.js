@@ -29,15 +29,23 @@ import {
   COMPOSE_UPLOAD_CHANGE_SUCCESS,
   COMPOSE_UPLOAD_CHANGE_FAIL,
   COMPOSE_RESET,
+  COMPOSE_POLL_ADD,
+  COMPOSE_POLL_REMOVE,
+  COMPOSE_POLL_OPTION_ADD,
+  COMPOSE_POLL_OPTION_CHANGE,
+  COMPOSE_POLL_OPTION_REMOVE,
+  COMPOSE_POLL_SETTINGS_CHANGE,
 } from '../actions/compose';
 import {
   COMPOSE_TAG_INSERT as PAWOO_COMPOSE_TAG_INSERT,
-} from '../../pawoo/actions/extensions/compose';
+} from 'pawoo/actions/extensions/compose';
 import { TIMELINE_DELETE } from '../actions/timelines';
 import { STORE_HYDRATE } from '../actions/store';
+import { REDRAFT } from '../actions/statuses';
 import { Map as ImmutableMap, List as ImmutableList, OrderedSet as ImmutableOrderedSet, fromJS } from 'immutable';
 import uuid from '../uuid';
 import { me } from '../initial_state';
+import { unescapeHTML } from '../utils/html';
 
 const initialState = ImmutableMap({
   mounted: 0,
@@ -52,9 +60,11 @@ const initialState = ImmutableMap({
   in_reply_to: null,
   is_composing: false,
   is_submitting: false,
+  is_changing_upload: false,
   is_uploading: false,
   progress: 0,
   media_attachments: ImmutableList(),
+  poll: null,
   suggestion_token: null,
   suggestions: ImmutableList(),
   default_privacy: 'public',
@@ -63,6 +73,12 @@ const initialState = ImmutableMap({
   idempotencyKey: null,
   pawooKeepCaretPosition: false,
   tagHistory: ImmutableList(),
+});
+
+const initialPoll = ImmutableMap({
+  options: ImmutableList(['', '']),
+  expires_in: 24 * 3600,
+  multiple: false,
 });
 
 const pawooInsertTag = (state, tag) => {
@@ -91,10 +107,12 @@ function clearAll(state) {
     map.set('spoiler', false);
     map.set('spoiler_text', '');
     map.set('is_submitting', false);
+    map.set('is_changing_upload', false);
     map.set('in_reply_to', null);
     map.set('privacy', state.get('default_privacy'));
     map.set('sensitive', false);
     map.update('media_attachments', list => list.clear());
+    map.set('poll', null);
     map.set('idempotencyKey', uuid());
   });
 };
@@ -108,7 +126,7 @@ function appendMedia(state, media) {
     map.set('resetFileKey', Math.floor((Math.random() * 0x10000)));
     map.set('idempotencyKey', uuid());
 
-    if (prevSize === 0 && (state.get('default_sensitive'))) {
+    if (prevSize === 0 && (state.get('default_sensitive') || state.get('spoiler'))) {
       map.set('sensitive', true);
     }
   });
@@ -127,15 +145,17 @@ function removeMedia(state, mediaId) {
   });
 };
 
-const insertSuggestion = (state, position, token, completion) => {
+const insertSuggestion = (state, position, token, completion, path) => {
   return state.withMutations(map => {
-    map.update('text', oldText => `${oldText.slice(0, position)}${completion} ${oldText.slice(position + token.length)}`);
+    map.updateIn(path, oldText => `${oldText.slice(0, position)}${completion} ${oldText.slice(position + token.length)}`);
     map.set('suggestion_token', null);
-    map.update('suggestions', ImmutableList(), list => list.clear());
-    map.set('focusDate', new Date());
-    map.set('caretPosition', position + completion.length + 1);
-    map.set('pawooKeepCaretPosition', false);
+    map.set('suggestions', ImmutableList());
+    if (path.length === 1 && path[0] === 'text') {
+      map.set('focusDate', new Date());
+      map.set('caretPosition', position + completion.length + 1);
+    }
     map.set('idempotencyKey', uuid());
+    map.set('pawooKeepCaretPosition', false);
   });
 };
 
@@ -144,7 +164,7 @@ const updateSuggestionTags = (state, token) => {
 
   return state.merge({
     suggestions: state.get('tagHistory')
-      .filter(tag => tag.startsWith(prefix))
+      .filter(tag => tag.toLowerCase().startsWith(prefix.toLowerCase()))
       .slice(0, 4)
       .map(tag => '#' + tag),
     suggestion_token: token,
@@ -159,21 +179,14 @@ const insertEmoji = (state, position, emojiData, needsSpace) => {
     text: `${oldText.slice(0, position)}${emoji} ${oldText.slice(position)}`,
     focusDate: new Date(),
     caretPosition: position + emoji.length + 1,
-    pawooKeepCaretPosition: false,
     idempotencyKey: uuid(),
+    pawooKeepCaretPosition: false,
   });
 };
 
 const privacyPreference = (a, b) => {
-  if (a === 'direct' || b === 'direct') {
-    return 'direct';
-  } else if (a === 'private' || b === 'private') {
-    return 'private';
-  } else if (a === 'unlisted' || b === 'unlisted') {
-    return 'unlisted';
-  } else {
-    return 'public';
-  }
+  const order = ['public', 'unlisted', 'private', 'direct'];
+  return order[Math.max(order.indexOf(a), order.indexOf(b), 0)];
 };
 
 const hydrate = (state, hydratedState) => {
@@ -184,6 +197,24 @@ const hydrate = (state, hydratedState) => {
   }
 
   return state;
+};
+
+const domParser = new DOMParser();
+
+const expandMentions = status => {
+  const fragment = domParser.parseFromString(status.get('content'), 'text/html').documentElement;
+
+  status.get('mentions').forEach(mention => {
+    fragment.querySelector(`a[href="${mention.get('url')}"]`).textContent = `@${mention.get('acct')}`;
+  });
+
+  return fragment.innerHTML;
+};
+
+const expiresInFromExpiresAt = expires_at => {
+  if (!expires_at) return 24 * 3600;
+  const delta = (new Date(expires_at).getTime() - Date.now()) / 1000;
+  return [300, 1800, 3600, 21600, 86400, 259200, 604800].find(expires_in => expires_in >= delta) || 24 * 3600;
 };
 
 export default function compose(state = initialState, action) {
@@ -198,7 +229,9 @@ export default function compose(state = initialState, action) {
       .set('is_composing', false);
   case COMPOSE_SENSITIVITY_CHANGE:
     return state.withMutations(map => {
-      map.set('sensitive', !state.get('sensitive'));
+      if (!state.get('spoiler')) {
+        map.set('sensitive', !state.get('sensitive'));
+      }
 
       map.set('idempotencyKey', uuid());
     });
@@ -207,8 +240,13 @@ export default function compose(state = initialState, action) {
       map.set('spoiler_text', '');
       map.set('spoiler', !state.get('spoiler'));
       map.set('idempotencyKey', uuid());
+
+      if (!state.get('sensitive') && state.get('media_attachments').size >= 1) {
+        map.set('sensitive', true);
+      }
     });
   case COMPOSE_SPOILER_TEXT_CHANGE:
+    if (!state.get('spoiler')) return state;
     return state
       .set('spoiler_text', action.text)
       .set('idempotencyKey', uuid());
@@ -229,9 +267,9 @@ export default function compose(state = initialState, action) {
       map.set('privacy', privacyPreference(action.status.get('visibility'), state.get('default_privacy')));
       map.set('focusDate', new Date());
       map.set('caretPosition', null);
-      map.set('pawooKeepCaretPosition', false);
       map.set('preselectDate', new Date());
       map.set('idempotencyKey', uuid());
+      map.set('pawooKeepCaretPosition', false);
 
       if (action.status.get('spoiler_text').length > 0) {
         map.set('spoiler', true);
@@ -249,17 +287,20 @@ export default function compose(state = initialState, action) {
       map.set('spoiler', false);
       map.set('spoiler_text', '');
       map.set('privacy', state.get('default_privacy'));
+      map.set('poll', null);
       map.set('idempotencyKey', uuid());
       map.set('pawooKeepCaretPosition', false);
     });
   case COMPOSE_SUBMIT_REQUEST:
-  case COMPOSE_UPLOAD_CHANGE_REQUEST:
     return state.set('is_submitting', true);
+  case COMPOSE_UPLOAD_CHANGE_REQUEST:
+    return state.set('is_changing_upload', true);
   case COMPOSE_SUBMIT_SUCCESS:
     return clearAll(state);
   case COMPOSE_SUBMIT_FAIL:
-  case COMPOSE_UPLOAD_CHANGE_FAIL:
     return state.set('is_submitting', false);
+  case COMPOSE_UPLOAD_CHANGE_FAIL:
+    return state.set('is_changing_upload', false);
   case COMPOSE_UPLOAD_REQUEST:
     return state.set('is_uploading', true);
   case COMPOSE_UPLOAD_SUCCESS:
@@ -275,8 +316,8 @@ export default function compose(state = initialState, action) {
       map.update('text', text => [text.trim(), `@${action.account.get('acct')} `].filter((str) => str.length !== 0).join(' '));
       map.set('focusDate', new Date());
       map.set('caretPosition', null);
-      map.set('pawooKeepCaretPosition', false);
       map.set('idempotencyKey', uuid());
+      map.set('pawooKeepCaretPosition', false);
     });
   case COMPOSE_DIRECT:
     return state.withMutations(map => {
@@ -284,15 +325,15 @@ export default function compose(state = initialState, action) {
       map.set('privacy', 'direct');
       map.set('focusDate', new Date());
       map.set('caretPosition', null);
-      map.set('pawooKeepCaretPosition', false);
       map.set('idempotencyKey', uuid());
+      map.set('pawooKeepCaretPosition', false);
     });
   case COMPOSE_SUGGESTIONS_CLEAR:
     return state.update('suggestions', ImmutableList(), list => list.clear()).set('suggestion_token', null);
   case COMPOSE_SUGGESTIONS_READY:
     return state.set('suggestions', ImmutableList(action.accounts ? action.accounts.map(item => item.id) : action.emojis)).set('suggestion_token', action.token);
   case COMPOSE_SUGGESTION_SELECT:
-    return insertSuggestion(state, action.position, action.token, action.completion);
+    return insertSuggestion(state, action.position, action.token, action.completion, action.path);
   case COMPOSE_SUGGESTION_TAGS_UPDATE:
     return updateSuggestionTags(state, action.token);
   case COMPOSE_TAG_HISTORY_UPDATE:
@@ -307,7 +348,7 @@ export default function compose(state = initialState, action) {
     return insertEmoji(state, action.position, action.emoji, action.needsSpace);
   case COMPOSE_UPLOAD_CHANGE_SUCCESS:
     return state
-      .set('is_submitting', false)
+      .set('is_changing_upload', false)
       .update('media_attachments', list => list.map(item => {
         if (item.get('id') === action.media.id) {
           return fromJS(action.media);
@@ -315,6 +356,46 @@ export default function compose(state = initialState, action) {
 
         return item;
       }));
+  case REDRAFT:
+    return state.withMutations(map => {
+      map.set('text', action.raw_text || unescapeHTML(expandMentions(action.status)));
+      map.set('in_reply_to', action.status.get('in_reply_to_id'));
+      map.set('privacy', action.status.get('visibility'));
+      map.set('media_attachments', action.status.get('media_attachments'));
+      map.set('focusDate', new Date());
+      map.set('caretPosition', null);
+      map.set('idempotencyKey', uuid());
+      map.set('sensitive', action.status.get('sensitive'));
+      map.set('pawooKeepCaretPosition', false);
+
+      if (action.status.get('spoiler_text').length > 0) {
+        map.set('spoiler', true);
+        map.set('spoiler_text', action.status.get('spoiler_text'));
+      } else {
+        map.set('spoiler', false);
+        map.set('spoiler_text', '');
+      }
+
+      if (action.status.get('poll')) {
+        map.set('poll', ImmutableMap({
+          options: action.status.getIn(['poll', 'options']).map(x => x.get('title')),
+          multiple: action.status.getIn(['poll', 'multiple']),
+          expires_in: expiresInFromExpiresAt(action.status.getIn(['poll', 'expires_at'])),
+        }));
+      }
+    });
+  case COMPOSE_POLL_ADD:
+    return state.set('poll', initialPoll);
+  case COMPOSE_POLL_REMOVE:
+    return state.set('poll', null);
+  case COMPOSE_POLL_OPTION_ADD:
+    return state.updateIn(['poll', 'options'], options => options.push(action.title));
+  case COMPOSE_POLL_OPTION_CHANGE:
+    return state.setIn(['poll', 'options', action.index], action.title);
+  case COMPOSE_POLL_OPTION_REMOVE:
+    return state.updateIn(['poll', 'options'], options => options.delete(action.index));
+  case COMPOSE_POLL_SETTINGS_CHANGE:
+    return state.update('poll', poll => poll.set('expires_in', action.expiresIn).set('multiple', action.isMultiple));
   case PAWOO_COMPOSE_TAG_INSERT:
     return pawooInsertTag(state, action.tag);
   default:

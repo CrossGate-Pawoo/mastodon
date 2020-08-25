@@ -1,29 +1,27 @@
 import React from 'react';
-import ImmutablePropTypes from 'react-immutable-proptypes';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
+import Icon from 'mastodon/components/icon';
 
 const messages = defineMessages({
   show: { id: 'column_header.show_settings', defaultMessage: 'Show settings' },
   hide: { id: 'column_header.hide_settings', defaultMessage: 'Hide settings' },
   moveLeft: { id: 'column_header.moveLeft_settings', defaultMessage: 'Move column to the left' },
   moveRight: { id: 'column_header.moveRight_settings', defaultMessage: 'Move column to the right' },
-  pawooMaximize: { id: 'pawoo.maximize', defaultMessage: 'Maximize' },
 });
 
-@injectIntl
-export default class ColumnHeader extends React.PureComponent {
+export default @injectIntl
+class ColumnHeader extends React.PureComponent {
 
   static contextTypes = {
     router: PropTypes.object,
-    pawooPopHistory: PropTypes.func,
   };
 
   static propTypes = {
     intl: PropTypes.object.isRequired,
     title: PropTypes.node,
+    pawooTitle: PropTypes.node,
     icon: PropTypes.string,
     active: PropTypes.bool,
     multiColumn: PropTypes.bool,
@@ -34,9 +32,6 @@ export default class ColumnHeader extends React.PureComponent {
     onPin: PropTypes.func,
     onMove: PropTypes.func,
     onClick: PropTypes.func,
-    pawoo: ImmutablePropTypes.map,
-    pawooIconRef: PropTypes.func,
-    pawooUrl: PropTypes.string,
   };
 
   state = {
@@ -44,23 +39,17 @@ export default class ColumnHeader extends React.PureComponent {
     animating: false,
   };
 
-  componentWillUpdate({ pawoo }) {
-    if (pawoo && pawoo.get('collapsed')) {
-      this.setState({ collapsed: true });
+  historyBack = () => {
+    if (window.history && window.history.length === 1) {
+      this.context.router.history.push('/');
+    } else {
+      this.context.router.history.goBack();
     }
   }
 
   handleToggleClick = (e) => {
     e.stopPropagation();
     this.setState({ collapsed: !this.state.collapsed, animating: true });
-
-    if (this.state.collapsed && this.props.pawoo) {
-      const onExpand = this.props.pawoo.get('onExpand');
-
-      if (onExpand) {
-        onExpand();
-      }
-    }
   }
 
   handleTitleClick = () => {
@@ -76,15 +65,22 @@ export default class ColumnHeader extends React.PureComponent {
   }
 
   handleBackClick = () => {
-    this.context.pawooPopHistory();
+    this.historyBack();
   }
 
   handleTransitionEnd = () => {
     this.setState({ animating: false });
   }
 
+  handlePin = () => {
+    if (!this.props.pinned) {
+      this.historyBack();
+    }
+    this.props.onPin();
+  }
+
   render () {
-    const { title, icon, active, children, pinned, onPin, multiColumn, extraButton, showBackButton, intl: { formatMessage }, pawoo, pawooUrl } = this.props;
+    const { title, icon, active, children, pinned, multiColumn, extraButton, showBackButton, intl: { formatMessage }, pawooTitle } = this.props;
     const { collapsed, animating } = this.state;
 
     const wrapperClassName = classNames('column-header__wrapper', {
@@ -115,37 +111,24 @@ export default class ColumnHeader extends React.PureComponent {
     }
 
     if (multiColumn && pinned) {
-      pinButton = <button key='pin-button' className='text-btn column-header__setting-btn' onClick={onPin}><i className='fa fa fa-times' /> <FormattedMessage id='column_header.unpin' defaultMessage='Unpin' /></button>;
+      pinButton = <button key='pin-button' className='text-btn column-header__setting-btn' onClick={this.handlePin}><Icon id='times' /> <FormattedMessage id='column_header.unpin' defaultMessage='Unpin' /></button>;
 
       moveButtons = (
         <div key='move-buttons' className='column-header__setting-arrows'>
-          <button title={formatMessage(messages.moveLeft)} aria-label={formatMessage(messages.moveLeft)} className='text-btn column-header__setting-btn' onClick={this.handleMoveLeft}><i className='fa fa-chevron-left' /></button>
-          <button title={formatMessage(messages.moveRight)} aria-label={formatMessage(messages.moveRight)} className='text-btn column-header__setting-btn' onClick={this.handleMoveRight}><i className='fa fa-chevron-right' /></button>
+          <button title={formatMessage(messages.moveLeft)} aria-label={formatMessage(messages.moveLeft)} className='text-btn column-header__setting-btn' onClick={this.handleMoveLeft}><Icon id='chevron-left' /></button>
+          <button title={formatMessage(messages.moveRight)} aria-label={formatMessage(messages.moveRight)} className='text-btn column-header__setting-btn' onClick={this.handleMoveRight}><Icon id='chevron-right' /></button>
         </div>
       );
     } else if (multiColumn) {
-      pinButton = <button key='pin-button' className='text-btn column-header__setting-btn' onClick={onPin}><i className='fa fa fa-plus' /> <FormattedMessage id='column_header.pin' defaultMessage='Pin' /></button>;
+      pinButton = <button key='pin-button' className='text-btn column-header__setting-btn' onClick={this.handlePin}><Icon id='plus' /> <FormattedMessage id='column_header.pin' defaultMessage='Pin' /></button>;
     }
 
-    if (!pinned && ((multiColumn && pawoo && pawoo.get('multiColumn')) || showBackButton)) {
+    if (!pinned && (multiColumn || showBackButton)) {
       backButton = (
         <button onClick={this.handleBackClick} className='column-header__back-button'>
-          <i className='fa fa-fw fa-chevron-left column-back-button__icon' />
+          <Icon id='chevron-left' className='column-back-button__icon' fixedWidth />
           <FormattedMessage id='column_back_button.label' defaultMessage='Back' />
         </button>
-      );
-    }
-
-    let pawooMaximizeButton;
-
-    if (pinned && pawooUrl && pawoo && !pawoo.get('multiColumn')) {
-      pawooMaximizeButton = (
-        <Link
-          className='column-header__button'
-          onClick={pawoo.get('onCollapse')}
-          style={{ margin: 'auto' }}
-          to={pawooUrl}
-        ><i aria-label={formatMessage(messages.pawooMaximize)} className='fa fa-window-maximize' /></Link>
       );
     }
 
@@ -159,18 +142,25 @@ export default class ColumnHeader extends React.PureComponent {
     }
 
     if (children || multiColumn) {
-      collapseButton = <button className={collapsibleButtonClassName} title={formatMessage(collapsed ? messages.show : messages.hide)} aria-label={formatMessage(collapsed ? messages.show : messages.hide)} aria-pressed={collapsed ? 'false' : 'true'} onClick={this.handleToggleClick}><i className='fa fa-sliders' /></button>;
+      collapseButton = <button className={collapsibleButtonClassName} title={formatMessage(collapsed ? messages.show : messages.hide)} aria-label={formatMessage(collapsed ? messages.show : messages.hide)} aria-pressed={collapsed ? 'false' : 'true'} onClick={this.handleToggleClick}><Icon id='sliders' /></button>;
     }
 
-    const hasTitle = title;
+    const hasTitle = (icon && title) || pawooTitle;
 
     return (
       <div className={wrapperClassName}>
         <h1 className={buttonClassName}>
+
           {hasTitle && (
             <button onClick={this.handleTitleClick}>
-              {icon && <i className={`fa fa-fw fa-${icon} column-header__icon`} ref={this.props.pawooIconRef} />}
-              {title}
+              {pawooTitle ? (
+                pawooTitle
+              ): (
+                <>
+                  <Icon id={icon} fixedWidth className='column-header__icon' />
+                  {title}
+                </>
+              )}
             </button>
           )}
 
@@ -178,7 +168,6 @@ export default class ColumnHeader extends React.PureComponent {
 
           <div className='column-header__buttons'>
             {hasTitle && backButton}
-            {pawooMaximizeButton}
             {extraButton}
             {collapseButton}
           </div>

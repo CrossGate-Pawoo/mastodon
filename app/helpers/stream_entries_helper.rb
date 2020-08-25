@@ -12,21 +12,75 @@ module StreamEntriesHelper
     end
   end
 
+  def account_action_button(account)
+    if user_signed_in?
+      if account.id == current_user.account_id
+        link_to settings_profile_url, class: 'button logo-button' do
+          safe_join([svg_logo, t('settings.edit_profile')])
+        end
+      elsif current_account.following?(account) || current_account.requested?(account)
+        link_to account_unfollow_path(account), class: 'button logo-button button--destructive', data: { method: :post } do
+          safe_join([svg_logo, t('accounts.unfollow')])
+        end
+      elsif !(account.memorial? || account.moved?)
+        link_to account_follow_path(account), class: "button logo-button#{account.blocking?(current_account) ? ' disabled' : ''}", data: { method: :post } do
+          safe_join([svg_logo, t('accounts.follow')])
+        end
+      end
+    elsif !(account.memorial? || account.moved?)
+      link_to account_remote_follow_path(account), class: 'button logo-button modal-button', target: '_new' do
+        safe_join([svg_logo, t('accounts.follow')])
+      end
+    end
+  end
+
+  def svg_logo
+    content_tag(:svg, tag(:use, 'xlink:href' => '#pawoo-svg-logo'), 'viewBox' => '0 0 24 24', class: 'pawoo-svg-logo')
+  end
+
+  def svg_logo_full
+    image_tag asset_pack_path('media/pawoo/images/service_logo.png'), alt: 'Pawoo', class: 'pawoo-service-logo'
+  end
+
+  def account_badge(account, all: false)
+    if account.bot?
+      content_tag(:div, content_tag(:div, t('accounts.roles.bot'), class: 'account-role bot'), class: 'roles')
+    elsif (Setting.show_staff_badge && account.bootstrap_timeline?) || all
+      content_tag(:div, class: 'roles') do
+        if all && !account.bootstrap_timeline?
+          content_tag(:div, t('admin.accounts.roles.user'), class: 'account-role')
+        elsif account.bootstrap_timeline?
+          content_tag(:div, t('accounts.roles.admin'), class: 'account-role admin')
+        end
+      end
+    end
+  end
+
+  def link_to_more(url)
+    link_to t('statuses.show_more'), url, class: 'load-more load-gap'
+  end
+
+  def nothing_here(extra_classes = '')
+    content_tag(:div, class: "nothing-here #{extra_classes}") do
+      t('accounts.nothing_here')
+    end
+  end
+
   def account_description(account)
     prepend_str = [
       [
         number_to_human(account.statuses_count, strip_insignificant_zeros: true),
-        I18n.t('accounts.posts'),
+        I18n.t('accounts.posts', count: account.statuses_count),
       ].join(' '),
 
       [
         number_to_human(account.following_count, strip_insignificant_zeros: true),
-        I18n.t('accounts.following'),
+        I18n.t('accounts.following', count: account.following_count),
       ].join(' '),
 
       [
         number_to_human(account.followers_count, strip_insignificant_zeros: true),
-        I18n.t('accounts.followers'),
+        I18n.t('accounts.followers', count: account.followers_count),
       ].join(' '),
     ].join(', ')
 
@@ -56,9 +110,19 @@ module StreamEntriesHelper
     I18n.t('statuses.content_warning', warning: status.spoiler_text)
   end
 
+  def poll_summary(status)
+    return unless status.preloadable_poll
+    status.preloadable_poll.options.map { |o| "[ ] #{o}" }.join("\n")
+  end
+
   def status_description(status)
     components = [[media_summary(status), status_text_summary(status)].reject(&:blank?).join(' · ')]
-    components << status.text if status.spoiler_text.blank?
+
+    if status.spoiler_text.blank?
+      components << status.text
+      components << poll_summary(status)
+    end
+
     components.reject(&:blank?).join("\n\n")
   end
 
@@ -67,7 +131,7 @@ module StreamEntriesHelper
   end
 
   def acct(account)
-    if embedded_view? && account.local?
+    if account.local?
       "@#{account.acct}@#{Rails.configuration.x.local_domain}"
     else
       "@#{account.acct}"
@@ -122,7 +186,7 @@ module StreamEntriesHelper
     when 'public'
       fa_icon 'globe fw'
     when 'unlisted'
-      fa_icon 'unlock-alt fw'
+      fa_icon 'unlock fw'
     when 'private'
       fa_icon 'lock fw'
     when 'direct'

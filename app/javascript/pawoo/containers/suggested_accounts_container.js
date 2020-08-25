@@ -8,7 +8,7 @@ import {
   fetchSuggestedAccounts,
   expandSuggestedAccounts,
 } from '../actions/suggested_accounts';
-import ScrollableList from '../../mastodon/components/scrollable_list';
+import ScrollableList from 'mastodon/components/scrollable_list';
 import SuggestedAccountContainer from './suggested_account_container';
 
 const mapStateToProps = (state) => ({
@@ -17,8 +17,8 @@ const mapStateToProps = (state) => ({
   isLoading: state.getIn(['pawoo', 'suggested_accounts', 'isLoading'], true),
 });
 
-@connect(mapStateToProps)
-export default class SuggestedAccounts extends React.PureComponent {
+export default @connect(mapStateToProps)
+class SuggestedAccounts extends React.PureComponent {
 
   static propTypes = {
     dispatch: PropTypes.func.isRequired,

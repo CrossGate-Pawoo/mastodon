@@ -1,10 +1,3 @@
-Rack::Timeout::Logger.disable
-Rack::Timeout.service_timeout = false
-
-if Rails.env.production?
-  Rack::Timeout.service_timeout = 30
-end
-
 require 'goldfinger'
 
 module Goldfinger
@@ -22,4 +15,8 @@ module Goldfinger
 
     prepend(ShortTimeout)
   end
+end
+
+if Rails.env.production?
+  Rails.application.config.middleware.insert_before Rack::Runtime, Rack::Timeout, service_timeout: 30
 end

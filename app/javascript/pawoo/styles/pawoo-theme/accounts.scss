@@ -1,0 +1,29 @@
+.pawoo-oauth-authentications {
+  display: flex;
+  align-items: center;
+  height: 100%;
+
+  a {
+    display: inline-block;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    overflow: hidden;
+
+    & + a {
+      margin-left: 12px;
+    }
+  }
+
+  .pawoo-oauth-authentication {
+    width: 100%;
+    height: 100%;
+    background-repeat: no-repeat;
+
+    &.pixiv {
+      background-color: #0096fa;
+      background-image: url('data:image/svg+xml;utf8,<svg width="20" height="18" xmlns="http://www.w3.org/2000/svg"><path d="M17.52 2.156C15.95.79 13.75 0 11.194 0 4.532 0 0 5.123 0 5.123l1.277 2.02s.706.058.332-1.132c.323-.607.955-1.425 2.19-2.37v13.45c-.532.15-1.236.431-.757.909h3.67c.483-.483-.28-.773-.744-.909v-3.173s2.515.984 5.226.984c2.382 0 4.549-.706 6.16-1.982 1.614-1.268 2.652-3.162 2.646-5.326a7.128 7.128 0 0 0-2.48-5.438zm-1.947 9.7c-1.114 1.096-2.733 1.789-4.601 1.787-2.083.001-3.838-.4-4.995-.97V2.598c1.27-.9 3.331-1.454 4.995-1.45 2.022 0 3.61.763 4.683 1.918 1.072 1.162 1.658 2.705 1.663 4.5-.007 1.747-.633 3.187-1.745 4.292v-.002z" fill="%23FFF" fill-rule="evenodd"/></svg>');
+      background-position: 50% 50%;
+    }
+  }
+}

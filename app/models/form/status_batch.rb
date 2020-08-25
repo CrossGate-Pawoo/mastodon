@@ -6,8 +6,6 @@ class Form::StatusBatch
 
   attr_accessor :status_ids, :action, :current_account
 
-  ACTION_TYPE = %w(nsfw_on nsfw_off delete).freeze
-
   def save
     case action
     when 'nsfw_on', 'nsfw_off'
@@ -23,7 +21,7 @@ class Form::StatusBatch
     media_attached_status_ids = MediaAttachment.where(status_id: status_ids).pluck(:status_id)
 
     ApplicationRecord.transaction do
-      Status.where(id: media_attached_status_ids).find_each do |status|
+      Status.where(id: media_attached_status_ids).reorder(nil).find_each do |status|
         status.update!(sensitive: sensitive)
         log_action :update, status
       end
@@ -35,8 +33,9 @@ class Form::StatusBatch
   end
 
   def delete_statuses
-    Status.where(id: status_ids).find_each do |status|
+    Status.where(id: status_ids).reorder(nil).find_each do |status|
       RemovalWorker.perform_async(status.id)
+      Tombstone.find_or_create_by(uri: status.uri, account: status.account, by_moderator: true)
       log_action :destroy, status
     end
 

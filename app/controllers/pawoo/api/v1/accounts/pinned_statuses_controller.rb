@@ -1,30 +1,24 @@
 # frozen_string_literal: true
 
 class Pawoo::Api::V1::Accounts::PinnedStatusesController < Api::BaseController
-  before_action -> { doorkeeper_authorize! :read }
+  before_action -> { authorize_if_got_token! :read, :'read:statuses' }
   before_action :set_account
 
   respond_to :json
 
   def index
-    limit = limit_param(DEFAULT_STATUSES_LIMIT)
-
-    statuses = @account.pinned_statuses.merge(StatusPin.recent.paginate_by_max_id(limit, params[:max_id], params[:since_id]))
-
+    statuses = pinned_scope.paginate_by_id(limit_param(DEFAULT_STATUSES_LIMIT), params_slice(:max_id, :since_id, :min_id))
     @statuses = cache_collection(statuses, Status)
 
-    next_path = api_v1_account_pinned_statuses_url(pagination_params(max_id: @statuses.last.status_pin.id)) if @statuses.size == limit
-    prev_path = api_v1_account_pinned_statuses_url(pagination_params(since_id: @statuses.first.status_pin.id)) unless @statuses.empty?
-
-    set_pagination_headers(next_path, prev_path)
-
-    render json: @statuses, each_serializer: REST::StatusSerializer, relationships: StatusRelationshipsPresenter.new(@statuses, current_user&.account_id)
+    render json: @statuses, each_serializer: ::REST::StatusSerializer, relationships: StatusRelationshipsPresenter.new(@statuses, current_user&.account_id), pawoo_from_pinned_statuses: true
   end
 
   private
 
-  def pagination_params(core_params)
-    params.permit(:limit).merge(core_params)
+  def pinned_scope
+    return Status.none if @account.blocking?(current_account)
+
+    @account.pinned_statuses
   end
 
   def set_account

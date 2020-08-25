@@ -1,4 +1,4 @@
-import { TREND_TAGS_SUCCESS } from '../../pawoo/actions/trend_tags';
+import { TREND_TAGS_SUCCESS } from 'pawoo/actions/trend_tags';
 import Immutable from 'immutable';
 
 const initialState = Immutable.Map({

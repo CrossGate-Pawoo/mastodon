@@ -8,8 +8,8 @@ const messages = defineMessages({
   title: { id: 'pawoo.trend_tags.title', defaultMessage: 'Suggested tag' },
 });
 
-@injectIntl
-export default class TrendTagsSection extends React.PureComponent {
+export default @injectIntl
+class TrendTagsSection extends React.PureComponent {
 
   static propTypes = {
     Tag: PropTypes.func.isRequired,
@@ -45,10 +45,10 @@ export default class TrendTagsSection extends React.PureComponent {
 
     const { intl, scrollable, Tag, tags, insertTagCompose } = this.props;
     return (
-      <div className='trend-tags'>
-        <div className='pawoo-subcolumn__header'>
-          <i className='fa fa-line-chart pawoo-subcolumn__header__icon' aria-hidden='true' />
-          <div className='pawoo-subcolumn__header__name'>
+      <div className='pawoo-trend-tags'>
+        <div className='pawoo-trend-tags__header'>
+          <i className='fa fa-line-chart pawoo-trend-tags__header__icon' aria-hidden='true' />
+          <div className='pawoo-trend-tags__header__name'>
             {intl.formatMessage(messages.title)}
           </div>
         </div>
@@ -60,7 +60,7 @@ export default class TrendTagsSection extends React.PureComponent {
                   <div className='suggestion-tags__name'>
                     <Tag tag={tag} />
                   </div>
-                  <div className={`suggestion-tags__description ${tag.get('type') === 'suggestion' ? 'suggestion' : ''}`}>{tag.get('description')}</div>
+                  <div className={'suggestion-tags__description'}>{tag.get('description')}</div>
                 </div>
                 {insertTagCompose && <button className='suggestion-tags__button' data-tag={tag.get('name')} onClick={this.handleToggleClick}><i className='fa fa-pencil' /></button>}
               </li>

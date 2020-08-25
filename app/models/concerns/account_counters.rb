@@ -8,32 +8,16 @@ module AccountCounters
     after_save :save_account_stat
   end
 
-  # delegate :statuses_count,
-  #          :statuses_count=,
-  #          :following_count,
-  #          :following_count=,
-  #          :followers_count,
-  #          :followers_count=,
-  #          :increment_count!,
-  #          :decrement_count!,
-  #          :last_status_at,
-  #          to: :account_stat
-
-  # TODO: 2.9.4アップデート時に消す
-  def statuses_count=(value)
-    super(value)
-    account_stat.statuses_count = value
-  end
-
-  def following_count=(value)
-    super(value)
-    account_stat.following_count = value
-  end
-
-  def followers_count=(value)
-    super(value)
-    account_stat.followers_count = value
-  end
+  delegate :statuses_count,
+           :statuses_count=,
+           :following_count,
+           :following_count=,
+           :followers_count,
+           :followers_count=,
+           :increment_count!,
+           :decrement_count!,
+           :last_status_at,
+           to: :account_stat
 
   def account_stat
     super || build_account_stat

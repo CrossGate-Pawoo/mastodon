@@ -15,9 +15,9 @@ describe Pawoo::Api::V1::Accounts::PinnedStatusesController do
     let!(:status_pin) { Fabricate(:status_pin, account: user.account) }
 
     it 'returns http success' do
-      get :index, params: { account_id: user.account.id, limit: 1 }
+      get :index, params: { account_id: user.account.id }
       expect(response).to have_http_status(:success)
-      expect(response.headers['Link'].links.size).to eq(2)
+      expect(JSON.parse(response.body)[0]['pinned']).to be true
     end
   end
 end

@@ -1,0 +1,139 @@
+---
+cs:
+  simple_form:
+    hints:
+      account_warning_preset:
+        text: Můžete používat syntaxi tootů, jako například URL, hashtagy a zmínky
+      admin_account_action:
+        send_email_notification: Uživatel obdrží vysvětlení toho, co se stalo s jeho účtem
+        text_html: Volitelné. Můžete používat syntaxi tootů. Pro ušetření času si můžete <a href="%{path}">přidat předlohy pro varování</a>
+        type_html: Vyberte, co chcete udělat s účtem <strong>%{acct}</strong>
+        warning_preset_id: Volitelné. Můžete stále vložit na konec předlohy vlastní text
+      defaults:
+        autofollow: Lidé, kteří se zaregistrují přes pozvání, vás budou automaticky sledovat
+        avatar: PNG, GIF či JPG. Maximálně %{size}. Bude zmenšen na %{dimensions} px
+        bot: Tento účet provádí hlavně automatizované akce a nemusí být spravován
+        context: Jeden či více kontextů, ve kterých má být filtr uplatněn
+        digest: Odesíláno pouze po dlouhé době nečinnosti a pouze, pokud jste při své nepřítomnosti obdržel/a osobní zprávy
+        discoverable_html: <a href="%{path}" target="_blank">Adresář</a> dovoluje lidem najít účty podle zájmů a aktivity. Vyžaduje alespoň %{min_followers} sledujících
+        email: Bude vám poslán potvrzovací e-mail
+        fields: Na profilu můžete mít až 4 položky zobrazené jako tabulka
+        header: PNG, GIF či JPG. Maximálně %{size}. Bude zmenšen na %{dimensions} px
+        inbox_url: Zkopírujte URL z hlavní stránky mostu, který chcete použít
+        irreversible: Filtrované tooty nenávratně zmizí, i pokud bude filtr později odstraněn
+        locale: Jazyk uživatelského rozhraní, e-mailů a oznámení push
+        locked: Vyžaduje, abyste ručně schvaloval/a sledující
+        password: Použijte alespoň 8 znaků
+        phrase: Shoda bude nalezena bez ohledu na velikost písmen v těle tootu či varování o obsahu
+        scopes: Která API bude aplikaci povoleno používat. Pokud vyberete rozsah nejvyššího stupně, nebudete je muset vybírat jednotlivě.
+        setting_aggregate_reblogs: Nezobrazovat nové boosty pro tooty, které byly nedávno boostnuty (ovlivňuje pouze nově přijaté boosty)
+        setting_default_sensitive: Citlivá média jsou ve výchozím stavu skryta a mohou být zobrazena kliknutím
+        setting_display_media_default: Skrývat média označená jako citlivá
+        setting_display_media_hide_all: Vždy skrývat všechna média
+        setting_display_media_show_all: Vždy zobrazovat média označená jako citlivá
+        setting_hide_network: Koho sledujete a kdo sleduje vás nebude zobrazeno na vašem profilu
+        setting_noindex: Ovlivňuje váš veřejný profil a stránky tootů
+        setting_show_application: Aplikace, kterou používáte k psaní tootů, bude zobrazena v detailním zobrazení vašich tootů
+        username: Vaše uživatelské jméno bude na %{domain} unikátní
+        whole_word: Je-li klíčové slovo či fráze pouze alfanumerická, bude aplikována pouze, pokud se shoduje s celým slovem
+      featured_tag:
+        name: 'Nejspíš budete chtít použít jeden z těchto:'
+      imports:
+        data: Soubor CSV exportovaný z jiného serveru Mastodon
+      invite_request:
+        text: To nám pomůže posoudit váš požadavek
+      sessions:
+        otp: 'Napište dvoufázový kód vygenerovaný vaší mobilní aplikací, nebo použijte jeden z vašich záložních kódů:'
+      user:
+        chosen_languages: Je-li tohle zaškrtnuto, budou ve veřejných časových osách zobrazeny pouze tooty ve zvolených jazycích
+    labels:
+      account:
+        fields:
+          name: Označení
+          value: Obsah
+      account_warning_preset:
+        text: Text předlohy
+      admin_account_action:
+        send_email_notification: Informovat uživatele e-mailem
+        text: Vlastní varování
+        type: Akce
+        types:
+          disable: Deaktivovat
+          none: Nic nedělat
+          silence: Utišit
+          suspend: Pozastavit a nenávratně smazat data účtu
+        warning_preset_id: Použít předlohu pro varování
+      defaults:
+        autofollow: Pozvat ke sledování vašeho účtu
+        avatar: Avatar
+        bot: Tohle je účet robota
+        chosen_languages: Filtrovat jazyky
+        confirm_new_password: Potvrďte nové heslo
+        confirm_password: Potvrdit heslo
+        context: Kontexty filtrů
+        current_password: Současné heslo
+        data: Data
+        discoverable: Zveřejnit tento účet v adresáři
+        display_name: Zobrazované jméno
+        email: E-mailová adresa
+        expires_in: Vypršet za
+        fields: Metadata profilu
+        header: Záhlaví
+        inbox_url: URL příchozí schránky mostu
+        irreversible: Zahodit místo skrytí
+        locale: Jazyk rozhraní
+        locked: Uzamknout účet
+        max_uses: Maximální počet použití
+        new_password: Nové heslo
+        note: O vás
+        otp_attempt: Dvoufázový kód
+        password: Heslo
+        phrase: Klíčové slovo či fráze
+        setting_advanced_layout: Povolit pokročilé webové rozhraní
+        setting_aggregate_reblogs: Seskupovat boosty v časových osách
+        setting_auto_play_gif: Automaticky přehrávat animace GIF
+        setting_boost_modal: Zobrazovat před boostnutím potvrzovací okno
+        setting_default_language: Jazyk příspěvků
+        setting_default_privacy: Soukromí příspěvků
+        setting_default_sensitive: Vždy označovat média jako citlivá
+        setting_delete_modal: Zobrazovat před smazáním tootu potvrzovací okno
+        setting_display_media: Zobrazování médií
+        setting_display_media_default: Výchozí
+        setting_display_media_hide_all: Skrýt vše
+        setting_display_media_show_all: Zobrazit vše
+        setting_expand_spoilers: Vždy rozbalit tooty označené varováními o obsahu
+        setting_hide_network: Skrýt svou síť
+        setting_noindex: Neindexovat svůj profil vyhledávači
+        setting_reduce_motion: Redukovat pohyb v animacích
+        setting_show_application: Zobrazit aplikaci používanou k psaní tootů
+        setting_system_font_ui: Použít výchozí písmo systému
+        setting_theme: Motiv stránky
+        setting_unfollow_modal: Zobrazovat před zrušením sledování potvrzovací okno
+        severity: Přísnost
+        type: Typ importu
+        username: Uživatelské jméno
+        username_or_email: Uživatelské jméno nebo e-mail
+        whole_word: Celé slovo
+      featured_tag:
+        name: Hashtag
+      interactions:
+        must_be_follower: Blokovat oznámení od lidí, kteří vás nesledují
+        must_be_following: Blokovat oznámení od lidí, které nesledujete
+        must_be_following_dm: Blokovat přímé zprávy od lidí, které nesledujete
+      invite_request:
+        text: Proč se chcete připojit?
+      notification_emails:
+        digest: Posílat e-maily s přehledem
+        favourite: Posílat e-maily, když si někdo oblíbí váš toot
+        follow: Posílat e-maily, když vás někdo začne sledovat
+        follow_request: Posílat e-maily, když vás někdo požádá o sledování
+        mention: Posílat e-maily, když vás někdo zmíní
+        pending_account: Posílat e-maily, když je třeba posoudit nový účet
+        reblog: Posílat e-maily, když někdo boostne váš toot
+        report: Posílat e-maily, je-li odesláno nové nahlášení
+    'no': Ne
+    recommended: Doporučeno
+    required:
+      mark: "*"
+      text: požadováno
+    'yes': Ano

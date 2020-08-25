@@ -1,7 +1,0 @@
-.controls.pawoo-follow{ class: classes }
-  .pawoo-follow__button
-    = yield
-    %button.button.pawoo-follow__button__dropdown{ 'aria-controls': id }
-      = fa_icon 'caret-down'
-  %ul.pawoo-follow__dropdown.dropdown-menu{ 'aria-expanded': 'false', id: id }
-    %li.dropdown-menu__item= link_to t('accounts.remote_follow'), (account.local? ? account_remote_follow_path(account) : "web+mastodon://follow?uri=#{account.uri}")

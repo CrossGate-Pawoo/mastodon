@@ -1,10 +1,10 @@
 import React from 'react';
 import ImmutablePropTypes from 'react-immutable-proptypes';
-import Avatar from '../../mastodon/components/avatar';
-import Permalink from '../../mastodon/components/permalink';
+import Avatar from 'mastodon/components/avatar';
+import Permalink from 'mastodon/components/permalink';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 import { connect } from 'react-redux';
-import { makeGetAccount } from '../../mastodon/selectors';
+import { makeGetAccount } from 'mastodon/selectors';
 import ga from '../actions/ga';
 
 const gaCategory = 'FollowersYouFollow';
@@ -19,8 +19,8 @@ const makeMapStateToProps = () => {
   return mapStateToProps;
 };
 
-@connect(makeMapStateToProps)
-export default class FollowersYouFollowColumn extends ImmutablePureComponent {
+export default @connect(makeMapStateToProps)
+class FollowersYouFollowColumn extends ImmutablePureComponent {
 
   static propTypes = {
     account: ImmutablePropTypes.map.isRequired,

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Api::V1::Timelines::HomeController < Api::BaseController
-  before_action -> { doorkeeper_authorize! :read }, only: [:show]
+  before_action -> { doorkeeper_authorize! :read, :'read:statuses' }, only: [:show]
   before_action :require_user!, only: [:show]
   after_action :insert_pagination_headers, unless: -> { @statuses.empty? }
 
@@ -27,13 +27,11 @@ class Api::V1::Timelines::HomeController < Api::BaseController
   end
 
   def home_statuses
-    max_id = params[:max_id]&.to_i
-    since_id = params[:since_id]&.to_i
-
     account_home_feed.get(
       limit_param(DEFAULT_STATUSES_LIMIT),
-      max_id,
-      since_id
+      params[:max_id],
+      params[:since_id],
+      params[:min_id]
     )
   end
 
@@ -54,7 +52,7 @@ class Api::V1::Timelines::HomeController < Api::BaseController
   end
 
   def prev_path
-    api_v1_timelines_home_url pagination_params(since_id: pagination_since_id)
+    api_v1_timelines_home_url pagination_params(min_id: pagination_since_id)
   end
 
   def pagination_max_id

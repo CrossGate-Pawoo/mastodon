@@ -19,8 +19,6 @@ zh-CN:
         provider: 提供商
         uid: 用户 ID
 
-  about:
-    contact_body_mastodon: 在 Pawoo 上联系我们
   admin:
     accounts:
       oauth_authentications: 关联的 pixiv 帐户

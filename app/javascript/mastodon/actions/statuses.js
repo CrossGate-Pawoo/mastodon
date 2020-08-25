@@ -3,8 +3,8 @@ import openDB from '../storage/db';
 import { evictStatus } from '../storage/modifier';
 
 import { deleteFromTimelines } from './timelines';
-import { fetchStatusCard } from './cards';
 import { importFetchedStatus, importFetchedStatuses, importAccount, importStatus } from './importer';
+import { ensureComposeIsVisible } from './compose';
 
 export const STATUS_FETCH_REQUEST = 'STATUS_FETCH_REQUEST';
 export const STATUS_FETCH_SUCCESS = 'STATUS_FETCH_SUCCESS';
@@ -28,6 +28,8 @@ export const STATUS_UNMUTE_FAIL    = 'STATUS_UNMUTE_FAIL';
 
 export const STATUS_REVEAL = 'STATUS_REVEAL';
 export const STATUS_HIDE   = 'STATUS_HIDE';
+
+export const REDRAFT = 'REDRAFT';
 
 export function fetchStatusRequest(id, skipLoading) {
   return {
@@ -84,7 +86,6 @@ export function fetchStatus(id) {
     const skipLoading = getState().getIn(['statuses', id], null) !== null;
 
     dispatch(fetchContext(id));
-    dispatch(fetchStatusCard(id));
 
     if (skipLoading) {
       return;
@@ -131,14 +132,33 @@ export function fetchStatusFail(id, error, skipLoading) {
   };
 };
 
-export function deleteStatus(id) {
+export function redraft(status, raw_text) {
+  return {
+    type: REDRAFT,
+    status,
+    raw_text,
+  };
+};
+
+export function deleteStatus(id, routerHistory, withRedraft = false) {
   return (dispatch, getState) => {
+    let status = getState().getIn(['statuses', id]);
+
+    if (status.get('poll')) {
+      status = status.set('poll', getState().getIn(['polls', status.get('poll')]));
+    }
+
     dispatch(deleteStatusRequest(id));
 
-    api(getState).delete(`/api/v1/statuses/${id}`).then(() => {
+    api(getState).delete(`/api/v1/statuses/${id}`).then(response => {
       evictStatus(id);
       dispatch(deleteStatusSuccess(id));
       dispatch(deleteFromTimelines(id));
+
+      if (withRedraft) {
+        dispatch(redraft(status, response.data.text));
+        ensureComposeIsVisible(getState, routerHistory);
+      }
     }).catch(error => {
       dispatch(deleteStatusFail(id, error));
     });

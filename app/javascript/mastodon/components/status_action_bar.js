@@ -5,10 +5,11 @@ import IconButton from './icon_button';
 import DropdownMenuContainer from '../containers/dropdown_menu_container';
 import { defineMessages, injectIntl } from 'react-intl';
 import ImmutablePureComponent from 'react-immutable-pure-component';
-import { me } from '../initial_state';
+import { me, isStaff } from '../initial_state';
 
 const messages = defineMessages({
   delete: { id: 'status.delete', defaultMessage: 'Delete' },
+  redraft: { id: 'status.redraft', defaultMessage: 'Delete & re-draft' },
   direct: { id: 'status.direct', defaultMessage: 'Direct message @{name}' },
   mention: { id: 'status.mention', defaultMessage: 'Mention @{name}' },
   mute: { id: 'account.mute', defaultMessage: 'Mute @{name}' },
@@ -22,21 +23,33 @@ const messages = defineMessages({
   cancel_reblog_private: { id: 'status.cancel_reblog_private', defaultMessage: 'Unboost' },
   cannot_reblog: { id: 'status.cannot_reblog', defaultMessage: 'This post cannot be boosted' },
   favourite: { id: 'status.favourite', defaultMessage: 'Favourite' },
-  open: { id: 'pawoo.status.open_in_another_column', defaultMessage: 'Expand in another column' },
+  open: { id: 'status.open', defaultMessage: 'Expand this status' },
   report: { id: 'status.report', defaultMessage: 'Report @{name}' },
   muteConversation: { id: 'status.mute_conversation', defaultMessage: 'Mute conversation' },
   unmuteConversation: { id: 'status.unmute_conversation', defaultMessage: 'Unmute conversation' },
   pin: { id: 'status.pin', defaultMessage: 'Pin on profile' },
   unpin: { id: 'status.unpin', defaultMessage: 'Unpin from profile' },
   embed: { id: 'status.embed', defaultMessage: 'Embed' },
+  admin_account: { id: 'status.admin_account', defaultMessage: 'Open moderation interface for @{name}' },
+  admin_status: { id: 'status.admin_status', defaultMessage: 'Open this status in the moderation interface' },
+  copy: { id: 'status.copy', defaultMessage: 'Copy link to status' },
 });
 
-@injectIntl
-export default class StatusActionBar extends ImmutablePureComponent {
+const obfuscatedCount = count => {
+  if (count < 0) {
+    return 0;
+  } else if (count <= 1) {
+    return count;
+  } else {
+    return '1+';
+  }
+};
+
+export default @injectIntl
+class StatusActionBar extends ImmutablePureComponent {
 
   static contextTypes = {
     router: PropTypes.object,
-    pawooPushHistory: PropTypes.func,
   };
 
   static propTypes = {
@@ -65,7 +78,11 @@ export default class StatusActionBar extends ImmutablePureComponent {
   ]
 
   handleReplyClick = () => {
-    this.props.onReply(this.props.status, this.context.router.history);
+    if (me) {
+      this.props.onReply(this.props.status, this.context.router.history);
+    } else {
+      this._openInteractionDialog('reply');
+    }
   }
 
   handleShareClick = () => {
@@ -78,15 +95,31 @@ export default class StatusActionBar extends ImmutablePureComponent {
   }
 
   handleFavouriteClick = () => {
-    this.props.onFavourite(this.props.status);
+    if (me) {
+      this.props.onFavourite(this.props.status);
+    } else {
+      this._openInteractionDialog('favourite');
+    }
   }
 
-  handleReblogClick = (e) => {
-    this.props.onReblog(this.props.status, e);
+  handleReblogClick = e => {
+    if (me) {
+      this.props.onReblog(this.props.status, e);
+    } else {
+      this._openInteractionDialog('reblog');
+    }
+  }
+
+  _openInteractionDialog = type => {
+    window.open(`/interact/${this.props.status.get('id')}?type=${type}`, 'mastodon-intent', 'width=445,height=600,resizable=no,menubar=no,status=no,scrollbars=yes');
   }
 
   handleDeleteClick = () => {
-    this.props.onDelete(this.props.status);
+    this.props.onDelete(this.props.status, this.context.router.history);
+  }
+
+  handleRedraftClick = () => {
+    this.props.onDelete(this.props.status, this.context.router.history, true);
   }
 
   handlePinClick = () => {
@@ -106,11 +139,11 @@ export default class StatusActionBar extends ImmutablePureComponent {
   }
 
   handleBlockClick = () => {
-    this.props.onBlock(this.props.status.get('account'));
+    this.props.onBlock(this.props.status);
   }
 
   handleOpen = () => {
-    this.context.pawooPushHistory(`/statuses/${this.props.status.get('id')}`, true);
+    this.context.router.history.push(`/statuses/${this.props.status.get('id')}`);
   }
 
   handleEmbed = () => {
@@ -123,6 +156,25 @@ export default class StatusActionBar extends ImmutablePureComponent {
 
   handleConversationMuteClick = () => {
     this.props.onMuteConversation(this.props.status);
+  }
+
+  handleCopy = () => {
+    const url      = this.props.status.get('url');
+    const textarea = document.createElement('textarea');
+
+    textarea.textContent    = url;
+    textarea.style.position = 'fixed';
+
+    document.body.appendChild(textarea);
+
+    try {
+      textarea.select();
+      document.execCommand('copy');
+    } catch (e) {
+
+    } finally {
+      document.body.removeChild(textarea);
+    }
   }
 
   render () {
@@ -140,6 +192,7 @@ export default class StatusActionBar extends ImmutablePureComponent {
     menu.push({ text: intl.formatMessage(messages.open), action: this.handleOpen });
 
     if (publicStatus) {
+      menu.push({ text: intl.formatMessage(messages.copy), action: this.handleCopy });
       menu.push({ text: intl.formatMessage(messages.embed), action: this.handleEmbed });
     }
 
@@ -160,6 +213,7 @@ export default class StatusActionBar extends ImmutablePureComponent {
       }
 
       menu.push({ text: intl.formatMessage(messages.delete), action: this.handleDeleteClick });
+      menu.push({ text: intl.formatMessage(messages.redraft), action: this.handleRedraftClick });
     } else {
       menu.push({ text: intl.formatMessage(messages.mention, { name: status.getIn(['account', 'username']) }), action: this.handleMentionClick });
       menu.push({ text: intl.formatMessage(messages.direct, { name: status.getIn(['account', 'username']) }), action: this.handleDirectClick });
@@ -167,6 +221,12 @@ export default class StatusActionBar extends ImmutablePureComponent {
       menu.push({ text: intl.formatMessage(messages.mute, { name: status.getIn(['account', 'username']) }), action: this.handleMuteClick });
       menu.push({ text: intl.formatMessage(messages.block, { name: status.getIn(['account', 'username']) }), action: this.handleBlockClick });
       menu.push({ text: intl.formatMessage(messages.report, { name: status.getIn(['account', 'username']) }), action: this.handleReport });
+
+      if (isStaff) {
+        menu.push(null);
+        menu.push({ text: intl.formatMessage(messages.admin_account, { name: status.getIn(['account', 'username']) }), href: `/admin/accounts/${status.getIn(['account', 'id'])}` });
+        menu.push({ text: intl.formatMessage(messages.admin_status), href: `/admin/accounts/${status.getIn(['account', 'id'])}/statuses/${status.get('id')}` });
+      }
     }
 
     if (status.get('visibility') === 'direct') {
@@ -189,9 +249,9 @@ export default class StatusActionBar extends ImmutablePureComponent {
 
     return (
       <div className='status__action-bar'>
-        <IconButton className='status__action-bar-button' disabled={anonymousAccess} title={replyTitle} icon={replyIcon} onClick={this.handleReplyClick} />
-        <IconButton className='status__action-bar-button' disabled={anonymousAccess || !publicStatus} active={status.get('reblogged')} pressed={status.get('reblogged')} title={!publicStatus ? intl.formatMessage(messages.cannot_reblog) : intl.formatMessage(messages.reblog)} icon={reblogIcon} onClick={this.handleReblogClick} />
-        <IconButton className='status__action-bar-button star-icon' disabled={anonymousAccess} animate active={status.get('favourited')} pressed={status.get('favourited')} title={intl.formatMessage(messages.favourite)} icon='star' onClick={this.handleFavouriteClick} />
+        <div className='status__action-bar__counter'><IconButton className='status__action-bar-button' title={replyTitle} icon={status.get('in_reply_to_account_id') === status.getIn(['account', 'id']) ? 'reply' : replyIcon} onClick={this.handleReplyClick} /><span className='status__action-bar__counter__label' >{obfuscatedCount(status.get('replies_count'))}</span></div>
+        <IconButton className='status__action-bar-button' disabled={!publicStatus} active={status.get('reblogged')} pressed={status.get('reblogged')} title={!publicStatus ? intl.formatMessage(messages.cannot_reblog) : intl.formatMessage(messages.reblog)} icon={reblogIcon} onClick={this.handleReblogClick} />
+        <IconButton className='status__action-bar-button star-icon' animate active={status.get('favourited')} pressed={status.get('favourited')} title={intl.formatMessage(messages.favourite)} icon='star' onClick={this.handleFavouriteClick} />
         {shareButton}
 
         <div className='status__action-bar-dropdown'>

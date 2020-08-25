@@ -12,10 +12,12 @@ import ImmutablePureComponent from 'react-immutable-pure-component';
 import Button from '../../../components/button';
 import Toggle from 'react-toggle';
 import IconButton from '../../../components/icon_button';
+import ReportTypeList from 'pawoo/components/report_type_list';
+import { changeReportType } from 'pawoo/actions/extensions/reports';
 
 const messages = defineMessages({
   close: { id: 'lightbox.close', defaultMessage: 'Close' },
-  placeholder: { id: 'report.placeholder', defaultMessage: 'Additional comments' },
+  placeholder: { id: 'pawoo.report.placeholder', defaultMessage: 'Additional comments (required for other cases)' },
   submit: { id: 'report.submit', defaultMessage: 'Submit' },
 });
 
@@ -30,6 +32,7 @@ const makeMapStateToProps = () => {
       account: getAccount(state, accountId),
       comment: state.getIn(['reports', 'new', 'comment']),
       forward: state.getIn(['reports', 'new', 'forward']),
+      pawooReportType: state.getIn(['reports', 'new', 'pawoo_report_type']),
       statusIds: OrderedSet(state.getIn(['timelines', `account:${accountId}:with_replies`, 'items'])).union(state.getIn(['reports', 'new', 'status_ids'])),
     };
   };
@@ -37,9 +40,9 @@ const makeMapStateToProps = () => {
   return mapStateToProps;
 };
 
-@connect(makeMapStateToProps)
+export default @connect(makeMapStateToProps)
 @injectIntl
-export default class ReportModal extends ImmutablePureComponent {
+class ReportModal extends ImmutablePureComponent {
 
   static propTypes = {
     isSubmitting: PropTypes.bool,
@@ -47,6 +50,7 @@ export default class ReportModal extends ImmutablePureComponent {
     statusIds: ImmutablePropTypes.orderedSet.isRequired,
     comment: PropTypes.string.isRequired,
     forward: PropTypes.bool,
+    reportType: PropTypes.string,
     dispatch: PropTypes.func.isRequired,
     intl: PropTypes.object.isRequired,
   };
@@ -63,6 +67,12 @@ export default class ReportModal extends ImmutablePureComponent {
     this.props.dispatch(submitReport());
   }
 
+  handleKeyDown = e => {
+    if (e.keyCode === 13 && (e.ctrlKey || e.metaKey)) {
+      this.handleSubmit();
+    }
+  }
+
   componentDidMount () {
     this.props.dispatch(expandAccountTimeline(this.props.account.get('id'), { withReplies: true }));
   }
@@ -73,8 +83,18 @@ export default class ReportModal extends ImmutablePureComponent {
     }
   }
 
+  pawooIsSendable() {
+    const { comment, pawooReportType } = this.props;
+
+    return pawooReportType && (pawooReportType !== 'other' || comment.length > 0);
+  }
+
+  pawooHandleReportTypeToggle = (reportType) => {
+    this.props.dispatch(changeReportType(reportType));
+  }
+
   render () {
-    const { account, comment, intl, statusIds, isSubmitting, forward, onClose } = this.props;
+    const { account, comment, intl, statusIds, isSubmitting, forward, onClose, pawooReportType } = this.props;
 
     if (!account) {
       return null;
@@ -91,14 +111,18 @@ export default class ReportModal extends ImmutablePureComponent {
 
         <div className='report-modal__container'>
           <div className='report-modal__comment'>
-            <p><FormattedMessage id='report.hint' defaultMessage='The report will be sent to your instance moderators. You can provide an explanation of why you are reporting this account below:' /></p>
+            <ReportTypeList pawooReportType={pawooReportType} onToggle={this.pawooHandleReportTypeToggle} disabled={isSubmitting} />
+
+            <p><FormattedMessage id='report.hint' defaultMessage='The report will be sent to your server moderators. You can provide an explanation of why you are reporting this account below:' /></p>
 
             <textarea
               className='setting-text light'
               placeholder={intl.formatMessage(messages.placeholder)}
               value={comment}
               onChange={this.handleCommentChange}
+              onKeyDown={this.handleKeyDown}
               disabled={isSubmitting}
+              autoFocus
             />
 
             {domain && (
@@ -112,7 +136,7 @@ export default class ReportModal extends ImmutablePureComponent {
               </div>
             )}
 
-            <Button disabled={isSubmitting} text={intl.formatMessage(messages.submit)} onClick={this.handleSubmit} />
+            <Button disabled={isSubmitting || !this.pawooIsSendable()} text={intl.formatMessage(messages.submit)} onClick={this.handleSubmit} />
           </div>
 
           <div className='report-modal__statuses'>

@@ -21,15 +21,13 @@ class AccountStat < ApplicationRecord
   end
 
   def decrement_count!(key)
-    # update(key => [public_send(key) - 1, 0].max)
-    update(key => [account.send(key), 0].max) # TODO: 2.9.4化のときに戻す
+    update(key => [public_send(key) - 1, 0].max)
   end
 
   private
 
   def attributes_for_increment(key)
-    # attrs = { key => public_send(key) + 1 }
-    attrs = { key => account.send(key) } # TODO: 2.9.4化のときに戻す
+    attrs = { key => public_send(key) + 1 }
     attrs[:last_status_at] = Time.now.utc if key == :statuses_count
     attrs
   end

@@ -12,6 +12,7 @@ class Pawoo::Form::OauthRegistration
   type_attribute :username, :string
   type_attribute :display_name, :string
   type_attribute :note, :string
+  type_attribute :agreement, :boolean
 
   validate :validate_user
 
@@ -97,6 +98,8 @@ class Pawoo::Form::OauthRegistration
       case key
       when :email
         messages.each { |message| errors.add(:email, message) }
+      when :agreement
+        messages.each { |message| errors.add(:agreement, message) }
       when :'account.username'
         messages.each { |message| errors.add(:username, message) }
       when :'account.display_name'
@@ -117,11 +120,12 @@ class Pawoo::Form::OauthRegistration
       password: password,
       password_confirmation: password,
       confirmed_at: confirmed_at,
+      agreement: agreement,
       account_attributes: {
         username: username,
         display_name: display_name,
-        note: note
-      }
+        note: note,
+      },
     }
   end
 end

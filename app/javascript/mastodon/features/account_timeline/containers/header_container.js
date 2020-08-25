@@ -5,24 +5,26 @@ import Header from '../components/header';
 import {
   followAccount,
   unfollowAccount,
-  blockAccount,
   unblockAccount,
   unmuteAccount,
+  pinAccount,
+  unpinAccount,
 } from '../../../actions/accounts';
 import {
   mentionCompose,
   directCompose,
 } from '../../../actions/compose';
 import { initMuteModal } from '../../../actions/mutes';
-import { initReport } from '../../../../pawoo/actions/reports';
+import { initBlockModal } from '../../../actions/blocks';
+import { initReport } from '../../../actions/reports';
 import { openModal } from '../../../actions/modal';
 import { blockDomain, unblockDomain } from '../../../actions/domain_blocks';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { unfollowModal } from '../../../initial_state';
+import { List as ImmutableList } from 'immutable';
 
 const messages = defineMessages({
   unfollowConfirm: { id: 'confirmations.unfollow.confirm', defaultMessage: 'Unfollow' },
-  blockConfirm: { id: 'confirmations.block.confirm', defaultMessage: 'Block' },
   blockDomainConfirm: { id: 'confirmations.domain_block.confirm', defaultMessage: 'Hide entire domain' },
 });
 
@@ -31,6 +33,8 @@ const makeMapStateToProps = () => {
 
   const mapStateToProps = (state, { accountId }) => ({
     account: getAccount(state, accountId),
+    domain: state.getIn(['meta', 'domain']),
+    identity_proofs: state.getIn(['identity_proofs', accountId], ImmutableList()),
   });
 
   return mapStateToProps;
@@ -58,11 +62,7 @@ const mapDispatchToProps = (dispatch, { intl }) => ({
     if (account.getIn(['relationship', 'blocking'])) {
       dispatch(unblockAccount(account.get('id')));
     } else {
-      dispatch(openModal('CONFIRM', {
-        message: <FormattedMessage id='confirmations.block.message' defaultMessage='Are you sure you want to block {name}?' values={{ name: <strong>@{account.get('acct')}</strong> }} />,
-        confirm: intl.formatMessage(messages.blockConfirm),
-        onConfirm: () => dispatch(blockAccount(account.get('id'))),
-      }));
+      dispatch(initBlockModal(account));
     }
   },
 
@@ -82,6 +82,14 @@ const mapDispatchToProps = (dispatch, { intl }) => ({
     }
   },
 
+  onEndorseToggle (account) {
+    if (account.getIn(['relationship', 'endorsed'])) {
+      dispatch(unpinAccount(account.get('id')));
+    } else {
+      dispatch(pinAccount(account.get('id')));
+    }
+  },
+
   onReport (account) {
     dispatch(initReport(account));
   },
@@ -96,7 +104,7 @@ const mapDispatchToProps = (dispatch, { intl }) => ({
 
   onBlockDomain (domain) {
     dispatch(openModal('CONFIRM', {
-      message: <FormattedMessage id='confirmations.domain_block.message' defaultMessage='Are you really, really sure you want to block the entire {domain}? In most cases a few targeted blocks or mutes are sufficient and preferable.' values={{ domain: <strong>{domain}</strong> }} />,
+      message: <FormattedMessage id='confirmations.domain_block.message' defaultMessage='Are you really, really sure you want to block the entire {domain}? In most cases a few targeted blocks or mutes are sufficient and preferable. You will not see content from that domain in any public timelines or your notifications. Your followers from that domain will be removed.' values={{ domain: <strong>{domain}</strong> }} />,
       confirm: intl.formatMessage(messages.blockDomainConfirm),
       onConfirm: () => dispatch(blockDomain(domain)),
     }));
@@ -104,6 +112,12 @@ const mapDispatchToProps = (dispatch, { intl }) => ({
 
   onUnblockDomain (domain) {
     dispatch(unblockDomain(domain));
+  },
+
+  onAddToList(account){
+    dispatch(openModal('LIST_ADDER', {
+      accountId: account.get('id'),
+    }));
   },
 
 });

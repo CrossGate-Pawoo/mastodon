@@ -5,6 +5,7 @@ import Overlay from 'react-overlays/lib/Overlay';
 import Motion from '../../ui/util/optional_motion';
 import spring from 'react-motion/lib/spring';
 import { searchEnabled } from '../../../initial_state';
+import Icon from 'mastodon/components/icon';
 
 const messages = defineMessages({
   placeholder: { id: 'search.placeholder', defaultMessage: 'Search' },
@@ -20,7 +21,7 @@ class SearchPopout extends React.PureComponent {
     const { style } = this.props;
     const extraInformation = searchEnabled ? <FormattedMessage id='search_popout.tips.full_text' defaultMessage='Simple text returns statuses you have written, favourited, boosted, or have been mentioned in, as well as matching usernames, display names, and hashtags.' /> : <FormattedMessage id='search_popout.tips.text' defaultMessage='Simple text returns matching display names, usernames and hashtags' />;
     return (
-      <div style={{ ...style, position: 'absolute', width: 285 }}>
+      <div style={{ ...style, position: 'absolute', width: 285, zIndex: 2 }}>
         <Motion defaultStyle={{ opacity: 0, scaleX: 0.85, scaleY: 0.75 }} style={{ opacity: spring(1, { damping: 35, stiffness: 400 }), scaleX: spring(1, { damping: 35, stiffness: 400 }), scaleY: spring(1, { damping: 35, stiffness: 400 }) }}>
           {({ opacity, scaleX, scaleY }) => (
             <div className='search-popout' style={{ opacity: opacity, transform: `scale(${scaleX}, ${scaleY})` }}>
@@ -43,8 +44,12 @@ class SearchPopout extends React.PureComponent {
 
 }
 
-@injectIntl
-export default class Search extends React.PureComponent {
+export default @injectIntl
+class Search extends React.PureComponent {
+
+  static contextTypes = {
+    router: PropTypes.object.isRequired,
+  };
 
   static propTypes = {
     value: PropTypes.string.isRequired,
@@ -53,6 +58,7 @@ export default class Search extends React.PureComponent {
     onSubmit: PropTypes.func.isRequired,
     onClear: PropTypes.func.isRequired,
     onShow: PropTypes.func.isRequired,
+    openInRoute: PropTypes.bool,
     intl: PropTypes.object.isRequired,
   };
 
@@ -72,17 +78,18 @@ export default class Search extends React.PureComponent {
     }
   }
 
-  handleKeyDown = (e) => {
+  handleKeyUp = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
+
       this.props.onSubmit();
+
+      if (this.props.openInRoute) {
+        this.context.router.history.push('/search');
+      }
     } else if (e.key === 'Escape') {
       document.querySelector('.ui').parentElement.focus();
     }
-  }
-
-  noop () {
-
   }
 
   handleFocus = () => {
@@ -109,15 +116,15 @@ export default class Search extends React.PureComponent {
             placeholder={intl.formatMessage(messages.placeholder)}
             value={value}
             onChange={this.handleChange}
-            onKeyUp={this.handleKeyDown}
+            onKeyUp={this.handleKeyUp}
             onFocus={this.handleFocus}
             onBlur={this.handleBlur}
           />
         </label>
 
         <div role='button' tabIndex='0' className='search__icon' onClick={this.handleClear}>
-          <i className={`fa fa-search ${hasValue ? '' : 'active'}`} />
-          <i aria-label={intl.formatMessage(messages.placeholder)} className={`fa fa-times-circle ${hasValue ? 'active' : ''}`} />
+          <Icon id='search' className={hasValue ? '' : 'active'} />
+          <Icon id='times-circle' className={hasValue ? 'active' : ''} aria-label={intl.formatMessage(messages.placeholder)} />
         </div>
 
         <Overlay show={expanded && !hasValue} placement='bottom' target={this}>

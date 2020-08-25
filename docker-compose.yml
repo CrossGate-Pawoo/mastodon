@@ -6,18 +6,20 @@ services:
     image: postgres:9.6-alpine
     networks:
       - internal_network
-### Uncomment to enable DB persistance
-#    volumes:
-#      - ./postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
 
   redis:
     restart: always
-    image: redis:4.0-alpine
+    image: redis:5.0-alpine
     networks:
       - internal_network
-### Uncomment to enable REDIS persistance
-#    volumes:
-#      - ./redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+    volumes:
+      - ./redis:/data
 
 #  es:
 #    restart: always
@@ -26,19 +28,22 @@ services:
 #      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
 #    networks:
 #      - internal_network
-#### Uncomment to enable ES persistance
-##    volumes:
-##      - ./elasticsearch:/usr/share/elasticsearch/data
+#    healthcheck:
+#      test: ["CMD-SHELL", "curl --silent --fail localhost:9200/_cluster/health || exit 1"]
+#    volumes:
+#      - ./elasticsearch:/usr/share/elasticsearch/data
 
   web:
     build: .
     image: tootsuite/mastodon
     restart: always
     env_file: .env.production
-    command: bundle exec rails s -p 3000 -b '0.0.0.0'
+    command: bash -c "rm -f /mastodon/tmp/pids/server.pid; bundle exec rails s -p 3000"
     networks:
       - external_network
       - internal_network
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider --header 'x-forwarded-proto: https' --proxy=off localhost:3000/api/v1/instance || exit 1"]
     ports:
       - "127.0.0.1:3000:3000"
     depends_on:
@@ -46,8 +51,6 @@ services:
       - redis
 #      - es
     volumes:
-      - ./public/assets:/mastodon/public/assets
-      - ./public/packs:/mastodon/public/packs
       - ./public/system:/mastodon/public/system
 
   streaming:
@@ -55,10 +58,12 @@ services:
     image: tootsuite/mastodon
     restart: always
     env_file: .env.production
-    command: yarn start
+    command: node ./streaming
     networks:
       - external_network
       - internal_network
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider --header 'x-forwarded-proto: https' --proxy=off localhost:4000/api/v1/streaming/health || exit 1"]
     ports:
       - "127.0.0.1:4000:4000"
     depends_on:
@@ -70,7 +75,7 @@ services:
     image: tootsuite/mastodon
     restart: always
     env_file: .env.production
-    command: bundle exec sidekiq -q default -q mailers -q pull -q push -q remove
+    command: bundle exec sidekiq
     depends_on:
       - db
       - redis
@@ -78,8 +83,23 @@ services:
       - external_network
       - internal_network
     volumes:
-      - ./public/packs:/mastodon/public/packs
       - ./public/system:/mastodon/public/system
+## Uncomment to enable federation with tor instances along with adding the following ENV variables
+## http_proxy=http://privoxy:8118
+## ALLOW_ACCESS_TO_HIDDEN_SERVICE=true
+#  tor:
+#    image: sirboops/tor
+#    networks:
+#      - external_network
+#      - internal_network
+#
+#  privoxy:
+#    image: sirboops/privoxy
+#    volumes:
+#      - ./priv-config:/opt/config
+#    networks:
+#      - external_network
+#      - internal_network
 
 networks:
   external_network:
