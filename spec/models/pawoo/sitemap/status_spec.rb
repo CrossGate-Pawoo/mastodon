@@ -13,9 +13,11 @@ RSpec.describe Pawoo::Sitemap::Status do
       -> { Pawoo::Sitemap::Status.new(page).prepare }
     end
 
+    let!(:not_target_status) { Fabricate(:status) }
+
     it 'writes status id for sitemap' do
       subject.call
-      expect(Rails.cache.read("pawoo:sitemap:status_indexes:#{page}").first).to eq status.id
+      expect(Rails.cache.read("pawoo:sitemap:status_indexes:#{page}")).to eq [status.id]
     end
   end
 
@@ -27,7 +29,7 @@ RSpec.describe Pawoo::Sitemap::Status do
     end
 
     it 'writes status id for sitemap' do
-      expect(subject.first.id).to eq status.id
+      expect(subject.map(&:id)).to eq [status.id]
     end
   end
 end
