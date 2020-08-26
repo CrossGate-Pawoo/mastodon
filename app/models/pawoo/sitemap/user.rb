@@ -12,14 +12,16 @@ class Pawoo::Sitemap::User < Pawoo::Sitemap
   def query
     account_ids = read_from_cache
 
-    Account.where(id: account_ids).merge(account_scope)
+    Account.joins(:account_stat).includes(:account_stat)
+           .where(id: account_ids)
+           .merge(account_scope).merge(account_stat_scope)
   end
 
   def prepare
-    account_ids = ::User.joins(:account)
+    account_ids = ::User.joins(account: :account_stat)
                         .where('users.id > ?', min_id)
                         .where('users.id <= ?', max_id)
-                        .merge(account_scope)
+                        .merge(account_scope).merge(account_stat_scope)
                         .pluck(:account_id)
 
     store_to_cache(account_ids)
