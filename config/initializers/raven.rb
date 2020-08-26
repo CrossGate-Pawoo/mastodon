@@ -40,9 +40,11 @@ module PawooShouldCaptureChecker
     Stoplight::Error::RedLight
     Net::OpenTimeout
     Net::ReadTimeout
+    Errno::ECONNRESET
   ].freeze
 
   NETWORK_WORKERS = %w[
+    FetchReplyWorker
     LinkCrawlWorker
     ProcessingWorker
     ThreadResolveWorker
@@ -54,6 +56,7 @@ module PawooShouldCaptureChecker
   NETWORK_CONTROLLERS_OR_CONCERNS = %w[
     RemoteFollowController
     AuthorizeFollowsController
+    RemoteInteractionController
     SignatureVerification
   ].freeze
 
