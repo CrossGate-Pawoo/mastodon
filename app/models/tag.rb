@@ -27,7 +27,8 @@ class Tag < ApplicationRecord
 
   scope :discoverable, -> { joins(:account_tag_stat).where(AccountTagStat.arel_table[:accounts_count].gt(0)).where(account_tag_stats: { hidden: false }).order(Arel.sql('account_tag_stats.accounts_count desc')) }
   scope :hidden, -> { where(account_tag_stats: { hidden: true }) }
-  scope :most_used, ->(account) { joins(:statuses).where(statuses: { account: account }).group(:id).order(Arel.sql('count(*) desc')) }
+  # Pawoo extension: To prevent slow queries, extract frequently used tags within the last 1000 cases
+  scope :most_used, ->(account) { joins(:statuses).where(statuses: { id: account.statuses.select(:id).limit(1000) }).group(:id).order(Arel.sql('count(*) desc')) }
 
   delegate :accounts_count,
            :accounts_count=,
