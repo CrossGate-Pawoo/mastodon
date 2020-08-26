@@ -41,6 +41,8 @@ class Pawoo::SuggestedAccountQuery
 
       offset = with_potential_friendship_limit * page_number
       account_ids = PotentialFriendshipTracker.get(account.id, limit: with_potential_friendship_limit, offset: offset).map(&:id)
+      account_ids = filter_by_last_status_at_and_searchable(account_ids)
+
       account_ids - excluded_ids
     end
 
@@ -63,18 +65,17 @@ class Pawoo::SuggestedAccountQuery
     def pixiv_following_account_ids
       return [] unless enable_pixiv_follows_query?
 
-      uids = oauth_authentication.pixiv_follows.pluck(:target_pixiv_uid)
+      account_ids = Rails.cache.fetch("pawoo:PopularAccountQuery:pixiv_following_account_ids:#{oauth_authentication.id}", expires_in: 1.hour) do
+        uids = oauth_authentication.pixiv_follows.pluck(:target_pixiv_uid)
+        ids = User.joins(:oauth_authentications)
+                  .where(oauth_authentications: { provider: 'pixiv', uid: uids })
+                  .pluck(:account_id)
+        ids = filter_by_last_status_at_and_searchable(ids)
+        # メディアを投稿しているユーザーだけを取り出すため、media_attachmentsとjoinする
+        MediaAttachment.reorder(:account_id).where(account_id: ids).distinct(:account_id).pluck(:account_id)
+      end
 
-      # メディアを投稿しているユーザーだけを取り出すため、media_attachmentsとjoinする
-      account_ids = default_scoped.joins(:media_attachments)
-                                  .joins(:user)
-                                  .where.not(id: excluded_ids)
-                                  .joins(:oauth_authentications)
-                                  .where(oauth_authentications: { provider: 'pixiv', uid: uids })
-                                  .distinct
-                                  .pluck(:id)
-
-      shuffle_ids(filter_by_last_status_at(account_ids))
+      shuffle_ids(account_ids) - excluded_ids
     end
 
     def enable_pixiv_follows_query?
@@ -86,22 +87,13 @@ class Pawoo::SuggestedAccountQuery
     private
 
     def popular_account_ids
-      active_ids = active_popular_account_ids
-      inactive_ids = all_popular_account_ids - active_ids
-
-      #アクティブなアカウントを先に表示する
-      shuffle_ids(active_ids - excluded_ids) + shuffle_ids(inactive_ids - excluded_ids)
-    end
-
-    def active_popular_account_ids
-      Rails.cache.fetch('pawoo:PopularAccountQuery:active_popular_account_ids', expires_in: 1.hour) do
-        filter_by_last_status_at(all_popular_account_ids)
+      account_ids = Rails.cache.fetch('pawoo:PopularAccountQuery:active_popular_account_ids', expires_in: 1.hour) do
+        key = Pawoo::RefreshPopularAccountService::REDIS_KEY
+        all_popular_account_ids = Redis.current.zrevrange(key, 0, -1).map(&:to_i)
+        filter_by_last_status_at_and_searchable(all_popular_account_ids)
       end
-    end
 
-    def all_popular_account_ids
-      key = Pawoo::RefreshPopularAccountService::REDIS_KEY
-      Redis.current.zrevrange(key, 0, -1).map(&:to_i)
+      shuffle_ids(account_ids) - excluded_ids
     end
   end
 
@@ -129,8 +121,12 @@ class Pawoo::SuggestedAccountQuery
     ids.shuffle(random: Random.new(seed))
   end
 
-  def filter_by_last_status_at(ids)
-    AccountStat.where(account_id: ids).where(AccountStat.arel_table[:last_status_at].gt(3.days.ago)).pluck(:account_id)
+  def filter_by_last_status_at_and_searchable(ids)
+    AccountStat.joins(:account)
+               .where(account_id: ids).where(AccountStat.arel_table[:last_status_at].gt(3.days.ago))
+               .merge(default_scoped)
+               .order(:account_id)
+               .pluck(:account_id)
   end
 
   def spawn(variables)

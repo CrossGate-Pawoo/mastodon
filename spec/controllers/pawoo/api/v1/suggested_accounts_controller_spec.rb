@@ -25,7 +25,7 @@ describe Pawoo::Api::V1::SuggestedAccountsController, type: :controller do
         subject { get :index, params: { limit: 1 } }
 
         it 'limits the number' do
-          suggested_accounts = 2.times.map { Fabricate(:account) }
+          suggested_accounts = 2.times.map { Fabricate(:status).account }
           pairs = suggested_accounts.map { |account| [100, account.id] }
           Redis.current.zadd('pawoo:popular_account_ids', pairs)
 
@@ -36,7 +36,8 @@ describe Pawoo::Api::V1::SuggestedAccountsController, type: :controller do
       end
 
       context 'with page parameter' do
-        let(:suggested_accounts) { 2.times.map { Fabricate(:account) } }
+        let(:suggested_accounts) { 2.times.map { Fabricate(:status).account } }
+
         before do
           pairs = suggested_accounts.map { |account| [100, account.id] }
           Redis.current.zadd('pawoo:popular_account_ids', pairs)
@@ -55,7 +56,7 @@ describe Pawoo::Api::V1::SuggestedAccountsController, type: :controller do
       end
 
       it 'excludes followed accounts' do
-        follow = Fabricate(:follow, account: user.account)
+        follow = Fabricate(:follow, account: user.account, target_account: Fabricate(:status).account)
         Redis.current.zadd('pawoo:popular_account_ids', [0, follow.target_account_id])
 
         get :index
@@ -64,7 +65,7 @@ describe Pawoo::Api::V1::SuggestedAccountsController, type: :controller do
       end
 
       it 'excludes muted accounts' do
-        mute = Fabricate(:mute, account: user.account)
+        mute = Fabricate(:mute, account: user.account, target_account: Fabricate(:status).account)
         Redis.current.zadd('pawoo:popular_account_ids', [0, mute.target_account_id])
 
         get :index
@@ -85,7 +86,7 @@ describe Pawoo::Api::V1::SuggestedAccountsController, type: :controller do
       end
 
       it 'queries potential friendship' do
-        target_account = Fabricate(:account)
+        target_account = Fabricate(:status).account
         PotentialFriendshipTracker.record(user.account.id, target_account.id, :favourite)
 
         get :index
