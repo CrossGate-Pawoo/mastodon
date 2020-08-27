@@ -26,11 +26,11 @@ class MediaAttachment < ApplicationRecord
 
   enum type: [:image, :gifv, :video, :unknown, :audio]
 
-  IMAGE_FILE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.gif', '.webp'].freeze
+  IMAGE_FILE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.gif'].freeze
   VIDEO_FILE_EXTENSIONS = ['.webm', '.mp4', '.m4v', '.mov'].freeze
   AUDIO_FILE_EXTENSIONS = ['.ogg', '.oga', '.mp3', '.wav', '.flac', '.opus'].freeze
 
-  IMAGE_MIME_TYPES             = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'].freeze
+  IMAGE_MIME_TYPES             = ['image/jpeg', 'image/png', 'image/gif'].freeze
   VIDEO_MIME_TYPES             = ['video/webm', 'video/mp4', 'video/quicktime', 'video/ogg'].freeze
   VIDEO_CONVERTIBLE_MIME_TYPES = ['video/webm', 'video/quicktime'].freeze
   AUDIO_MIME_TYPES             = ['audio/wave', 'audio/wav', 'audio/x-wav', 'audio/x-pn-wave', 'audio/ogg', 'audio/mpeg', 'audio/mp3', 'audio/webm', 'audio/flac'].freeze
