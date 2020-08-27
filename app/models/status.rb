@@ -25,9 +25,6 @@
 #
 
 class Status < ApplicationRecord
-  # Pawoo extension: Skip deleting columns because there are too many records.
-  self.ignored_columns = %w(favourites_count reblogs_count)
-
   before_destroy :unlink_from_conversations
 
   include Paginable
